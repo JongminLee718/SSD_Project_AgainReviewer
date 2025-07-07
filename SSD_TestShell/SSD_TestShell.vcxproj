@@ -135,6 +135,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="read_command.cpp" />
     <ClCompile Include="write_command.cpp" />
+    <ClCompile Include="test\mock_command_processer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
