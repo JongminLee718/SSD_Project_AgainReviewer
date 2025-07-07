@@ -128,8 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="parser.cpp" />
+    <ClCompile Include="parser.h" />
+    <ClCompile Include="parser_test.cpp" />
     <ClCompile Include="ssd.cpp" />
-  </ItemGroup>
+    </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
