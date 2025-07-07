@@ -1,10 +1,9 @@
-class SSD {
-public:
-	void doWriteCmd() {
-		return;
-	}
+#include "ssd.h"
 
-	void doReadCmd() {
-		return;
-	}
-};
+void SSD::doWriteCmd() {
+	return;
+}
+
+void SSD::doReadCmd() {
+	return;
+}
