@@ -131,9 +131,13 @@
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="parser.h" />
     <ClCompile Include="parser_test.cpp" />
-  </ItemGroup>
+    <ClCompile Include="ssd.cpp" />
+    </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ssd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
