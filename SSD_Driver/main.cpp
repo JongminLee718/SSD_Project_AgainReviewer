@@ -1,4 +1,7 @@
+#include "gmock/gmock.h"
+
 int main()
 {
-	return 0;
+	::testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
 }

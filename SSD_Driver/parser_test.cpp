@@ -1,13 +1,22 @@
 #include "gmock/gmock.h"
+#include "parser.h"
+#include <vector>
+#include <string>
 
-TEST(ParserTest, ParseReadCommand){
+using namespace testing;
+using std::string;
+using std::vector;
+
+TEST(ParserTest, ParseReadCommand) {
 	Parser parser;
-	std::vector actual = parser.parse("Read 0");
-	EXPECT_EQ(["Read", "0"], actual);
+	vector<string> actual = parser.parse("read 0");
+	vector<string> expected = { "read", "0" };
+	EXPECT_EQ(expected, actual);
 }
 
-TEST(ParserTest, ParseWriteCommand){
+TEST(ParserTest, ParseWriteCommand) {
 	Parser parser;
-	std::vector actual = parser.parse("write 3 0xAAAABBBB");
-	EXPECT_EQ(["write", "3", "0xAAAABBBB"], actual);
+	vector<string> actual = parser.parse("write 3 0xAAAABBBB");
+	vector<string> expected = { "write", "3", "0xAAAABBBB" };
+	EXPECT_EQ(expected, actual);
 }
