@@ -9,47 +9,14 @@ using std::istringstream;
 vector<string> Parser::parse(const string& input) {
 	vector<string> result = split(input);
 	if (result[0] == "read") {
-		if (result.size() != 2) {
-			throw std::invalid_argument("INVALID COMMAND");
-		}
-
-		int lba;
-		try {
-			lba = std::stoi(result[1]);
-		}
-		catch (...) {
-			throw std::invalid_argument("INVALID COMMAND");
-		}
-		if (lba < 0 || lba > 99) {
-			throw std::invalid_argument("INVALID COMMAND");
-		}
-
+		checkTokenCount(result, 2);
+		validateAddress(result[1]);
 		return result;
 	}
 	if (result[0] == "write") {
-		if (result.size() != 3) {
-			throw std::invalid_argument("INVALID COMMAND");
-		}
-
-		int lba;
-		try {
-			lba = std::stoi(result[1]);
-		}
-		catch (...) {
-			throw std::invalid_argument("INVALID COMMAND");
-		}
-		if (lba < 0 || lba > 99) {
-			throw std::invalid_argument("INVALID COMMAND");
-		}
-
-		unsigned int value;
-		try {
-			value = std::stoul(result[2], nullptr, 16);
-		}
-		catch (...) {
-			throw std::invalid_argument("INVALID COMMAND");
-		}
-
+		checkTokenCount(result, 3);
+		validateAddress(result[1]);
+		validateDataValue(result[2]);
 		return result;
 	}
 	throw std::invalid_argument("INVALID COMMAND");
@@ -63,4 +30,36 @@ vector<string> Parser::split(const string& input) {
 		tokens.push_back(token);
 	}
 	return tokens;
+}
+
+void Parser::checkTokenCount(std::vector<std::string>& result, int expectedCount)
+{
+	if (result.size() != expectedCount) {
+		throw std::invalid_argument("INVALID COMMAND");
+	}
+}
+
+void Parser::validateAddress(const string& address)
+{
+	int lba;
+	try {
+		lba = std::stoi(address);
+	}
+	catch (...) {
+		throw std::invalid_argument("INVALID COMMAND");
+	}
+	if (lba < 0 || lba > 99) {
+		throw std::invalid_argument("INVALID COMMAND");
+	}
+}
+
+void Parser::validateDataValue(const string& dataValue)
+{
+	unsigned int value;
+	try {
+		value = std::stoul(dataValue, nullptr, 16);
+	}
+	catch (...) {
+		throw std::invalid_argument("INVALID COMMAND");
+	}
 }
