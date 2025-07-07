@@ -127,10 +127,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="command_processer.cpp" />
+    <ClCompile Include="exit_command.cpp" />
+    <ClCompile Include="full_read_command.cpp" />
+    <ClCompile Include="full_write_command.cpp" />
+    <ClCompile Include="help_command.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="read_command.cpp" />
+    <ClCompile Include="write_command.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="command_processer.h" />
+    <ClInclude Include="exit_command.h" />
+    <ClInclude Include="full_read_command.h" />
+    <ClInclude Include="full_write_command.h" />
+    <ClInclude Include="help_command.h" />
+    <ClInclude Include="read_command.h" />
+    <ClInclude Include="write_command.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
