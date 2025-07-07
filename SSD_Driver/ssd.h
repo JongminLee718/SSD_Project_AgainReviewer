@@ -1,7 +1,9 @@
+
 class SSD {
 public:
-	void doWriteCmd();
+	int m_ssd[100];
+	bool doWriteCmd(int address, int data);
 	void doReadCmd();
 private:
-	int m_ssd[100];
+
 };
