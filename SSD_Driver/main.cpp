@@ -15,7 +15,8 @@ int main(int argc, char* argv[]) {
 
 	if (command == "R") {
 		if (argc == 3) { // R <LBA>
-			ssd.doReadCmd();
+			int lba = std::stoi(argv[2]);
+			ssd.doReadCmd("R", lba);
 		}
 		else {
 			// Incorrect number of arguments for R
