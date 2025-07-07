@@ -132,6 +132,7 @@
     <ClCompile Include="full_read_command.cpp" />
     <ClCompile Include="full_write_command.cpp" />
     <ClCompile Include="help_command.cpp" />
+    <ClCompile Include="parser.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -148,6 +149,7 @@
     <ClInclude Include="full_read_command.h" />
     <ClInclude Include="full_write_command.h" />
     <ClInclude Include="help_command.h" />
+    <ClInclude Include="parser.h" />
     <ClInclude Include="read_command.h" />
     <ClInclude Include="write_command.h" />
   </ItemGroup>
