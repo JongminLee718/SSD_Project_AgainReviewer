@@ -132,8 +132,10 @@
     <ClCompile Include="full_read_command.cpp" />
     <ClCompile Include="full_write_command.cpp" />
     <ClCompile Include="help_command.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="parser.cpp" />
+    <ClCompile Include="main.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="read_command.cpp" />
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="test\mock_command_processer.h" />
