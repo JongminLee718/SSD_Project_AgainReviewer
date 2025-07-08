@@ -1,4 +1,4 @@
-name: Build and Run Google Tests
+name: Parallel Build and Run Google Tests
 
 on:
   push:
@@ -8,14 +8,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  test-driver:
+    name: SSD_Driver Tests
     runs-on: windows-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Restore NuGet packages (Driver)
+    - name: Restore NuGet packages
       run: nuget restore SSD_Driver/SSD_Driver.sln
 
     - name: Set up MSBuild
@@ -27,8 +28,19 @@ jobs:
     - name: Run SSD_DriverTests
       run: SSD_Driver\x64\Debug\SSD_Driver.exe --gtest_output=xml:test-results-driver.xml
 
-    - name: Restore NuGet packages (TestShell)
+  test-shell:
+    name: SSD_TestShell Tests
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Restore NuGet packages
       run: nuget restore SSD_TestShell/SSD_TestShell.sln
+
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1.3.1
 
     - name: Build SSD_TestShell.sln
       run: msbuild SSD_TestShell/SSD_TestShell.sln /p:Configuration=Debug /p:Platform=x64
