@@ -21,7 +21,7 @@ void storeNand(SSD* ssd) {
 		//std::string ss;
 		std::stringstream ss;
 		//ss = "0x" + std::to_string(ssd->getData(i));
-		ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << std::to_string(ssd->getData(i))<<"\n";
+		ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << ssd->getData(i)<<"\n";
 		outputFile << ss.str();
 	}
 }
@@ -56,7 +56,9 @@ int main(int argc, char* argv[]) {
 	}
 	else if (command == "W") {
 		if (argc == 4) { // W <LBA> <VALUE>
-			int data = std::stoi(argv[3]);
+			string input = argv[3];
+			int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
+			std::cout << "data = " << data << "\n";
 			SSDHandler ssd_reader(NAND_FILE_PATH);
 			ssd.loadData(ssd_reader.nandData);
 			string result = ssd.doWriteCmd(addr, data);
