@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "ssd_verify_app.h"
+#include "ssd_client_app.h"
 #include "parser/parser.h"
 #include "command_processer.h"
 
@@ -9,7 +9,7 @@ using std::vector;
 using std::cout;
 using std::cin;
 
-void SsdVerifyApp::startVerify(SsdInterface* sdInterface) {
+void SsdClientApp::startVerify(SsdInterface* sdInterface) {
 	Parser parser;
 	vector<string> parsedInput = parser.parse(inputCmd);
 
@@ -18,13 +18,21 @@ void SsdVerifyApp::startVerify(SsdInterface* sdInterface) {
 	commandProcesser.run(parsedInput);
 }
 
-void SsdVerifyApp::setInputCmd(string input) {
+void SsdClientApp::setInputCmd(string input) {
 	inputCmd = input;
 }
 
-void SsdVerifyApp::getUserCmdLine() {
+void SsdClientApp::getUserCmdLine() {
+	displayPrompt();
+	setInputCmd(readUserInput());
+}
+
+void SsdClientApp::displayPrompt() const {
 	cout << "Shell> ";
+}
+
+string SsdClientApp::readUserInput() {
 	string input;
 	getline(cin, input);
-	setInputCmd(input);
+	return input;
 }

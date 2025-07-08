@@ -1,10 +1,10 @@
 #include "gmock/gmock.h"
-#include "ssd_verify_app.h"
+#include "ssd_client_app.h"
 #include "command_processer.h"
 
 using namespace testing;
 
-class SsdVerifyAppFixture : public Test {
+class SsdClientAppFixture : public Test {
 public:
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -20,26 +20,26 @@ private:
 	}
 };
 
-TEST_F(SsdVerifyAppFixture, ReadSuccess) {
+TEST_F(SsdClientAppFixture, ReadSuccess) {
 	EXPECT_CALL(mockSssHandler, read(_))
 		.Times(1);
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return("0x00000000"));
 
-	SsdVerifyApp app;
+	SsdClientApp app;
 	app.setInputCmd("read 0");
 	app.startVerify(&mockSssHandler);
 
 	EXPECT_EQ(oss.str(), "[Read] LBA 0 : 0x00000000\n");
 }
 
-TEST_F(SsdVerifyAppFixture, WriteSuccess) {
+TEST_F(SsdClientAppFixture, WriteSuccess) {
 	EXPECT_CALL(mockSssHandler, write(_,_))
 		.Times(1);
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(""));
 
-	SsdVerifyApp app;
+	SsdClientApp app;
 	app.setInputCmd("write 3 0xAAAABBBB");
 	app.startVerify(&mockSssHandler);
 
