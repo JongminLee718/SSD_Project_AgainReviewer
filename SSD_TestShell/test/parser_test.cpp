@@ -53,6 +53,18 @@ TEST_F(ParserFixture, HelpSuccess) {
 	EXPECT_EQ(expected, actual);
 }
 
+TEST_F(ParserFixture, FullwriteSuccess) {
+	vector<string> actual = parser.parse("fullwrite 0xAAAABBBB");
+	vector<string> expected = { "fullwrite", "0xAAAABBBB" };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST_F(ParserFixture, FullreadSuccess) {
+	vector<string> actual = parser.parse("fullread");
+	vector<string> expected = { "fullread" };
+	EXPECT_EQ(expected, actual);
+}
+
 TEST_F(ParserFixture, UnknownCommand) {
 	EXPECT_THROW(parser.parse("unknown, 0"), std::invalid_argument);
 }
