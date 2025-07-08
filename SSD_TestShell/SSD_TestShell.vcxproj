@@ -139,6 +139,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="read_command.cpp" />
+    <ClCompile Include="ssd_handler.cpp" />
     <ClCompile Include="test\test_command_processer.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -162,6 +163,7 @@
     <ClInclude Include="parser.h" />
     <ClInclude Include="read_command.h" />
     <ClInclude Include="shell_command.h" />
+    <ClInclude Include="ssd_handler.h" />
     <ClInclude Include="write_command.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
