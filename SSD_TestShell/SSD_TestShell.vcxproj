@@ -168,6 +168,7 @@
     <ClInclude Include="help_command.h" />
     <ClInclude Include="parser\parser.h" />
     <ClInclude Include="parser\validator.h" />
+    <ClInclude Include="parser\validator_factory.h" />
     <ClInclude Include="parser\validator_utils.h" />
     <ClInclude Include="read_command.h" />
     <ClInclude Include="shell_command.h" />
