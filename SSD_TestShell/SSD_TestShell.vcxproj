@@ -137,6 +137,9 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="read_command.cpp" />
+    <ClCompile Include="test\parser_test.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(MSBuildThisFileDirectory)..\..\lib\native\include\;%(AdditionalIncludeDirectories);$(SolutionDir)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="test\mock_command_processer.h" />
   </ItemGroup>
