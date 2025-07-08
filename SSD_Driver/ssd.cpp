@@ -1,7 +1,7 @@
 #include "ssd.h"
 
 bool SSD::doWriteCmd(int address, int data) {
-	if (address < 0 || address >= 100) return false;
+	if (address < 0 || address >= MAX_LBA) return false;
 	setData(address, data);
 	return true;
 }

@@ -1,6 +1,7 @@
 
 class SSD {
 public:
+
 	bool doWriteCmd(int address, int data);
 	void doReadCmd();
 	int getData(int addr);

@@ -7,7 +7,7 @@ class WriteFixture : public Test {
 public:
 	SSD ssd;
 	WriteFixture() {
-		for (int addrIdx = 0; addrIdx < 100; addrIdx++) {
+		for (int addrIdx = 0; addrIdx < MAX_LBA; addrIdx++) {
 			ssd.setData(addrIdx, 0);
 		}
 	}
@@ -25,7 +25,7 @@ public:
 	}
 
 private:
-
+	static const int MAX_LBA = 100;
 };
 
 TEST_F(WriteFixture, writeAddr0) {
