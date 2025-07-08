@@ -1,0 +1,32 @@
+name: Build and Run Google Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up MSBuild
+      uses: microsoft/setup-msbuild@v1.3.1
+
+    - name: Build SSD_Driver.sln
+      run: msbuild SSD_Driver/SSD_Driver.sln /p:Configuration=Debug /p:Platform=x64
+
+    - name: Run SSD_DriverTests
+      run: SSD_Driver\x64\Debug\SSD_Driver.exe --gtest_output=xml:test-results-driver.xml
+
+    - name: Build SSD_TestShell.sln
+      run: msbuild SSD_TestShell/SSD_TestShell.sln /p:Configuration=Debug /p:Platform=x64
+
+    - name: Run SSD_TestShellTests
+      run: SSD_TestShell\x64\Debug\SSD_TestShell.exe --gtest_output=xml:test-results-shell.xml
+
