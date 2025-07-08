@@ -7,6 +7,9 @@ using std::cout;
 
 class ExitCommand : public Command {
 public:
+	ExitCommand(SsdInterface* ssdInterface) {
+		this->ssdInterface = ssdInterface;
+	}
 	void run(vector<string> commands) override;
 private:
 };

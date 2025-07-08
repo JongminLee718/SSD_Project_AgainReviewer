@@ -7,6 +7,7 @@
 #include "read_command.h"
 #include "write_command.h"
 
+
 //Simple Factory Pattern
 class FactoryCommand {
 public:
@@ -15,13 +16,13 @@ public:
 		return instance;
 	}
 
-	Command* makeCommand(string& opcode) {
-		if ("exit" == opcode) { return new ExitCommand();}
-		else if ("read" == opcode) { return new ReadCommand();}
-		else if ("write" == opcode) { return new WriteCommand();}
-		else if ("help" == opcode) { return new HelpCommand();}
-		else if ("fullwrite" == opcode) { return new FullWriteCommand();}
-		else if ("fullread" == opcode) { return new FullReadCommand();}
+	Command* makeCommand(string& opcode, SsdInterface* ssdInterface) {
+		if ("exit" == opcode) { return new ExitCommand(ssdInterface);}
+		else if ("read" == opcode) { return new ReadCommand(ssdInterface);}
+		else if ("write" == opcode) { return new WriteCommand(ssdInterface);}
+		else if ("help" == opcode) { return new HelpCommand(ssdInterface);}
+		else if ("fullwrite" == opcode) { return new FullWriteCommand(ssdInterface);}
+		else if ("fullread" == opcode) { return new FullReadCommand(ssdInterface);}
 
 		return nullptr;
 	}
@@ -32,8 +33,12 @@ private:
 void CommandProcesser::run(vector<string> commands) {
 	FactoryCommand factoryCommand = FactoryCommand::getInstance();
 
-	Command* command = factoryCommand.makeCommand(commands[OPCODE]);
+	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface);
 
 	command->run(commands);
+}
+
+void CommandProcesser::setSsdInterface(SsdInterface* ssdInterface) {
+	this->ssdInterface = ssdInterface;
 }
 
