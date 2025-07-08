@@ -136,6 +136,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="read_command.cpp" />
+    <ClCompile Include="test\test_command_processer.cpp" />
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="test\mock_command_processer.h" />
   </ItemGroup>
