@@ -19,6 +19,9 @@ vector<string> Parser::parse(const string& input) {
 		validateDataValue(result[2]);
 		return result;
 	}
+	if (result[0] == "exit" || result[0] == "help") {
+		checkTokenCount(result, 1);
+	}
 	throw std::invalid_argument("INVALID COMMAND");
 }
 
