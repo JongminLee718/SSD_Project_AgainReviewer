@@ -138,7 +138,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="parser\parser.cpp" />
-    <ClCompile Include="parser\validator.cpp" />
     <ClCompile Include="parser\validator_utils.cpp" />
     <ClCompile Include="read_command.cpp" />
     <ClCompile Include="ssd_handler.cpp" />

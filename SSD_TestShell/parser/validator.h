@@ -49,3 +49,12 @@ public:
 private:
 	const size_t EXPECTED_NUM_TOKENS = 1;
 };
+
+class ScriptValidator : public Validator {
+public:
+	void validate(const std::vector<std::string> tokens) override {
+		ValidatorUtils::checkTokenCount(tokens, EXPECTED_NUM_TOKENS);
+	}
+private:
+	const size_t EXPECTED_NUM_TOKENS = 1;
+};

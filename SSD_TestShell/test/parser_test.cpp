@@ -65,6 +65,18 @@ TEST_F(ParserFixture, FullreadSuccess) {
 	EXPECT_EQ(expected, actual);
 }
 
+TEST_F(ParserFixture, ScriptLongSuccess) {
+	vector<string> actual = parser.parse("1_FullWriteAndReadCompare");
+	vector<string> expected = { "1_FullWriteAndReadCompare" };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST_F(ParserFixture, ScriptShortSuccess) {
+	vector<string> actual = parser.parse("1_");
+	vector<string> expected = { "1_" };
+	EXPECT_EQ(expected, actual);
+}
+
 TEST_F(ParserFixture, UnknownCommand) {
 	EXPECT_THROW(parser.parse("unknown, 0"), std::invalid_argument);
 }
