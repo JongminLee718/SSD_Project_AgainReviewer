@@ -4,11 +4,13 @@
 #include <fstream>
 #include "gmock/gmock.h"
 #include "ssd.h"
-#include "ssdHandler.h"
+#include "reader.h"
+#include "fileio.h"
 
 using std::string;
 const std::string NAND_FILE_PATH = "ssd_nand.txt";
 const std::string OUTPUT_FILE_PATH = "ssd_output.txt";
+const std::string ERROR = "ERROR";
 
 void writeOutput(const std::string& content) {
 	std::ofstream outputFile(OUTPUT_FILE_PATH);
@@ -44,14 +46,16 @@ int main(int argc, char* argv[]) {
 
 	if (command == "R") {
 		if (argc == 3) { // R <LBA>
-			SSDHandler ssd_reader(NAND_FILE_PATH);
-			string result = ssd_reader.executeRead(addr);
+			FileInOut fileio(NAND_FILE_PATH);
+			SSDHandler handler(fileio.nandData);
+			string result = handler.executeRead(addr);
 			writeOutput(result);
 			std::cout << "result = " << result << "\n";
 		}
 		else {
 			// Incorrect number of arguments for R
 			std::cout << "Incorrect number of arguments for R" << "\n";
+			writeOutput(ERROR);
 		}
 	}
 	else if (command == "W") {
@@ -59,7 +63,8 @@ int main(int argc, char* argv[]) {
 			string input = argv[3];
 			int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
 			std::cout << "data = " << data << "\n";
-			SSDHandler ssd_reader(NAND_FILE_PATH);
+			FileInOut fileio(NAND_FILE_PATH);
+			SSDHandler ssd_reader(fileio.nandData);
 			ssd.loadData(ssd_reader.nandData);
 			string result = ssd.doWriteCmd(addr, data);
 			storeNand(&ssd);
@@ -68,10 +73,12 @@ int main(int argc, char* argv[]) {
 		}
 		else {
 			std::cout << "Incorrect write command" << "\n";
+			writeOutput(ERROR);
 		}
 	}
 	else {
 		std::cout << "Incorrect command" << "\n";
+		writeOutput(ERROR);
 	}
 
 	return 1;
