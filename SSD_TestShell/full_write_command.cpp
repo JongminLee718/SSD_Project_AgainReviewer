@@ -7,6 +7,8 @@ using std::cout;
 using std::to_string;
 
 void FullWriteCommand::run(vector<string> commands) {
-	// SSD Interface write
+	for (int lba = 0; lba < MAX_LBA; lba++) {
+		
+	}
 	cout << "[Write] Done\n";
 }
