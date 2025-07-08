@@ -1,5 +1,6 @@
 #include "gmock/gmock.h"
 #include "ssd.h"
+#include <string>
 
 using namespace testing;
 
@@ -12,16 +13,16 @@ public:
 		}
 	}
 	void writeTest(int tarAddr, int writeData) {
-		int result = 0;
+		std::string result = {};
 		EXPECT_EQ(ssd.getData(tarAddr), 0);
 		result = ssd.doWriteCmd(tarAddr, writeData);
 		EXPECT_EQ(ssd.getData(tarAddr), writeData);
-		EXPECT_EQ(1, result);
+		EXPECT_EQ("", result);
 	}
 	void writeExpectionTest(int tarAddr, int writeData) {
-		int result = 0;
+		std::string result = {};
 		result = ssd.doWriteCmd(tarAddr, writeData);
-		EXPECT_EQ(0, result);
+		EXPECT_EQ("ERROR", result);
 	}
 
 private:
