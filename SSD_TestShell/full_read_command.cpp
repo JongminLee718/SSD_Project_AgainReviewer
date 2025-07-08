@@ -7,6 +7,8 @@ using std::to_string;
 
 void FullReadCommand::run(vector<string> commands) {
 	for (int lba = 0; lba < MAX_LBA; lba++) {
+		ssdInterface->read(to_string(lba));
+
 		cout << "[Read] LBA " + to_string(lba) + " : 0x00000000\n";
 	}
 }

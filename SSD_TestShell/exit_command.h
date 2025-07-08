@@ -12,4 +12,5 @@ public:
 	}
 	void run(vector<string> commands) override;
 private:
+	SsdInterface* ssdInterface;
 };

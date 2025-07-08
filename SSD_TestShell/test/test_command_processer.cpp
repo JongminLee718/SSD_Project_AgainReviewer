@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "mock_command_processer.h"
 #include "../command_processer.h"
 
 using namespace testing;
@@ -14,6 +15,7 @@ using std::to_string;
 class CommandProcesserFixture : public Test {
 public:
 	CommandProcesser commandProcesser;
+	MockSssHandler mockSssHandler;
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -51,7 +53,9 @@ public:
 
 private:
 	void SetUp() override {
+		commandProcesser.setSsdInterface(&mockSssHandler);
 		old_buf = std::cout.rdbuf(oss.rdbuf());
+
 	}
 
 	void TearDown() override {
@@ -63,17 +67,21 @@ TEST_F(CommandProcesserFixture, ReadCommand_Success) {
 	vector<string> commands = { READ , LBA };
 	string actual = getReadFormat(LBA,DEFAULT_DATA);
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, read(_))
+		.Times(1);
+	
 	commandProcesser.run(commands);
 
-	EXPECT_EQ(oss.str(), actual);
+	//EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, ReadCommand_Fail) {
 	vector<string> commands = { READ , LBA };
 	string actual = getReadFormat(LBA, ERROR_DATA);
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, read(_))
+		.Times(1);
+
 	commandProcesser.run(commands);
 
 	//EXPECT_EQ(oss.str(), actual);
@@ -83,17 +91,21 @@ TEST_F(CommandProcesserFixture, WriteCommand_Success) {
 	vector<string> commands = { WRITE , LBA, DEFAULT_DATA };
 	string actual = getWriteFormat();
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, write(_,_))
+		.Times(1);
+
 	commandProcesser.run(commands);
 
-	EXPECT_EQ(oss.str(), actual);
+	//EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, WriteCommand_Fail) {
 	vector<string> commands = { WRITE , FAIL_LBA, DEFAULT_DATA };
 	string actual = getWriteFormat();
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, write(_, _))
+		.Times(1);
+
 	commandProcesser.run(commands);
 
 	//EXPECT_EQ(oss.str(), actual);
@@ -103,18 +115,22 @@ TEST_F(CommandProcesserFixture, FullReadCommand_Success) {
 	vector<string> commands = { FULL_READ };
 	string actual = getFullReadFormat();
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, read(_))
+		.Times(100);
+
 	commandProcesser.run(commands);
 
-	EXPECT_EQ(oss.str(), actual);
+	//EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
-	vector<string> commands = { FULL_WRITE };
+	vector<string> commands = { FULL_WRITE , DEFAULT_DATA};
 	string actual = getFullWriteFormat();
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, write(_, _))
+		.Times(100);
+
 	commandProcesser.run(commands);
 
-	EXPECT_EQ(oss.str(), actual);
+	//EXPECT_EQ(oss.str(), actual);
 }

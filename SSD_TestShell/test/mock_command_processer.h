@@ -1,8 +1,13 @@
 #pragma once
 #include "gmock/gmock.h"
+#include "../ssd_handler.h"
+#include <string>
 
+using std::string;
 
-class MockCommandProcesser {
+class MockSssHandler : public SsdInterface {
 public:
-	void run(std::vector<std::string> commands);
+	MOCK_METHOD(void, read, (string lba), (override));
+	MOCK_METHOD(void, write, (string lba, string data), (override));
+	MOCK_METHOD(string, readOutput, (), (override));
 };
