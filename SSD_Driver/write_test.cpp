@@ -8,14 +8,14 @@ public:
 	SSD ssd;
 	WriteFixture() {
 		for (int addrIdx = 0; addrIdx < 100; addrIdx++) {
-			ssd.m_ssd[addrIdx] = 0;
+			ssd.setData(addrIdx, 0);
 		}
 	}
 	void writeTest(int tarAddr, int writeData) {
 		int result = 0;
-		EXPECT_EQ(ssd.m_ssd[tarAddr], 0);
+		EXPECT_EQ(ssd.getData(tarAddr), 0);
 		result = ssd.doWriteCmd(tarAddr, writeData);
-		EXPECT_EQ(ssd.m_ssd[tarAddr], writeData);
+		EXPECT_EQ(ssd.getData(tarAddr), writeData);
 		EXPECT_EQ(1, result);
 	}
 	void writeExpectionTest(int tarAddr, int writeData) {

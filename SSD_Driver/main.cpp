@@ -8,7 +8,7 @@
 using std::string;
 
 int main(int argc, char* argv[]) {
-#if defined(RUN_UT)
+#if defined(_DEBUG)
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
 #else
@@ -30,6 +30,7 @@ int main(int argc, char* argv[]) {
 	}
 	else if (command == "W") {
 		if (argc == 4) { // W <LBA> <VALUE>
+			int addr = 0, data = 0;
 			ssd.doWriteCmd(addr, data);
 		}
 		else {
