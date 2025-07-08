@@ -1,7 +1,9 @@
 #pragma once
 
-class ReadCommand {
+#include "command.h"
+
+class ReadCommand : public Command {
 public:
-	void read(int lba);
+	void run(vector<string> commands) override;
 private:
 };

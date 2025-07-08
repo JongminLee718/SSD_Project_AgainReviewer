@@ -1,7 +1,9 @@
 #pragma once
 
-class WriteCommand {
+#include "command.h"
+
+class WriteCommand : public Command {
 public:
-	void write(int lba, int data);
+	void run(vector<string> commands) override;
 private:
 };

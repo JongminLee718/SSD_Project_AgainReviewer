@@ -1,6 +1,9 @@
 #pragma once
-class ExitCommand {
+
+#include "command.h"
+
+class ExitCommand : public Command {
 public:
-	void exit();
+	void run(vector<string> commands) override;
 private:
 };

@@ -1,4 +1,5 @@
 #include "command_processer.h"
+
 #include "exit_command.h"
 #include "full_read_command.h"
 #include "full_write_command.h"
@@ -6,33 +7,33 @@
 #include "read_command.h"
 #include "write_command.h"
 
+void CommandProcesser::run(vector<string> commands) {
+	Command* command = getCommand(commands[OPCODE]);
 
-void CommandProcesser::run(std::vector<std::string> commands) {
-	std::string command = commands[0];
+	command->run(commands);
+}
 
-	if ("exit" == command) {
-		ExitCommand exitCommand;
-		exitCommand.exit();
+Command* CommandProcesser::getCommand(string& opcode) {
+	Command* command = nullptr;
+
+	if ("exit" == opcode) {
+		command = new ExitCommand();
 	}
-	else if ("read" == command) {
-		ReadCommand readCommand;
-		readCommand.read(0);
+	else if ("read" == opcode) {
+		command = new ReadCommand();
 	}
-	else if ("write" == command) {
-		WriteCommand writeCommand;
-		writeCommand.write(0,0);
+	else if ("write" == opcode) {
+		command = new WriteCommand();;
 	}
-	else if ("help" == command) {
-		HelpCommand helpCommand;
-		helpCommand.help();
+	else if ("help" == opcode) {
+		command = new HelpCommand();
 	}
-	else if ("fullwrite" == command) {
-		FullWriteCommand fullWriteCommand;
-		fullWriteCommand.fullWrite(0);
+	else if ("fullwrite" == opcode) {
+		command = new FullWriteCommand();
 	}
-	else if ("fullread" == command) {
-		FullReadCommand fullReadCommand;
-		fullReadCommand.fullRead();
+	else if ("fullread" == opcode) {
+		command = new FullReadCommand();
 	}
 
+	return command;
 }

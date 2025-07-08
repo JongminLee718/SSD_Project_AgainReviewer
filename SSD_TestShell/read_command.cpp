@@ -6,7 +6,7 @@
 using std::cout;
 using std::to_string;
 
-void ReadCommand::read(int lba) {
-	cout << "[Read] LBA " + to_string(lba) + " : 0x00000000\n";
+void ReadCommand::run(vector<string> commands){
+	cout << "[Read] LBA " + commands[1] + " : 0x00000000\n";
 	// SSD Interface read
 }

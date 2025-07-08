@@ -1,5 +1,5 @@
 #include "help_command.h"
 
-void HelpCommand::help() {
+void HelpCommand::run(vector<string> commands) {
 	// print help info
 }
