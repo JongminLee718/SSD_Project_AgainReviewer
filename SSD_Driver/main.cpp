@@ -1,10 +1,17 @@
 #include <iostream>
 #include <string>
+#include "gmock/gmock.h"
 #include "ssd.h"
+
+#define RUN_UT
 
 using std::string;
 
 int main(int argc, char* argv[]) {
+#if defined(RUN_UT)
+	::testing::InitGoogleMock();
+	return RUN_ALL_TESTS();
+#else
 	SSD ssd;
 	if (argc < 2) {
 		// Not enough arguments
@@ -23,7 +30,7 @@ int main(int argc, char* argv[]) {
 	}
 	else if (command == "W") {
 		if (argc == 4) { // W <LBA> <VALUE>
-			ssd.doWriteCmd();
+			ssd.doWriteCmd(addr, data);
 		}
 		else {
 			// Incorrect number of arguments for W
@@ -32,4 +39,5 @@ int main(int argc, char* argv[]) {
 	else {
 		// Unknown command
 	}
+#endif
 }
