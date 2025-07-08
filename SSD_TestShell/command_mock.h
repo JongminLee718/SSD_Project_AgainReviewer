@@ -1,5 +1,5 @@
 #pragma once
-#include "gmock/gmock.h""
+#include "gmock/gmock.h"
 #include "shell_command.h"
 
 class CommandMock : public Command {
