@@ -38,7 +38,7 @@ TEST_F(ParserFixture, WriteInvalidLength) {
 }
 
 TEST_F(ParserFixture, WriteInvalidArgument) {
-	EXPECT_THROW(parser.parse("write 3 0xAAAAAAAAA"), std::invalid_argument);
+	EXPECT_THROW(parser.parse("write 3 0x100000000"), std::invalid_argument);
 }
 
 TEST_F(ParserFixture, ExitSuccess) {
