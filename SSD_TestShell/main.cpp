@@ -7,14 +7,15 @@ int main(int argc, char** argv) {
     return RUN_ALL_TESTS();
 }
 #else
-#include "ssd_verify_app.h"
+#include "ssd_client_app.h"
 #include <iostream>
 int main() {
     std::cout << "Release\n";
 
-    SsdVerifyApp app;
+    SsdClientApp app;
     app.getUserCmdLine();
-    app.startVerify();
+    SsdHandler ssdHandler;
+    app.startVerify(&ssdHandler);
 
     return 0;
 }
