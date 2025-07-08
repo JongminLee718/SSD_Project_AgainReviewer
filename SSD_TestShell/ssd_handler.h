@@ -9,12 +9,14 @@ interface SsdInterface {
 public:
 	virtual void read(string lba) = 0;
 	virtual void write(string lba, string data) = 0;
+	virtual string readOutput() = 0;
 };
 
 class SsdHandler : public SsdInterface {
 public :
 	void read(string lba) override;
 	void write(string lba, string data) override;
+	string readOutput() override;
 private:
 	void runSSD(std::string cmd);
 };
