@@ -40,3 +40,31 @@ TEST_F(ParserFixture, WriteInvalidLength) {
 TEST_F(ParserFixture, WriteInvalidArgument) {
 	EXPECT_THROW(parser.parse("write 3 0xAAAAAAAAA"), std::invalid_argument);
 }
+
+TEST_F(ParserFixture, ExitSuccess) {
+	vector<string> actual = parser.parse("exit");
+	vector<string> expected = { "exit" };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST_F(ParserFixture, HelpSuccess) {
+	vector<string> actual = parser.parse("help");
+	vector<string> expected = { "help" };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST_F(ParserFixture, FullwriteSuccess) {
+	vector<string> actual = parser.parse("fullwrite 0xAAAABBBB");
+	vector<string> expected = { "fullwrite", "0xAAAABBBB" };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST_F(ParserFixture, FullreadSuccess) {
+	vector<string> actual = parser.parse("fullread");
+	vector<string> expected = { "fullread" };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST_F(ParserFixture, UnknownCommand) {
+	EXPECT_THROW(parser.parse("unknown, 0"), std::invalid_argument);
+}

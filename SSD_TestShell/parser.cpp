@@ -19,6 +19,15 @@ vector<string> Parser::parse(const string& input) {
 		validateDataValue(result[2]);
 		return result;
 	}
+	if (result[0] == "exit" || result[0] == "help" || result[0] == "fullread") {
+		checkTokenCount(result, 1);
+		return result;
+	}
+	if (result[0] == "fullwrite") {
+		checkTokenCount(result, 2);
+		validateDataValue(result[1]);
+		return result;
+	}
 	throw std::invalid_argument("INVALID COMMAND");
 }
 
