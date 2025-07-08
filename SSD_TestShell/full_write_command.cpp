@@ -6,7 +6,7 @@
 using std::cout;
 using std::to_string;
 
-void FullWriteCommand::fullWrite(int data) {
+void FullWriteCommand::run(vector<string> commands) {
 	// SSD Interface write
 	cout << "[Write] Done\n";
 }

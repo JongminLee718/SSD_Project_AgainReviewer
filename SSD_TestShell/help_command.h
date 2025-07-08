@@ -1,6 +1,9 @@
 #pragma once
-class HelpCommand {
+
+#include "command.h"
+
+class HelpCommand : public Command {
 public:
-	void help();
+	void run(vector<string> commands) override;
 private:
 };
