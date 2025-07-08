@@ -9,7 +9,11 @@ using std::string;
 
 class HelpCommand : public Command {
 public:
+	HelpCommand(SsdInterface* ssdInterface) {
+		this->ssdInterface = ssdInterface;
+	}
 	void run(vector<string> commands) override;
 private:
+	SsdInterface* ssdInterface;
 	string getHelpString();
 };

@@ -7,6 +7,13 @@ using std::cout;
 using std::to_string;
 
 void WriteCommand::run(vector<string> commands){
-	cout << "[Write] Done\n";
-	// SSD Interface write
+	ssdInterface->write(commands[1], commands[2]);
+	string data = ssdInterface->readOutput();
+
+	if (ERROR_PATERN == data) {
+		cout << "[Write] ERROR\n";
+	}
+	else {
+		cout << "[Write] Done\n";
+	}
 }

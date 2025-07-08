@@ -14,6 +14,7 @@ using std::to_string;
 class CommandProcesserFixture : public Test {
 public:
 	CommandProcesser commandProcesser;
+	SsdHandlerMock mockSssHandler;
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -26,7 +27,8 @@ public:
 	string LBA = "0";
 	string FAIL_LBA = "100";
 	string DEFAULT_DATA ="0x00000000";
-	string ERROR_DATA = "ERROR";
+	string ERROR_PATTERN = "ERROR";
+
 	int MAX_LBA = 100;
 
 	string getReadFormat(string lba, string expect) {
@@ -51,6 +53,7 @@ public:
 
 private:
 	void SetUp() override {
+		commandProcesser.setSsdInterface(&mockSssHandler);
 		old_buf = std::cout.rdbuf(oss.rdbuf());
 	}
 
@@ -63,7 +66,11 @@ TEST_F(CommandProcesserFixture, ReadCommand_Success) {
 	vector<string> commands = { READ , LBA };
 	string actual = getReadFormat(LBA,DEFAULT_DATA);
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, read(_))
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(DEFAULT_DATA));
+
 	commandProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
@@ -71,19 +78,28 @@ TEST_F(CommandProcesserFixture, ReadCommand_Success) {
 
 TEST_F(CommandProcesserFixture, ReadCommand_Fail) {
 	vector<string> commands = { READ , LBA };
-	string actual = getReadFormat(LBA, ERROR_DATA);
+	string actual = "[Read] ERROR\n";
+	
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, read(_))
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(ERROR_PATTERN));
+
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, WriteCommand_Success) {
 	vector<string> commands = { WRITE , LBA, DEFAULT_DATA };
 	string actual = getWriteFormat();
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, write(_,_))
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(""));
+
 	commandProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
@@ -91,29 +107,44 @@ TEST_F(CommandProcesserFixture, WriteCommand_Success) {
 
 TEST_F(CommandProcesserFixture, WriteCommand_Fail) {
 	vector<string> commands = { WRITE , FAIL_LBA, DEFAULT_DATA };
-	string actual = getWriteFormat();
+	string actual = "[Write] ERROR\n";
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, write(_, _))
+		.Times(1);
+
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(ERROR_PATTERN));
+
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, FullReadCommand_Success) {
 	vector<string> commands = { FULL_READ };
 	string actual = getFullReadFormat();
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, read(_))
+		.Times(100);
+
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillRepeatedly(Return(DEFAULT_DATA));
+
 	commandProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
-	vector<string> commands = { FULL_WRITE };
+	vector<string> commands = { FULL_WRITE , DEFAULT_DATA};
 	string actual = getFullWriteFormat();
 
-	CommandProcesser commandProcesser;
+	EXPECT_CALL(mockSssHandler, write(_, _))
+		.Times(100);
+
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillRepeatedly(Return(""));
+
 	commandProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
