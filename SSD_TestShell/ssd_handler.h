@@ -25,4 +25,5 @@ class SsdHandlerMock : public SsdInterface {
 public:
 	MOCK_METHOD(void, read, (string), (override));
 	MOCK_METHOD(void, write, (string, string), (override));
+	MOCK_METHOD(string, readOutput, (), (override));
 };

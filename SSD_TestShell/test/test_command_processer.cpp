@@ -4,7 +4,6 @@
 #include <iostream>
 #include <sstream>
 
-#include "mock_command_processer.h"
 #include "../command_processer.h"
 
 using namespace testing;
@@ -15,7 +14,7 @@ using std::to_string;
 class CommandProcesserFixture : public Test {
 public:
 	CommandProcesser commandProcesser;
-	MockSssHandler mockSssHandler;
+	SsdHandlerMock mockSssHandler;
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -56,7 +55,6 @@ private:
 	void SetUp() override {
 		commandProcesser.setSsdInterface(&mockSssHandler);
 		old_buf = std::cout.rdbuf(oss.rdbuf());
-
 	}
 
 	void TearDown() override {
