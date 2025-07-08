@@ -9,5 +9,12 @@ using std::to_string;
 void ReadCommand::run(vector<string> commands){
 	ssdInterface->read(commands[1]);
 
-	cout << "[Read] LBA " + commands[1] + " : 0x00000000\n";
+	string data = ssdInterface->readOutput();
+
+	if (ERROR_PATERN == data) {
+		cout << "[Read] ERROR\n";
+	}
+	else {
+		cout << "[Read] LBA " + commands[1] + " : "+ data +"\n";
+	}
 }

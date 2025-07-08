@@ -15,5 +15,5 @@ public:
 
 protected:
 	const int MAX_LBA = 100;
-	
+	string ERROR_PATERN = "ERROR";
 };

@@ -28,7 +28,8 @@ public:
 	string LBA = "0";
 	string FAIL_LBA = "100";
 	string DEFAULT_DATA ="0x00000000";
-	string ERROR_DATA = "ERROR";
+	string ERROR_PATTERN = "ERROR";
+
 	int MAX_LBA = 100;
 
 	string getReadFormat(string lba, string expect) {
@@ -69,22 +70,27 @@ TEST_F(CommandProcesserFixture, ReadCommand_Success) {
 
 	EXPECT_CALL(mockSssHandler, read(_))
 		.Times(1);
-	
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(DEFAULT_DATA));
+
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, ReadCommand_Fail) {
 	vector<string> commands = { READ , LBA };
-	string actual = getReadFormat(LBA, ERROR_DATA);
+	string actual = "[Read] ERROR\n";
+	
 
 	EXPECT_CALL(mockSssHandler, read(_))
 		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(ERROR_PATTERN));
 
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, WriteCommand_Success) {
@@ -93,22 +99,27 @@ TEST_F(CommandProcesserFixture, WriteCommand_Success) {
 
 	EXPECT_CALL(mockSssHandler, write(_,_))
 		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(""));
 
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, WriteCommand_Fail) {
 	vector<string> commands = { WRITE , FAIL_LBA, DEFAULT_DATA };
-	string actual = getWriteFormat();
+	string actual = "[Write] ERROR\n";
 
 	EXPECT_CALL(mockSssHandler, write(_, _))
 		.Times(1);
 
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(ERROR_PATTERN));
+
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, FullReadCommand_Success) {
@@ -118,9 +129,12 @@ TEST_F(CommandProcesserFixture, FullReadCommand_Success) {
 	EXPECT_CALL(mockSssHandler, read(_))
 		.Times(100);
 
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillRepeatedly(Return(DEFAULT_DATA));
+
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }
 
 TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
@@ -130,7 +144,10 @@ TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
 	EXPECT_CALL(mockSssHandler, write(_, _))
 		.Times(100);
 
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillRepeatedly(Return(""));
+
 	commandProcesser.run(commands);
 
-	//EXPECT_EQ(oss.str(), actual);
+	EXPECT_EQ(oss.str(), actual);
 }

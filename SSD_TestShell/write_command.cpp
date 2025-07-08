@@ -8,5 +8,12 @@ using std::to_string;
 
 void WriteCommand::run(vector<string> commands){
 	ssdInterface->write(commands[1], commands[2]);
-	cout << "[Write] Done\n";
+	string data = ssdInterface->readOutput();
+
+	if (ERROR_PATERN == data) {
+		cout << "[Write] ERROR\n";
+	}
+	else {
+		cout << "[Write] Done\n";
+	}
 }
