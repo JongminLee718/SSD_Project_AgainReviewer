@@ -1,27 +1,13 @@
-#include "ssdHandler.h"
 #include <fstream>
-#include <stdexcept>
-#include <sstream>
-#include <iomanip>
+#include <iostream>
+#include "fileio.h"
 
-SSDHandler::SSDHandler(const std::string& nandFilePath) : filePath(nandFilePath) {
+FileInOut::FileInOut(const std::string& nandFilePath) : filePath(nandFilePath) {
     initializeNandFile();
     loadNandData();
 }
 
-std::string SSDHandler::executeRead(int address) {
-    if (address < 0 || address >= SSD_SIZE) {
-        return "ERROR";
-    }
-
-    unsigned int readValue = nandData[address];
-
-    std::stringstream ss;
-    ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << readValue;
-    return ss.str();
-}
-
-void SSDHandler::initializeNandFile() {
+void FileInOut::initializeNandFile() {
     std::ifstream file(filePath);
     if (file.good()) {
         return;
@@ -35,7 +21,7 @@ void SSDHandler::initializeNandFile() {
     }
 }
 
-void SSDHandler::loadNandData() {
+void FileInOut::loadNandData() {
     std::ifstream file(filePath);
     if (!file.is_open()) {
         throw std::runtime_error("Failed to open NAND file for reading.");

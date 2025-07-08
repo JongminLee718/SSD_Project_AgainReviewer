@@ -127,18 +127,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="fileio.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="reader.cpp" />
     <ClCompile Include="read_test.cpp" />
     <ClCompile Include="ssd.cpp" />
-    <ClCompile Include="ssdHandler.cpp" />
     <ClCompile Include="write_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fileio.h" />
+    <ClInclude Include="reader.h" />
     <ClInclude Include="ssd.h" />
-    <ClInclude Include="ssdHandler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

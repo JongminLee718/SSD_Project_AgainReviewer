@@ -1,13 +1,14 @@
+#pragma once
 #include <string>
 #include <vector>
 
-class SSDHandler {
+class FileInOut {
 public:
     std::vector<unsigned int> nandData;
-    explicit SSDHandler(const std::string& nandFilePath);
-    std::string executeRead(int lba);
+    FileInOut(const std::string& nandFilePath);
 
 private:
+    
     void initializeNandFile();
     void loadNandData();
 
