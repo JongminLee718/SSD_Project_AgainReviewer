@@ -1,9 +1,15 @@
+#pragma once
+#include <string>
+#include <vector>
 
 class SSD {
 public:
-	int m_ssd[100];
-	bool doWriteCmd(int address, int data);
+	std::string doWriteCmd(int address, int data);
 	void doReadCmd();
+	int getData(int addr);
+	void setData(int addr, int data);
+	void loadData(const std::vector<unsigned int>& memory);
 private:
-
+	static const int MAX_LBA = 100;
+	int m_ssd[MAX_LBA];
 };

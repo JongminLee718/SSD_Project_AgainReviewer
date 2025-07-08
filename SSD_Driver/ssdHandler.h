@@ -3,6 +3,7 @@
 
 class SSDHandler {
 public:
+    std::vector<unsigned int> nandData;
     explicit SSDHandler(const std::string& nandFilePath);
     std::string executeRead(int lba);
 
@@ -11,6 +12,6 @@ private:
     void loadNandData();
 
     std::string filePath;
-    std::vector<unsigned int> nandData;
+
     const int SSD_SIZE = 100;
 };
