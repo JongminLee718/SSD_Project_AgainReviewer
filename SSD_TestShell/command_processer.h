@@ -13,5 +13,4 @@ public:
 private:
 	int OPCODE = 0;
 
-	Command* getCommand(string& opcode);
 };

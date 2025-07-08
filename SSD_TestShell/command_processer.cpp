@@ -7,33 +7,33 @@
 #include "read_command.h"
 #include "write_command.h"
 
+//Simple Factory Pattern
+class FactoryCommand {
+public:
+	static FactoryCommand& getInstance() {
+		static FactoryCommand instance;
+		return instance;
+	}
+
+	Command* makeCommand(string& opcode) {
+		if ("exit" == opcode) { return new ExitCommand();}
+		else if ("read" == opcode) { return new ReadCommand();}
+		else if ("write" == opcode) { return new WriteCommand();}
+		else if ("help" == opcode) { return new HelpCommand();}
+		else if ("fullwrite" == opcode) { return new FullWriteCommand();}
+		else if ("fullread" == opcode) { return new FullReadCommand();}
+
+		return nullptr;
+	}
+private:
+	FactoryCommand() {};
+};
+
 void CommandProcesser::run(vector<string> commands) {
-	Command* command = getCommand(commands[OPCODE]);
+	FactoryCommand factoryCommand = FactoryCommand::getInstance();
+
+	Command* command = factoryCommand.makeCommand(commands[OPCODE]);
 
 	command->run(commands);
 }
 
-Command* CommandProcesser::getCommand(string& opcode) {
-	Command* command = nullptr;
-
-	if ("exit" == opcode) {
-		command = new ExitCommand();
-	}
-	else if ("read" == opcode) {
-		command = new ReadCommand();
-	}
-	else if ("write" == opcode) {
-		command = new WriteCommand();;
-	}
-	else if ("help" == opcode) {
-		command = new HelpCommand();
-	}
-	else if ("fullwrite" == opcode) {
-		command = new FullWriteCommand();
-	}
-	else if ("fullread" == opcode) {
-		command = new FullReadCommand();
-	}
-
-	return command;
-}
