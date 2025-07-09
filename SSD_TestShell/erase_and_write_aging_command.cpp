@@ -17,7 +17,7 @@ bool EraseAndWriteAgingCommand::run(vector<string> commands) {
 		}
 	}
 
-	std::cout << "PASS\n";
+	cout << "PASS\n";
 	return true;
 
 }

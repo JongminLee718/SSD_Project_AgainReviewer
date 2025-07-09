@@ -1,10 +1,12 @@
 #pragma once
 #include "gmock/gmock.h"
+#include <iostream>
 #include <string>
 #include <random>
 #include <sstream>
 #include <fstream>
 
+using std::cout;
 using std::string;
 using std::to_string;
 
