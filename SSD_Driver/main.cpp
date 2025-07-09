@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 			SSD handler(fileio.nandData);
 			string result = handler.doReadCmd(addr);
 			writeOutput(result);
-			std::cout << "R result = " << result << "\n";
+			std::cout << "R result = " <<addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << result << "\n";
 		}
 		else {
 			// Incorrect number of arguments for R
@@ -60,13 +60,13 @@ int main(int argc, char* argv[]) {
 		if (argc == 4) { // W <LBA> <VALUE>
 			string input = argv[3];
 			int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
-			std::cout << "data = " << data << "\n";
+			std::cout << "input data = addr" << addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << data << "\n";
 			FileInOut fileio(NAND_FILE_PATH);
 			SSD ssd(fileio.nandData);
 			string result = ssd.doWriteCmd(addr, data);
 			storeNand(&ssd);
 			writeOutput(result);
-			std::cout << "W result = " << result << "\n";
+			std::cout << "W result = " <<  result << "\n";
 		}
 		else {
 			std::cout << "Incorrect number of arguments for W" << "\n";
