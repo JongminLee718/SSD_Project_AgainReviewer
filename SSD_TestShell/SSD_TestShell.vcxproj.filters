@@ -36,13 +36,49 @@
     <ClCompile Include="full_read_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="command_processer.cpp">
+    <ClCompile Include="command_processor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="test\mock_command_processer.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
-    <ClCompile Include="parser.cpp">
+    <ClCompile Include="parser\parser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\validator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\validator_utils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssd_handler.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssd_client_app.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssd_client_app_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="test\test_command_processer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="test\parser_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="test_script_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="checker.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="full_write_and_read_compare_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="partial_lba_write_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="write_read_aging_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,11 +104,44 @@
     <ClInclude Include="write_command.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="command_processer.h">
+    <ClInclude Include="command_processor.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="parser.h">
+    <ClInclude Include="command.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\parser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\validator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\validator_factory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\validator_utils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="shell_command.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ssd_handler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ssd_client_app.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="checker.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="full_write_and_read_compare_command.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="partial_lba_write_command.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="write_read_aging_command.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

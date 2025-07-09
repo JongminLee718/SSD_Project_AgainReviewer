@@ -1,6 +1,6 @@
 #include "gmock/gmock.h"
 #include "ssd_client_app.h"
-#include "command_processer.h"
+#include "command_processor.h"
 
 using namespace testing;
 

@@ -2,7 +2,8 @@
 #include <vector>
 #include "ssd_client_app.h"
 #include "parser/parser.h"
-#include "command_processer.h"
+#include "command_processor.h"
+#include "checker.h"
 
 using std::string;
 using std::vector;
@@ -12,9 +13,10 @@ using std::cin;
 void SsdClientApp::startVerify(SsdInterface* sdInterface) {
 	Parser parser;
 	vector<string> parsedInput = parser.parse(inputCmd);
+	
+	OutputChecker checker;
 
-	CommandProcesser commandProcesser;
-	commandProcesser.setSsdInterface(sdInterface);
+	CommandProcessor commandProcesser{ sdInterface, &checker };
 	commandProcesser.run(parsedInput);
 }
 
