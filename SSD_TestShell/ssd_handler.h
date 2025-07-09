@@ -19,6 +19,8 @@ public :
 	void read(string lba) override;
 	void write(string lba, string data) override;
 	string readOutput() override;
+	void erase(string lba, string size);
+	void flush();
 private:
 	void runSSD(std::string cmd);
 };

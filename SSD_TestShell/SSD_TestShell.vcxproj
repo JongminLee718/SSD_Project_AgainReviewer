@@ -132,6 +132,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="erase_and_write_aging_command.cpp" />
+    <ClCompile Include="erase_command.cpp" />
     <ClCompile Include="exit_command.cpp" />
     <ClCompile Include="full_read_command.cpp" />
     <ClCompile Include="full_write_and_read_compare_command.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="command.h" />
     <ClInclude Include="command_processor.h" />
     <ClInclude Include="erase_and_write_aging_command.h" />
+    <ClInclude Include="erase_command.h" />
     <ClInclude Include="exit_command.h" />
     <ClInclude Include="full_read_command.h" />
     <ClInclude Include="full_write_and_read_compare_command.h" />

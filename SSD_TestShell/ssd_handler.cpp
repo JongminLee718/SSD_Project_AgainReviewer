@@ -48,3 +48,13 @@ void SsdHandler::runSSD(std::string cmd)
 
     system(exePath.c_str());
 }
+
+void SsdHandler::erase(string lba, string size) {
+    string cmd = "//SSD_Driver.exe E " + lba + " " + size;
+    runSSD(cmd);
+}
+
+void SsdHandler::flush() {
+    string cmd = "//SSD_Driver.exe F ";
+    runSSD(cmd);
+}

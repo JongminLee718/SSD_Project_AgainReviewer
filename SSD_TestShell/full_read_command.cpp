@@ -16,7 +16,7 @@ void FullReadCommand::run(vector<string> commands) {
 			break;
 		}
 		else {
-			cout << "[Read] LBA " + to_string(lba) + " : " + data + "\n";
+			cout << "[Read] LBA " << std::setfill('0') << std::setw(2) << lba << " : " + data + "\n";
 		}
 	}
 }

@@ -16,7 +16,11 @@ public:
 	OutputChecker checker;
 	SsdHandlerMock mockSssHandler;
 
-	CommandProcessor commandProcesser{ &mockSssHandler, &checker };
+	CommandProcessor mockCmdProcesser{ &mockSssHandler, &checker };
+
+	SsdHandler ssdHandler;
+	CommandProcessor realCmdProcesser{ &ssdHandler, &checker };
+
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -34,7 +38,13 @@ public:
 	int MAX_LBA = 100;
 
 	string getReadFormat(string lba, string expect) {
-		return "[Read] LBA " + lba + " : "+ expect +"\n";
+		string empty = "";
+		if (lba.size() == 1)
+		{
+			empty = "0";
+		}
+
+		return "[Read] LBA " + empty + lba + " : "+ expect +"\n";
 	}
 
 	string getWriteFormat() {
@@ -51,6 +61,16 @@ public:
 
 	string getFullWriteFormat() {
 		return "[Write] Done\n";
+	}
+
+	std::string intToHexString(int num) {
+		const char* hexChars = "0123456789ABCDEF";
+		std::string result = "0x";
+		for (int i = 7; i >= 0; --i) {
+			unsigned int nibble = (num >> (i * 4)) & 0xF;
+			result += hexChars[nibble];
+		}
+		return result;
 	}
 
 private:
@@ -72,9 +92,10 @@ TEST_F(CommandProcesserFixture, ReadCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(DEFAULT_DATA));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
-	EXPECT_EQ(oss.str(), actual);
+	string str = oss.str();
+	EXPECT_EQ(str, actual);
 }
 
 TEST_F(CommandProcesserFixture, ReadCommand_Fail) {
@@ -87,7 +108,7 @@ TEST_F(CommandProcesserFixture, ReadCommand_Fail) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(ERROR_PATTERN));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -101,7 +122,7 @@ TEST_F(CommandProcesserFixture, WriteCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(""));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -116,7 +137,7 @@ TEST_F(CommandProcesserFixture, WriteCommand_Fail) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(ERROR_PATTERN));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -131,7 +152,7 @@ TEST_F(CommandProcesserFixture, FullReadCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillRepeatedly(Return(DEFAULT_DATA));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -146,7 +167,30 @@ TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillRepeatedly(Return(""));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
+
+
+/*
+TEST_F(CommandProcesserFixture, Real_WriteRead_Success) {
+	for (int lba = 0; lba < MAX_LBA; lba++)
+	{
+		string writeData = intToHexString(lba);
+		string sLba = to_string(lba);
+		vector<string> writeCommands = { WRITE , sLba, writeData };
+		vector<string> readCommands = { READ , sLba };
+		
+		string actual = getWriteFormat();
+		actual += getReadFormat(sLba, writeData);
+
+		realCmdProcesser.run(writeCommands);
+		realCmdProcesser.run(readCommands);
+
+		string str = oss.str();
+		EXPECT_EQ(str, actual);
+	}	
+}
+*/
+
