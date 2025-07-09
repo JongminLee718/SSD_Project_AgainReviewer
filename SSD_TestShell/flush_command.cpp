@@ -9,14 +9,11 @@ using std::to_string;
 bool FlushCommand::run(vector<string> commands) {
 	ssdInterface->flush();
 
-	string data = utilsInterface->readOutput();
-
-	if (ERROR_PATERN == data) {
+	if (ERROR_PATERN == utilsInterface->readOutput()) {
 		cout << "[Flush] ERROR\n";
 		return false;
 	}
-	else {
-		cout << "[Flush] Done" << "\n";
-		return true;
-	}
+
+	cout << "[Flush] Done" << "\n";
+	return true;
 }

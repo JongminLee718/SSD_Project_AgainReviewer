@@ -9,14 +9,11 @@ using std::to_string;
 bool EraseCommand::run(vector<string> commands) {
 	ssdInterface->erase(commands[LBA_OFFSET], commands[LBA_SIZE_OFFSET]);
 
-	string data = utilsInterface->readOutput();
-
-	if (ERROR_PATERN == data) {
+	if (ERROR_PATERN == utilsInterface->readOutput()) {
 		cout << "[Erase] ERROR\n";
 		return false;
 	}
-	else {
-		cout << "[Erase] Done\n";
-		return true;
-	}
+	
+	cout << "[Erase] Done\n";
+	return true;
 }

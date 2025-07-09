@@ -10,16 +10,14 @@ bool FullReadCommand::run(vector<string> commands) {
 	
 	for (int lba = 0; lba < MAX_LBA; lba++) {
 		ssdInterface->read(to_string(lba));
-
 		string data = utilsInterface->readOutput();
 
 		if (ERROR_PATERN == data) {
 			cout << "[Full Read] ERROR\n";
 			return false;;
 		}
-		else {
-			cout << "LBA " << std::setfill('0') << std::setw(2) << lba << " : " + data + "\n";
-		}
+
+		cout << "LBA " << std::setfill('0') << std::setw(2) << lba << " : " + data + "\n";
 	}
 	return true;
 }

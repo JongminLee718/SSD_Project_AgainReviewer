@@ -20,7 +20,7 @@ public :
 	void erase(string lba, string size) override;
 	void flush() override;
 private:
-	void runSSD(std::string cmd);
+	void excute(std::string cmd);
 };
 
 class SsdHandlerMock : public SsdInterface {

@@ -47,13 +47,13 @@ private:
 
 bool CommandProcessor::run(vector<string> commands) {
 	FactoryCommand factoryCommand = FactoryCommand::getInstance();
-
 	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface, utilsInterface);
 
 	if (command == nullptr) {
 		std::cout << "command is not defined.\n";
 		return false;
 	}
+
 	return command->run(commands);
 }
 
