@@ -129,15 +129,16 @@
   <ItemGroup>
     <ClCompile Include="fileio.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="read_test.cpp" />
+    <ClCompile Include="ssd_read_test.cpp" />
     <ClCompile Include="ssd.cpp" />
-    <ClCompile Include="write_test.cpp" />
+    <ClCompile Include="ssd_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fileio.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="ssd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

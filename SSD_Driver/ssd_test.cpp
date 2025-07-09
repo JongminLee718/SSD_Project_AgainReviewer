@@ -1,6 +1,7 @@
 #include "gmock/gmock.h"
 #include "ssd.h"
 #include "fileio.h"
+#include "main.h"
 #include <string>
 
 using namespace testing;
@@ -45,7 +46,6 @@ public:
 
 private:
 	static const int MAX_LBA = 100;
-	const std::string TEST_NAN_PATH = "test_nand.txt";
 };
 
 TEST_F(SsdFixture, writeAddr0) {

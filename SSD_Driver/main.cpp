@@ -1,16 +1,11 @@
 #include <iostream>
-#include <string>
 #include <fstream>
 #include "gmock/gmock.h"
+#include "main.h"
 #include "ssd.h"
 #include "fileio.h"
 
-//#define DEBUG_LOG
-
 using std::string;
-const std::string NAND_FILE_PATH = "ssd_nand.txt";
-const std::string OUTPUT_FILE_PATH = "ssd_output.txt";
-const std::string ERROR = "ERROR";
 
 void writeOutput(const std::string& content) {
 	std::ofstream outputFile(OUTPUT_FILE_PATH);
@@ -19,11 +14,9 @@ void writeOutput(const std::string& content) {
 
 void storeNand(SSD* ssd) {
 	std::ofstream outputFile(NAND_FILE_PATH);
-	for (int i = 0;i < 100;i++) {
-		//std::string ss;
+	for (int addrIdx = 0;addrIdx < SSD_SIZE;addrIdx++) {
 		std::stringstream ss;
-		//ss = "0x" + std::to_string(ssd->getData(i));
-		ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << ssd->getData(i)<<"\n";
+		ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << ssd->getData(addrIdx)<<"\n";
 		outputFile << ss.str();
 	}
 }
@@ -36,9 +29,7 @@ int main(int argc, char* argv[]) {
 	
 	if (argc < 2) {
 		// Not enough arguments
-#if defined(DEBUG_LOG)
-		std::cout << "argunement error" << "\n";
-#endif
+		writeOutput(ERROR);
 		return true;
 	}
 
