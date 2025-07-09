@@ -148,11 +148,13 @@
     <ClCompile Include="parser\validator_utils.cpp" />
     <ClCompile Include="partial_lba_write_command.cpp" />
     <ClCompile Include="read_command.cpp" />
+    <ClCompile Include="runner.cpp" />
     <ClCompile Include="ssd_handler.cpp" />
     <ClCompile Include="ssd_client_app.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="ssd_client_app_test.cpp" />
+    <ClCompile Include="test\runner_test.cpp" />
     <ClCompile Include="test\test_command_processer.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -187,6 +189,7 @@
     <ClInclude Include="parser\validator_utils.h" />
     <ClInclude Include="partial_lba_write_command.h" />
     <ClInclude Include="read_command.h" />
+    <ClInclude Include="runner.h" />
     <ClInclude Include="ssd_handler.h" />
     <ClInclude Include="ssd_client_app.h" />
     <ClInclude Include="utils.h" />
