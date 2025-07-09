@@ -27,8 +27,11 @@ public:
 
 	string READ = "read";
 	string WRITE = "write";
+	string ERASE = "erase";
+	string FLUSH = "flush";
 	string FULL_READ = "fullread";
 	string FULL_WRITE = "fullwrite";
+	string ERASE_RANGE = "erase_range";
 
 	string LBA = "0";
 	string FAIL_LBA = "100";
@@ -61,6 +64,27 @@ public:
 
 	string getFullWriteFormat() {
 		return "[Write] Done\n";
+	}
+
+	string getEraseFormat() {
+		return "[Erase] Done\n";
+	}
+
+	string getEraseErrorFormat() {
+		return "[Erase] ERROR\n";
+	}
+
+	string getFlushFormat() {
+		return "[Flush] Done\n";
+	}
+
+
+	string getEraseRangeFormat() {
+		return "[EraseRange] Done\n";
+	}
+
+	string getEraseRangeErrorFormat() {
+		return "[EraseRange] ERROR\n";
 	}
 
 	std::string intToHexString(int num) {
@@ -172,6 +196,61 @@ TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
 	EXPECT_EQ(oss.str(), actual);
 }
 
+TEST_F(CommandProcesserFixture, EraseCommand_Success) {
+	vector<string> commands = { ERASE , LBA, "10" };
+	string actual = getEraseFormat();
+
+	EXPECT_CALL(mockSssHandler, erase(_, _))
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(""));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
+
+TEST_F(CommandProcesserFixture, EraseCommand_Fail) {
+	vector<string> commands = { ERASE , LBA, "1000" };
+	string actual = getEraseErrorFormat();
+
+	EXPECT_CALL(mockSssHandler, erase(_, _))
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return("ERROR"));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
+
+TEST_F(CommandProcesserFixture, FlushCommand_Success) {
+	vector<string> commands = { FLUSH };
+	string actual = getFlushFormat();
+
+	EXPECT_CALL(mockSssHandler, flush())
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(""));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
+
+TEST_F(CommandProcesserFixture, EraseRageCommand_Success) {
+	vector<string> commands = { ERASE_RANGE , LBA, "30" };
+	string actual = getEraseRangeFormat();
+
+	EXPECT_CALL(mockSssHandler, erase(_, _))
+		.Times(3);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillRepeatedly(Return(""));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
 
 /*
 TEST_F(CommandProcesserFixture, Real_WriteRead_Success) {

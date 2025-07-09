@@ -5,9 +5,9 @@
 
 using std::cout;
 
-class EraseCommand : public Command {
+class FlushCommand : public Command {
 public:
-	EraseCommand(SsdInterface* ssdInterface) {
+	FlushCommand(SsdInterface* ssdInterface) {
 		this->ssdInterface = ssdInterface;
 	}
 	void run(vector<string> commands) override;
