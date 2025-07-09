@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
+#include <unordered_set>
 #include "validator.h"
 
 class ValidatorFactory {
@@ -19,6 +20,10 @@ public:
 		}
 		if (command == "fullread" || command == "exit" || command == "help") {
 			return std::make_unique<SimpleValidator>();
+		}
+		if (command == "1_" || command == "2_" || command == "3_" ||
+			command == "1_FullWriteAndReadCompare" || command == "2_PartialLBAWrite" || command == "3_WriteReadAging") {
+			return std::make_unique<ScriptValidator>();
 		}
 
 		throw std::invalid_argument("INVALID COMMAND");

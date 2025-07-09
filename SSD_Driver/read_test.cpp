@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "reader.h"
+#include "ssd.h"
 #include "fileio.h"
 #include <fstream>
 #include <cstdio>
@@ -38,9 +38,9 @@ TEST_F(SSDHandlerTestFixture, ReadSuccess) {
     test_file.close();
 
     FileInOut fileio(TEST_NAN_PATH);
-    SSDHandler handler(fileio.nandData);
+    SSD handler(fileio.nandData);
 
-    EXPECT_EQ(handler.executeRead(0), "0x00000001");
+    EXPECT_EQ(handler.doReadCmd(0), "0x00000001");
 }
 
 TEST_F(SSDHandlerTestFixture, ReadFail) {
@@ -51,18 +51,18 @@ TEST_F(SSDHandlerTestFixture, ReadFail) {
     test_file.close();
 
     FileInOut fileio(TEST_NAN_PATH);
-    SSDHandler handler(fileio.nandData);
+    SSD handler(fileio.nandData);
 
-    EXPECT_NE(handler.executeRead(0), "0x00000001");
-    EXPECT_NE(handler.executeRead(1), "0x00000002");
-    EXPECT_NE(handler.executeRead(2), "0x00000003");
+    EXPECT_NE(handler.doReadCmd(0), "0x00000001");
+    EXPECT_NE(handler.doReadCmd(1), "0x00000002");
+    EXPECT_NE(handler.doReadCmd(2), "0x00000003");
 }
 
 TEST_F(SSDHandlerTestFixture, ReadInvalidAddress) {
     FileInOut fileio(TEST_NAN_PATH);
-    SSDHandler handler(fileio.nandData);
+    SSD handler(fileio.nandData);
 
-    EXPECT_EQ(handler.executeRead(100), "ERROR");
-    EXPECT_EQ(handler.executeRead(-1), "ERROR");
+    EXPECT_EQ(handler.doReadCmd(100), "ERROR");
+    EXPECT_EQ(handler.doReadCmd(-1), "ERROR");
 }
 

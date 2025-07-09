@@ -1,6 +1,6 @@
 #include "gmock/gmock.h"
 #include "ssd_client_app.h"
-#include "command_processer.h"
+#include "command_processor.h"
 
 using namespace testing;
 
@@ -30,7 +30,7 @@ TEST_F(SsdClientAppFixture, ReadSuccess) {
 	app.setInputCmd("read 0");
 	app.startVerify(&mockSssHandler);
 
-	EXPECT_EQ(oss.str(), "[Read] LBA 0 : 0x00000000\n");
+	EXPECT_EQ(oss.str(), "[Read] LBA 00 : 0x00000000\n");
 }
 
 TEST_F(SsdClientAppFixture, WriteSuccess) {
