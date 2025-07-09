@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 	if (argc < 2) {
 		// Not enough arguments
 		std::cout << "argunement error" << "\n";
-		return 1;
+		return true;
 	}
 
 	std::string command = argv[1];
@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 			SSD handler(fileio.nandData);
 			string result = handler.doReadCmd(addr);
 			writeOutput(result);
-			std::cout << "result = " << result << "\n";
+			std::cout << "R result = " << result << "\n";
 		}
 		else {
 			// Incorrect number of arguments for R
@@ -63,14 +63,37 @@ int main(int argc, char* argv[]) {
 			std::cout << "data = " << data << "\n";
 			FileInOut fileio(NAND_FILE_PATH);
 			SSD ssd(fileio.nandData);
-			//ssd.loadData(ssd_reader.nandData);
 			string result = ssd.doWriteCmd(addr, data);
 			storeNand(&ssd);
 			writeOutput(result);
-			std::cout << "result = " << result << "\n";
+			std::cout << "W result = " << result << "\n";
 		}
 		else {
-			std::cout << "Incorrect write command" << "\n";
+			std::cout << "Incorrect number of arguments for W" << "\n";
+			writeOutput(ERROR);
+		}
+	}
+	else if (command == "E") {
+		if (argc == 4) {
+			int size = std::stoi(argv[3]);
+			FileInOut fileio(NAND_FILE_PATH);
+			SSD ssd(fileio.nandData);
+			string result = ssd.doEraseCmd(addr, size);
+			storeNand(&ssd);
+			writeOutput(result);
+			std::cout << "E result = " << result << "\n";
+		}
+		else {
+			std::cout << "Incorrect number of arguments for E" << "\n";
+			writeOutput(ERROR);
+		}
+	}
+	else if (command == "F") {
+		if (argc == 2) {
+
+		}
+		else {
+			std::cout << "Incorrect number of arguments for F" << "\n";
 			writeOutput(ERROR);
 		}
 	}
@@ -79,6 +102,6 @@ int main(int argc, char* argv[]) {
 		writeOutput(ERROR);
 	}
 
-	return 1;
+	return true;
 #endif
 }
