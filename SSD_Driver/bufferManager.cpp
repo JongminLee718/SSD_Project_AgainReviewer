@@ -10,14 +10,18 @@ namespace fs = std::filesystem;
 
 struct Command {
 	std::string type;
-	bool isEmpty = true; 
+	bool isEmpty = true;
 	int address = -1;
 	unsigned int value = 0;
 	int eraseSize = 0;
 };
 
+
+
 class BufferManager {
 public:
+	BufferManager(std::string nandPath) : nandPath(nandPath) {}
+
 	void initializeBuffer() {
 		if (!fs::exists(bufferDir)) {
 			fs::create_directory(bufferDir);
@@ -38,7 +42,7 @@ public:
 				std::string init_file_name = std::to_string(i) + "_empty";
 				std::ofstream(fs::path(bufferDir) / init_file_name);
 			}
-		}	
+		}
 	}
 
 	void loadBufferData() {
@@ -56,27 +60,31 @@ public:
 			}
 
 			if (parts.size() < 2) continue;
-	
+
 			if (parts[1] == "empty") continue;
 
 			int bufferNum = std::stoi(parts[0]);
 			if (bufferNum < 0 || bufferNum > 5) continue;
-		
+
 			int command_addr = std::stoi(parts[2]);
 			std::string command_type = parts[1];
 			commands[bufferNum].type = command_type;
-			commands[bufferNum].address = command_addr;			
+			commands[bufferNum].address = command_addr;
 			if (command_type == "W") {
 				commands[bufferNum].value = std::stoul(parts[3], nullptr, 16);
 			}
 			else if (command_type == "E") {
 				commands[bufferNum].eraseSize = std::stoi(parts[3]);
-			}			
+			}
 			commands[bufferNum].isEmpty = false;
-		}			
+		}
 	}
 
 	void updateBufferFile() {
+		for (const auto& entry : fs::directory_iterator(bufferDir)) {
+			fs::remove(entry.path());
+		}
+
 		for (int i = 0; i < 5; i++) {
 			std::string file_name = std::to_string(i + 1) + '_';
 			if (commands[i].isEmpty) {
@@ -93,13 +101,12 @@ public:
 				else if (commands[i].type == "E") {
 					file_name += std::to_string(commands[i].eraseSize);
 				}
-				std::ofstream(fs::path(bufferDir) / file_name);
 			}
 			std::ofstream(fs::path(bufferDir) / file_name);
 		}
 	}
 
-	void addCommandInBuffer(const std::string &command_type, int address, int valueOrSize) {
+	void addCommandInBuffer(const std::string& command_type, int address, int valueOrSize) {
 		loadBufferData();
 
 		int emptyCnt = 0;
@@ -108,11 +115,12 @@ public:
 		}
 
 		if (emptyCnt == 0) {
-			//flush();
-			//initializeBuffer();
+			flush();
+			loadBufferData();
 		}
 
 		bool cmd_handled = false;
+
 		if (command_type == "E") {
 			int new_address = address;
 			int new_erasesize = static_cast<int>(valueOrSize);
@@ -159,7 +167,6 @@ public:
 		}
 
 		for (auto& cmd : commands) {
-			//주소가 같고 
 			if (cmd.address == address && !cmd.isEmpty) {
 				cmd.isEmpty = true;
 			}
@@ -206,7 +213,43 @@ public:
 		return false;
 	}
 
+	void flush() {
+		loadBufferData();
+
+		FileInOut file_io(nandPath);
+		std::vector<unsigned int> ssd_memory = file_io.nandData;
+
+		for (const auto& cmd : commands) {
+			if (cmd.isEmpty) continue;
+			if (cmd.type == "W") {
+				if (cmd.address >= 0 && cmd.address < ssd_memory.size()) {
+					ssd_memory[cmd.address] = cmd.value;
+				}
+			}
+			else if (cmd.type == "E") {
+				for (int i = 0; i < cmd.eraseSize; i++) {
+					int current_address = cmd.address + i;
+					if (current_address >= 0 && current_address < ssd_memory.size()) {
+						ssd_memory[current_address] = 0x00000000;
+					}
+				}
+			}
+		}
+
+		std::ofstream nandFile(nandPath);
+		for (const auto& data : ssd_memory) {
+			nandFile << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << data << "\n";
+		}
+
+		for (auto& cmd : commands) {
+			cmd.isEmpty = true;
+		}
+
+		updateBufferFile();
+	}
+
 private:
 	const std::string bufferDir = "buffer";
 	std::vector<Command> commands;
+	std::string nandPath;
 };
