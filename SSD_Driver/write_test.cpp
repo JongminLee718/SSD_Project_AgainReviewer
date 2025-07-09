@@ -28,10 +28,19 @@ public:
 	void EraseTest(int tarAddr, int eraseSize) {
 		FileInOut fileio(TEST_NAN_PATH);
 		SSD ssd(fileio.nandData);
-		ssd.doEraseCmd(tarAddr, eraseSize);
+		std::string result = {};
+		result = ssd.doEraseCmd(tarAddr, eraseSize);
 		for (int addrIdx = 0;addrIdx < eraseSize;addrIdx++) {
 			EXPECT_EQ(0, ssd.getData(tarAddr + addrIdx));
+			EXPECT_EQ("", result);
 		}
+	}
+	void EraseExceptionTest(int tarAddr, int eraseSize) {
+		FileInOut fileio(TEST_NAN_PATH);
+		SSD ssd(fileio.nandData);
+		std::string result = {};
+		result = ssd.doEraseCmd(tarAddr, eraseSize);
+		EXPECT_EQ("ERROR", result);
 	}
 
 private:
@@ -61,4 +70,11 @@ TEST_F(SsdFixture, Erase) {
 	EraseTest(70, 10);
 	EraseTest(90, 10);
 	EraseTest(65, 1);
+}
+
+TEST_F(SsdFixture, EraseException) {
+	EraseExceptionTest(0, 15);
+	EraseExceptionTest(0, 0);
+	EraseExceptionTest(70, 15);
+	EraseExceptionTest(95, 10);
 }

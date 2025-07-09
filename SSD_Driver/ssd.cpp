@@ -23,6 +23,8 @@ string SSD::doReadCmd(int address) {
 
 string SSD::doEraseCmd(int address, int size) {
 	if (address < 0 || address >= SSD_SIZE) { return "ERROR"; }
+	if (size < 1 || size > 10) { return "ERROR"; }
+	if (address + size > SSD_SIZE) { return "ERROR"; }
 	for (int addrIdx = 0; addrIdx < size; addrIdx++) {
 		setData(address + addrIdx, 0);
 	}
