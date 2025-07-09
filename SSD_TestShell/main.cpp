@@ -13,14 +13,14 @@ int main(int argc, char** argv) {
 int main(int argc, char* argv[]) {
     SsdHandler ssdHandler;
     Utils utils;
-    SsdClientApp app;
-    Runner runner;
+    SsdClientApp app(&ssdHandler, &utils);
+    Runner runner(&ssdHandler, &utils);
 
     if (argc == 1) {
         while (true) {
             try {
                 app.getUserCmdLine();
-                app.startVerify(&ssdHandler, &utils);
+                app.startVerify();
             }
             catch (const std::invalid_argument& e) {
                 std::cout << e.what() << '\n';

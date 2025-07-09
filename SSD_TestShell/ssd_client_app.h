@@ -6,7 +6,8 @@
 
 class SsdClientApp {
 public:
-	bool startVerify(SsdInterface* sdInterface, UtilsInterface* utilsInterface);
+	SsdClientApp(SsdInterface* ssd, UtilsInterface* utils) : ssdInterface{ ssd }, utilsInterface{ utils } {}
+	bool startVerify();
 	void setInputCmd(std::string input);
 	void getUserCmdLine();
 	void printError();
@@ -15,4 +16,6 @@ private:
 	void displayPrompt() const;
 	std::string readUserInput();
 	std::string inputCmd;
+	SsdInterface* ssdInterface;
+	UtilsInterface* utilsInterface;
 };

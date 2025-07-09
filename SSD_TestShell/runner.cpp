@@ -27,9 +27,11 @@ void Runner::executeAllTest(std::ifstream& fin)
     }
 }
 
-void Runner::printCmd(std::string& command)
+void Runner::printCmd(const string& command)
 {
-    cout << std::left << std::setw(30) << command << " ___   Run...";
+    std::ostringstream oss;
+    oss << std::setfill(' ') << std::left << std::setw(27) << command << " ___   Run...";
+    cout << oss.str();
 }
 
 bool Runner::isValidPath(std::ifstream& fin)
@@ -42,10 +44,8 @@ bool Runner::isValidPath(std::ifstream& fin)
 }
 
 bool Runner::executeOneTest(const string& cmd) {
-    SsdHandler ssdHandler;
-    Utils utils;
-    SsdClientApp app;
+    SsdClientApp app(ssdInterface, utilsInterface);
 
     app.setInputCmd(cmd);
-    return app.startVerify(&ssdHandler, &utils);
+    return app.startVerify();
 }
