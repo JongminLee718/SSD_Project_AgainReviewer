@@ -131,6 +131,7 @@
     <ClCompile Include="command_processor.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="erase_and_write_aging_command.cpp" />
     <ClCompile Include="exit_command.cpp" />
     <ClCompile Include="full_read_command.cpp" />
     <ClCompile Include="full_write_and_read_compare_command.cpp" />
@@ -155,7 +156,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(MSBuildThisFileDirectory)..\..\lib\native\include\;%(AdditionalIncludeDirectories);$(SolutionDir)\parser</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <ClCompile Include="test_script_test.cpp" />
+    <ClCompile Include="test_script_command_test.cpp" />
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="test\mock_command_processer.h" />
     <ClCompile Include="write_read_aging_command.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="checker.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="command_processor.h" />
+    <ClInclude Include="erase_and_write_aging_command.h" />
     <ClInclude Include="exit_command.h" />
     <ClInclude Include="full_read_command.h" />
     <ClInclude Include="full_write_and_read_compare_command.h" />
@@ -178,7 +180,6 @@
     <ClInclude Include="parser\validator_utils.h" />
     <ClInclude Include="partial_lba_write_command.h" />
     <ClInclude Include="read_command.h" />
-    <ClInclude Include="shell_command.h" />
     <ClInclude Include="ssd_handler.h" />
     <ClInclude Include="ssd_client_app.h" />
     <ClInclude Include="write_command.h" />
