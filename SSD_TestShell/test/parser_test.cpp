@@ -89,6 +89,23 @@ TEST_F(ParserFixture, ScriptShortSuccess) {
 	EXPECT_EQ(expected, actual);
 }
 
+TEST_F(ParserFixture, EraseSuccess) {
+	vector<string> actual = parser.parse("erase 1 30");
+	vector<string> expected = { "erase", "1", "30" };
+	EXPECT_EQ(expected, actual);
+}
+
+TEST_F(ParserFixture, EraseInvalidArgument) {
+	vector<string> actual = parser.parse("erase foo 30");
+	EXPECT_THROW(parser.parse("erase foo 30"), std::invalid_argument);
+}
+
+TEST_F(ParserFixture, FlushSuccess) {
+	vector<string> actual = parser.parse("flush");
+	vector<string> expected = { "flush" };
+	EXPECT_EQ(expected, actual);
+}
+
 TEST_F(ParserFixture, UnknownCommand) {
 	EXPECT_THROW(parser.parse("unknown, 0"), std::invalid_argument);
 }
