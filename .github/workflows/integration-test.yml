@@ -1,0 +1,38 @@
+name: Build and Integration Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages (if needed)
+      run: nuget restore SSD_Driver/SSD_Driver.sln
+
+    - name: Build SSD_Driver (Release)
+      run: msbuild SSD_Driver/SSD_Driver.sln /p:Configuration=Release
+
+    - name: Build SSD_TestShell (Release)
+      run: msbuild SSD_TestShell/SSD_TestShell.sln /p:Configuration=Release
+
+    - name: Copy SSD_Driver.exe to SSD_TestShell output directory
+      run: copy SSD_Driver\\x64\\Release\\SSD_Driver.exe SSD_TestShell\\x64\\Release\\
+
+    - name: Run SSD_TestShell with test input
+      run: |
+        echo read 0 > input.txt
+        echo write 0 0xFFFFFFFF >> input.txt
+        echo exit >> input.txt
+        type input.txt | SSD_TestShell\x64\Release\SSD_TestShell.exe
+
