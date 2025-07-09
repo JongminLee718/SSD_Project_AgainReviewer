@@ -31,6 +31,7 @@ public:
 	string FLUSH = "flush";
 	string FULL_READ = "fullread";
 	string FULL_WRITE = "fullwrite";
+	string ERASE_RANGE = "erase_range";
 
 	string LBA = "0";
 	string FAIL_LBA = "100";
@@ -75,6 +76,15 @@ public:
 
 	string getFlushFormat() {
 		return "[Flush] Done\n";
+	}
+
+
+	string getEraseRangeFormat() {
+		return "[EraseRange] Done\n";
+	}
+
+	string getEraseRangeErrorFormat() {
+		return "[EraseRange] ERROR\n";
 	}
 
 	std::string intToHexString(int num) {
@@ -222,6 +232,20 @@ TEST_F(CommandProcesserFixture, FlushCommand_Success) {
 		.Times(1);
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(""));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
+
+TEST_F(CommandProcesserFixture, EraseRageCommand_Success) {
+	vector<string> commands = { ERASE_RANGE , LBA, "30" };
+	string actual = getEraseRangeFormat();
+
+	EXPECT_CALL(mockSssHandler, erase(_, _))
+		.Times(3);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillRepeatedly(Return(""));
 
 	mockCmdProcesser.run(commands);
 

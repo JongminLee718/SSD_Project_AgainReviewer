@@ -38,7 +38,7 @@ int  EraseRangeCommand::getLbaSize(int startLba, int endLba)
 
 int EraseRangeCommand::changeLbaToInt(string lba)
 {
-	if (lba.find("0x")) {
+	if (lba.find("0x") != std::string::npos) {
 		return std::stoi(lba, nullptr, 16);
 	}
 	else {
