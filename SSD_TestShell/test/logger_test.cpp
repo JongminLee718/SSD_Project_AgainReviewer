@@ -1,31 +1,16 @@
 #include "gmock/gmock.h"
+#include "logger.h"
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <regex>
 
 using std::string;
 using namespace testing;
 
-TEST(LoggerTest, CreateLogFile) {
-	Logger.logger;
-	const std::string logFile = logger.getLogFile();
-
-	if (std::filesystem::exists(logFile)) {
-		std::filesystem::remove(logFile);
-	}
-
-	logger.createLogFile();
-
-	EXPECT_TRUE(std::filesystem::exists(logFile));
-
-	std::filesystem::remove(logFile);
-}
-
 TEST(LoggerTest, PrintLogLine) {
 	Logger logger;
 	const std::string logFile = logger.getLogFile();
-
-	logger.createLogFile();
 
 	logger.print("Foo.bar()", "some message.");
 
@@ -37,10 +22,20 @@ TEST(LoggerTest, PrintLogLine) {
 		if (!line.empty()) last = line;
 	in.close();
 
-	const std::string pattern =
-		R"(\[\d{2}\.\d{2}\.\d{2} \d{2}:\d{2}\] Foo\.bar\(\)\s*: some message\.)";
+	std::time_t now = std::time(nullptr);
+	std::tm tm;
+	localtime_s(&tm, &now);
+	char buf[20];
+	std::strftime(buf, sizeof(buf), "%y.%m.%d %H:%M", &tm);
+	std::string timestamp(buf);
 
-	EXPECT_THAT(last, MatchesRegex(pattern));
+	std::string pattern_now =
+		R"(\[)" + timestamp + R"(\] Foo\.bar\(\)\s*: some message\.)";
+	std::string pattern_prev =
+		R"(\[)" + timestamp + R"(\] Foo\.bar\(\)\s*: some message\.)";
+
+	EXPECT_TRUE(std::regex_match(last, std::regex(pattern_now)) ||
+		std::regex_match(last, std::regex(pattern_prev)));
 
 	std::filesystem::remove(logFile);
 }

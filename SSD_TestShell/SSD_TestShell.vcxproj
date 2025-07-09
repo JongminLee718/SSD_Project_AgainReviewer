@@ -142,6 +142,7 @@
     <ClCompile Include="full_write_and_read_compare_command.cpp" />
     <ClCompile Include="full_write_command.cpp" />
     <ClCompile Include="help_command.cpp" />
+    <ClCompile Include="logger\logger.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -154,6 +155,9 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="ssd_client_app_test.cpp" />
+    <ClCompile Include="test\logger_test.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="test\test_command_processer.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -182,6 +186,7 @@
     <ClInclude Include="full_write_and_read_compare_command.h" />
     <ClInclude Include="full_write_command.h" />
     <ClInclude Include="help_command.h" />
+    <ClInclude Include="logger\logger.h" />
     <ClInclude Include="parser\parser.h" />
     <ClInclude Include="parser\validator.h" />
     <ClInclude Include="parser\validator_factory.h" />
