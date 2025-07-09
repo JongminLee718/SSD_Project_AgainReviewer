@@ -184,7 +184,7 @@ TEST_F(TestScriptFixture, EraseAndWriteAging_Test1) {
 	EXPECT_CALL(ssd, write(_, _))
 		.Times(2940);
 	EXPECT_CALL(ssd, erase(_, _))
-		.Times(1500);
+		.Times(1471);
 
 	eraseAndWriteAging.run(commands);
 
