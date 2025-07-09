@@ -10,6 +10,8 @@ public:
 	virtual void read(string lba) = 0;
 	virtual void write(string lba, string data) = 0;
 	virtual string readOutput() = 0;
+	virtual void erase(string lba, string size) = 0;
+	virtual void flush() = 0;
 };
 
 class SsdHandler : public SsdInterface {
@@ -26,4 +28,6 @@ public:
 	MOCK_METHOD(void, read, (string), (override));
 	MOCK_METHOD(void, write, (string, string), (override));
 	MOCK_METHOD(string, readOutput, (), (override));
+	MOCK_METHOD(void, erase, (string, string), (override));
+	MOCK_METHOD(void, flush, (), (override));
 };

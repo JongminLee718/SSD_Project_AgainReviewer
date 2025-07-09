@@ -2,6 +2,7 @@
 #include "full_write_and_read_compare_command.h"
 #include "partial_lba_write_command.h"
 #include "write_read_aging_command.h"
+#include "erase_and_write_aging_command.h"
 
 #include <iostream>
 #include <sstream>
@@ -175,4 +176,17 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test3) {
 	writeReadAging.run(commands);
 
 	EXPECT_EQ(oss.str(), "FAIL");
+}
+
+TEST_F(TestScriptFixture, EraseAndWriteAging_Test1) {
+	EraseAndWriteAgingCommand eraseAndWriteAging{ &ssd };
+
+	EXPECT_CALL(ssd, write(_, _))
+		.Times(2940);
+	EXPECT_CALL(ssd, erase(_, _))
+		.Times(1500);
+
+	eraseAndWriteAging.run(commands);
+
+	EXPECT_EQ(oss.str(), "PASS");
 }
