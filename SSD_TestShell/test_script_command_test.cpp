@@ -4,9 +4,6 @@
 #include "write_read_aging_command.h"
 #include "erase_and_write_aging_command.h"
 
-#include <iostream>
-#include <sstream>
-
 using namespace testing;
 
 class TestScriptFixture : public Test {
@@ -35,6 +32,8 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test1) {
 		.Times(100);
 	EXPECT_CALL(ssd, read(_))
 		.Times(100);
+	EXPECT_CALL(utils, genRandData())
+		.Times(25);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(100)
 		.WillRepeatedly(Return(true));
@@ -51,6 +50,8 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test2) {
 		.Times(1);
 	EXPECT_CALL(ssd, read(_))
 		.Times(1);
+	EXPECT_CALL(utils, genRandData())
+		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.WillRepeatedly(Return(false));
 
@@ -66,6 +67,8 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test3) {
 		.Times(2);
 	EXPECT_CALL(ssd, read(_))
 		.Times(2);
+	EXPECT_CALL(utils, genRandData())
+		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(2)
 		.WillOnce(Return(true))
@@ -83,6 +86,8 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test1) {
 		.Times(150);
 	EXPECT_CALL(ssd, read(_))
 		.Times(150);
+	EXPECT_CALL(utils, genRandData())
+		.Times(30);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(150)
 		.WillRepeatedly(Return(true));
@@ -98,6 +103,8 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test2) {
 	EXPECT_CALL(ssd, write(_, _))
 		.Times(5);
 	EXPECT_CALL(ssd, read(_))
+		.Times(1);
+	EXPECT_CALL(utils, genRandData())
 		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(1)
@@ -115,6 +122,8 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test3) {
 		.Times(10);
 	EXPECT_CALL(ssd, read(_))
 		.Times(6);
+	EXPECT_CALL(utils, genRandData())
+		.Times(2);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(6)
 		.WillOnce(Return(true))
@@ -136,6 +145,8 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test1) {
 		.Times(400);
 	EXPECT_CALL(ssd, read(_))
 		.Times(400);
+	EXPECT_CALL(utils, genRandData())
+		.Times(200);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(400)
 		.WillRepeatedly(Return(true));
@@ -151,6 +162,8 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test2) {
 	EXPECT_CALL(ssd, write(_, _))
 		.Times(2);
 	EXPECT_CALL(ssd, read(_))
+		.Times(1);
+	EXPECT_CALL(utils, genRandData())
 		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(1)
@@ -168,6 +181,8 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test3) {
 		.Times(2);
 	EXPECT_CALL(ssd, read(_))
 		.Times(2);
+	EXPECT_CALL(utils, genRandData())
+		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(2)
 		.WillOnce(Return(true))
