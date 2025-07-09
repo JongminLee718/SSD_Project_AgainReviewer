@@ -74,8 +74,8 @@ jobs:
     - name: Run SSD_TestShell with test input
       shell: pwsh
       run: |
-        "write 0 0x00000001" | Out-File -Append -Encoding ASCII -FilePath input.txt
-        "read 0" | Out-File -Encoding ASCII -FilePath input.txt
+        "write 0 0x00000001" | Out-File -Encoding ASCII -FilePath input.txt
+        "read 0" | Out-File -Append -Encoding ASCII -FilePath input.txt
         "fullwrite 0x00000002" | Out-File -Append -Encoding ASCII -FilePath input.txt
         "fullread" | Out-File -Append -Encoding ASCII -FilePath input.txt
         "exit" | Out-File -Append -Encoding ASCII -FilePath input.txt
@@ -94,8 +94,22 @@ jobs:
         $output = Get-Content $outputPath
         Write-Output $output
 
-        if ($output -match "file open fail" -or $process.ExitCode -ne 0) {
+        $outputStr = $output -join "`n"
+
+        if ($outputStr -match "file open fail" -or $process.ExitCode -ne 0) {
           Write-Error "Integration test failed. Detected 'file open fail' or non-zero exit code."
           exit 1
         }
+
+        if ($outputStr -notmatch "\[Read\] LBA 00\s*:\s*0x00000001") {
+          Write-Error "Expected value 0x00000001 not found in read output"
+          exit 1
+        }
+
+        if ($outputStr -notmatch "\[Read\] LBA 99\s*:\s*0x00000002") {
+          Write-Error "Expected value 0x00000002 not found in fullread output"
+          exit 1
+        }
+
+
 
