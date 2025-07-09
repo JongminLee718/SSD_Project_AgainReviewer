@@ -14,14 +14,9 @@ using std::to_string;
 class CommandProcesserFixture : public Test {
 public:
 	UtilsMock mockUtils;
-	Utils utils;
 	SsdHandlerMock mockSssHandler;
 
 	CommandProcessor mockCmdProcesser{ &mockSssHandler, &mockUtils };
-
-	SsdHandler ssdHandler;
-	CommandProcessor realCmdProcesser{ &ssdHandler, &utils };
-
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -43,8 +38,8 @@ public:
 
 	string getReadFormat(string lba, string expect) {
 		string empty = "";
-		if (lba.size() == 1)
-		{
+
+		if (lba.size() == 1) {
 			empty = "0";
 		}
 
@@ -57,8 +52,8 @@ public:
 
 	string getReadFormatForFullRead(string lba, string expect) {
 		string empty = "";
-		if (lba.size() == 1)
-		{
+
+		if (lba.size() == 1) {
 			empty = "0";
 		}
 
@@ -88,7 +83,6 @@ public:
 	string getFlushFormat() {
 		return "[Flush] Done\n";
 	}
-
 
 	string getEraseRangeFormat() {
 		return "[EraseRange] Done\n";
@@ -262,25 +256,4 @@ TEST_F(CommandProcesserFixture, EraseRageCommand_Success) {
 
 	EXPECT_EQ(oss.str(), actual);
 }
-
-/*
-TEST_F(CommandProcesserFixture, Real_WriteRead_Success) {
-	for (int lba = 0; lba < MAX_LBA; lba++)
-	{
-		string writeData = intToHexString(lba);
-		string sLba = to_string(lba);
-		vector<string> writeCommands = { WRITE , sLba, writeData };
-		vector<string> readCommands = { READ , sLba };
-		
-		string actual = getWriteFormat();
-		actual += getReadFormat(sLba, writeData);
-
-		realCmdProcesser.run(writeCommands);
-		realCmdProcesser.run(readCommands);
-
-		string str = oss.str();
-		EXPECT_EQ(str, actual);
-	}	
-}
-*/
 

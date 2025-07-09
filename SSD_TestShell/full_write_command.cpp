@@ -10,8 +10,7 @@ bool FullWriteCommand::run(vector<string> commands) {
 	for (int lba = 0; lba < MAX_LBA; lba++) {
 		ssdInterface->write(to_string(lba), commands[1]);
 
-		string data = utilsInterface->readOutput();
-		if (ERROR_PATERN == data) {
+		if (ERROR_PATERN == utilsInterface->readOutput()) {
 			cout << "[Full Write] ERROR\n";
 			return false;;
 		}

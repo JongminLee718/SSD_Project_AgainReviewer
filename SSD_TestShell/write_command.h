@@ -10,6 +10,9 @@ public:
 	}
 	bool run(vector<string> commands) override;
 private:
+	const int LBA_OFFSET = 1;
+	const int DATA_OFFSET = 2;
+
 	SsdInterface* ssdInterface;
 	UtilsInterface* utilsInterface;
 };
