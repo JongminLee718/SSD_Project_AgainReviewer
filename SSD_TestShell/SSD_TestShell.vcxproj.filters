@@ -72,6 +72,15 @@
     <ClCompile Include="checker.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="full_write_and_read_compare_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="partial_lba_write_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="write_read_aging_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -123,6 +132,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="checker.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="full_write_and_read_compare_command.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="partial_lba_write_command.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="write_read_aging_command.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

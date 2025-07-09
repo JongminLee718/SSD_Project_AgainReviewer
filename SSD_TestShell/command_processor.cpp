@@ -7,8 +7,10 @@
 #include "read_command.h"
 #include "write_command.h"
 
+#include "full_write_and_read_compare_command.h"
+#include "partial_lba_write_command.h"
+#include "write_read_aging_command.h"
 
-//Simple Factory Pattern
 class FactoryCommand {
 public:
 	static FactoryCommand& getInstance() {
@@ -16,13 +18,17 @@ public:
 		return instance;
 	}
 
-	Command* makeCommand(string& opcode, SsdInterface* ssdInterface) {
+	Command* makeCommand(string& opcode, SsdInterface* ssdInterface, Checker* checker) {
 		if ("exit" == opcode) { return new ExitCommand(ssdInterface);}
 		else if ("read" == opcode) { return new ReadCommand(ssdInterface);}
 		else if ("write" == opcode) { return new WriteCommand(ssdInterface);}
 		else if ("help" == opcode) { return new HelpCommand(ssdInterface);}
 		else if ("fullwrite" == opcode) { return new FullWriteCommand(ssdInterface);}
 		else if ("fullread" == opcode) { return new FullReadCommand(ssdInterface);}
+		else if ("1_FullWriteAndReadCompare" == opcode || "1_" == opcode) { return new FullWriteAndReadCompareCommand(ssdInterface, checker); }
+		else if ("2_PartialLBAWrite" == opcode || "2_" == opcode) { return new PartialLBAWriteCommand(ssdInterface, checker); }
+		else if ("3_WriteReadAging" == opcode || "3_" == opcode) { return new WriteReadAgingCommand(ssdInterface, checker); }
+		// add new command
 
 		return nullptr;
 	}
@@ -33,7 +39,7 @@ private:
 void CommandProcessor::run(vector<string> commands) {
 	FactoryCommand factoryCommand = FactoryCommand::getInstance();
 
-	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface);
+	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface, checker);
 
 	command->run(commands);
 }

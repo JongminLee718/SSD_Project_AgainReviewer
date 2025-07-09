@@ -133,6 +133,7 @@
     </ClCompile>
     <ClCompile Include="exit_command.cpp" />
     <ClCompile Include="full_read_command.cpp" />
+    <ClCompile Include="full_write_and_read_compare_command.cpp" />
     <ClCompile Include="full_write_command.cpp" />
     <ClCompile Include="help_command.cpp" />
     <ClCompile Include="main.cpp">
@@ -141,6 +142,7 @@
     <ClCompile Include="parser\parser.cpp" />
     <ClCompile Include="parser\validator.cpp" />
     <ClCompile Include="parser\validator_utils.cpp" />
+    <ClCompile Include="partial_lba_write_command.cpp" />
     <ClCompile Include="read_command.cpp" />
     <ClCompile Include="ssd_handler.cpp" />
     <ClCompile Include="ssd_client_app.cpp">
@@ -157,6 +159,7 @@
     <ClCompile Include="test_script_test.cpp" />
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="test\mock_command_processer.h" />
+    <ClCompile Include="write_read_aging_command.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -167,17 +170,20 @@
     <ClInclude Include="command_processor.h" />
     <ClInclude Include="exit_command.h" />
     <ClInclude Include="full_read_command.h" />
+    <ClInclude Include="full_write_and_read_compare_command.h" />
     <ClInclude Include="full_write_command.h" />
     <ClInclude Include="help_command.h" />
     <ClInclude Include="parser\parser.h" />
     <ClInclude Include="parser\validator.h" />
     <ClInclude Include="parser\validator_factory.h" />
     <ClInclude Include="parser\validator_utils.h" />
+    <ClInclude Include="partial_lba_write_command.h" />
     <ClInclude Include="read_command.h" />
     <ClInclude Include="shell_command.h" />
     <ClInclude Include="ssd_handler.h" />
     <ClInclude Include="ssd_client_app.h" />
     <ClInclude Include="write_command.h" />
+    <ClInclude Include="write_read_aging_command.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
