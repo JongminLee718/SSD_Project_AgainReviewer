@@ -5,6 +5,8 @@
 #include "ssd.h"
 #include "fileio.h"
 
+//#define DEBUG_LOG
+
 using std::string;
 const std::string NAND_FILE_PATH = "ssd_nand.txt";
 const std::string OUTPUT_FILE_PATH = "ssd_output.txt";
@@ -34,7 +36,9 @@ int main(int argc, char* argv[]) {
 	
 	if (argc < 2) {
 		// Not enough arguments
+#if defined(DEBUG_LOG)
 		std::cout << "argunement error" << "\n";
+#endif
 		return true;
 	}
 
@@ -48,11 +52,15 @@ int main(int argc, char* argv[]) {
 			SSD handler(fileio.nandData);
 			string result = handler.doReadCmd(addr);
 			writeOutput(result);
-			std::cout << "R result = " << result << "\n";
+#if defined(DEBUG_LOG)
+			std::cout << "R result = " <<addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << result << "\n";
+#endif
 		}
 		else {
 			// Incorrect number of arguments for R
+#if defined(DEBUG_LOG)
 			std::cout << "Incorrect number of arguments for R" << "\n";
+#endif
 			writeOutput(ERROR);
 		}
 	}
@@ -60,16 +68,20 @@ int main(int argc, char* argv[]) {
 		if (argc == 4) { // W <LBA> <VALUE>
 			string input = argv[3];
 			int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
-			std::cout << "data = " << data << "\n";
 			FileInOut fileio(NAND_FILE_PATH);
 			SSD ssd(fileio.nandData);
 			string result = ssd.doWriteCmd(addr, data);
 			storeNand(&ssd);
 			writeOutput(result);
-			std::cout << "W result = " << result << "\n";
+#if defined(DEBUG_LOG)
+			std::cout << "input data = addr" << addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << data << "\n";
+			std::cout << "W result = " <<  result << "\n";
+#endif
 		}
 		else {
+#if defined(DEBUG_LOG)
 			std::cout << "Incorrect number of arguments for W" << "\n";
+#endif
 			writeOutput(ERROR);
 		}
 	}
@@ -81,10 +93,14 @@ int main(int argc, char* argv[]) {
 			string result = ssd.doEraseCmd(addr, size);
 			storeNand(&ssd);
 			writeOutput(result);
+#if defined(DEBUG_LOG)
 			std::cout << "E result = " << result << "\n";
+#endif
 		}
 		else {
+#if defined(DEBUG_LOG)
 			std::cout << "Incorrect number of arguments for E" << "\n";
+#endif
 			writeOutput(ERROR);
 		}
 	}
@@ -93,12 +109,16 @@ int main(int argc, char* argv[]) {
 
 		}
 		else {
+#if defined(DEBUG_LOG)
 			std::cout << "Incorrect number of arguments for F" << "\n";
+#endif
 			writeOutput(ERROR);
 		}
 	}
 	else {
+#if defined(DEBUG_LOG)
 		std::cout << "Incorrect command" << "\n";
+#endif
 		writeOutput(ERROR);
 	}
 
