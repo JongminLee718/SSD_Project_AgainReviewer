@@ -6,7 +6,7 @@
 using namespace testing;
 
 
-class WriteFixture : public Test {
+class SsdFixture : public Test {
 public:
 	
 	void writeTest(int tarAddr, int writeData) {
@@ -25,21 +25,40 @@ public:
 		result = ssd.doWriteCmd(tarAddr, writeData);
 		EXPECT_EQ("ERROR", result);
 	}
+	void EraseTest(int tarAddr, int eraseSize) {
+		FileInOut fileio(TEST_NAN_PATH);
+		SSD ssd(fileio.nandData);
+		ssd.doEraseCmd(tarAddr, eraseSize);
+		for (int addrIdx = 0;addrIdx < eraseSize;addrIdx++) {
+			EXPECT_EQ(0, ssd.getData(tarAddr + addrIdx));
+		}
+	}
 
 private:
 	static const int MAX_LBA = 100;
 	const std::string TEST_NAN_PATH = "test_nand.txt";
 };
 
-TEST_F(WriteFixture, writeAddr0) {
+TEST_F(SsdFixture, writeAddr0) {
 	writeTest(0, 0xAAA);
 	writeTest(5, 0xCCC);
 	writeTest(30, 0xCCC);
 	writeTest(99, 0xCCC);
 }
 
-TEST_F(WriteFixture, writeExceptionAddress100) {
+TEST_F(SsdFixture, writeExceptionAddress100) {
 
 	writeExpectionTest(100, 0xCCC);
 	writeExpectionTest(-1, 0xCCC);
+}
+
+TEST_F(SsdFixture, Erase) {
+	EraseTest(0, 1);
+	EraseTest(0, 10);
+	EraseTest(30, 2);
+	EraseTest(50, 5);
+	EraseTest(23, 10);
+	EraseTest(70, 10);
+	EraseTest(90, 10);
+	EraseTest(65, 1);
 }
