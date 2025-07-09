@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 			writeOutput(ERROR);
 			return true;
 		}
-		BufferManager buffer;
+		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		unsigned int readValue = 0;
 		bool isBufResult = buffer.readFromBuffer(addr, readValue);
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
 			writeOutput(ERROR);
 			return true;
 		}
-		BufferManager buffer;
+		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		string input = argv[3];
 		int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
 			writeOutput(ERROR);
 			return true;
 		}
-		BufferManager buffer;
+		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 
 		int size = std::stoi(argv[3]);
