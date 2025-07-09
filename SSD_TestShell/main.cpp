@@ -2,7 +2,6 @@
 #include <gmock/gmock.h>
 
 int main(int argc, char** argv) {
-    std::cout << "Debug\n";
     ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }
@@ -10,9 +9,8 @@ int main(int argc, char** argv) {
 #include "ssd_client_app.h"
 #include "runner.h"
 #include <iostream>
-int main(int argc, char* argv[]) {
-    std::cout << "Release\n";
 
+int main(int argc, char* argv[]) {
     SsdHandler ssdHandler;
     Utils utils;
     SsdClientApp app;

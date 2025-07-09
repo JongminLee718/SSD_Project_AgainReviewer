@@ -9,15 +9,15 @@ using std::getline;
 
 void SsdHandler::read(string lba) {
     string cmd = "//SSD_Driver.exe R " + lba ;
-    runSSD(cmd);
+    excute(cmd);
 }
 
 void SsdHandler::write(string lba, string data) {
     string cmd = "//SSD_Driver.exe W " + lba + " " + data;
-    runSSD(cmd);
+    excute(cmd);
 }
 
-void SsdHandler::runSSD(std::string cmd)
+void SsdHandler::excute(std::string cmd)
 {
     char curDir[1000];
     _getcwd(curDir, 1000);
@@ -30,10 +30,10 @@ void SsdHandler::runSSD(std::string cmd)
 
 void SsdHandler::erase(string lba, string size) {
     string cmd = "//SSD_Driver.exe E " + lba + " " + size;
-    runSSD(cmd);
+    excute(cmd);
 }
 
 void SsdHandler::flush() {
     string cmd = "//SSD_Driver.exe F ";
-    runSSD(cmd);
+    excute(cmd);
 }
