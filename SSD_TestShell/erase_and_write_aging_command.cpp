@@ -7,8 +7,8 @@ void EraseAndWriteAgingCommand::run(vector<string> commands) {
 	std::uniform_int_distribution<uint32_t>dist(0, 0xFFFFFFFF);
 	std::ostringstream oss;
 
+	ssd->erase(std::to_string(0), std::to_string(3));
 	for (int i = 0; i < 30; i++) {
-		ssd->erase(std::to_string(0), std::to_string(3));
 		for (int LBA = 2; LBA < 100; LBA+=2) {
 			uint32_t value = dist(gen);
 			oss.str("");
