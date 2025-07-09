@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include "ssd_handler.h"
+#include "utils.h"
 #define interface class
 
 using std::vector;

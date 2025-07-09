@@ -17,27 +17,6 @@ void SsdHandler::write(string lba, string data) {
     runSSD(cmd);
 }
 
-string SsdHandler::readOutput() {
-    char curDir[1000];
-    _getcwd(curDir, 1000);
-    string filePath(curDir);
-    filePath += "//ssd_output.txt";
-
-    std::ifstream file(filePath);
-
-    if (!file.is_open()) {
-        std::cerr << "file open fail" << std::endl;
-        return "";
-    }
-
-    std::string line = "";
-    getline(file, line);
-
-    file.close();
-
-    return line;
-}
-
 void SsdHandler::runSSD(std::string cmd)
 {
     char curDir[1000];

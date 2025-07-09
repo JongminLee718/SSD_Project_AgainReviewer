@@ -15,7 +15,7 @@ void EraseRangeCommand::run(vector<string> commands) {
 
 		ssdInterface->erase(to_string(startLba), to_string(lbaSize));
 
-		string data = ssdInterface->readOutput();
+		string data = utilsInterface->readOutput();
 
 		if (ERROR_PATERN == data) {
 			cout << "[Erase] ERROR\n";

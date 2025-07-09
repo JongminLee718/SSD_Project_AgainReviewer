@@ -8,13 +8,13 @@
 #include <sstream>
 #include <fstream>
 #include "ssd_handler.h"
-#include "checker.h"
+#include "utils.h"
 
 class WriteReadAgingCommand : public Command {
 public:
-	WriteReadAgingCommand(SsdInterface* ssd, Checker* cc) : ssd{ ssd }, cc{ cc } {}
+	WriteReadAgingCommand(SsdInterface* ssd, UtilsInterface* utils) : ssd{ ssd }, utils{ utils } {}
 	void run(vector<string> commands) override;
 private:
 	SsdInterface* ssd;
-	Checker* cc;
+	UtilsInterface* utils;
 };

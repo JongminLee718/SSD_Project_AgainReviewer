@@ -13,13 +13,13 @@ int main() {
     std::cout << "Release\n";
 
     SsdHandler ssdHandler;
-    OutputChecker checker;
+    Utils utils;
     SsdClientApp app;
 
     while (true) {
         try {
             app.getUserCmdLine();
-            app.startVerify(&ssdHandler, &checker);
+            app.startVerify(&ssdHandler, &utils);
         }
         catch (const std::invalid_argument& e) {
             std::cout << e.what() << '\n';
