@@ -96,7 +96,6 @@ TEST_F(ParserFixture, EraseSuccess) {
 }
 
 TEST_F(ParserFixture, EraseInvalidArgument) {
-	vector<string> actual = parser.parse("erase foo 30");
 	EXPECT_THROW(parser.parse("erase foo 30"), std::invalid_argument);
 }
 

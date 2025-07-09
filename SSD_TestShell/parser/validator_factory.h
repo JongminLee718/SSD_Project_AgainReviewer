@@ -18,7 +18,10 @@ public:
 		if (command == "fullwrite") {
 			return std::make_unique<FullWriteValidator>();
 		}
-		if (command == "fullread" || command == "exit" || command == "help") {
+		if (command == "erase") {
+			return std::make_unique<EraseValidator>();
+		}
+		if (command == "fullread" || command == "exit" || command == "help" || command == "flush") {
 			return std::make_unique<SimpleValidator>();
 		}
 		if (command == "1_" || command == "2_" || command == "3_" ||
