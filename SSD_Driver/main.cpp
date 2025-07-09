@@ -1,10 +1,8 @@
 #include <iostream>
 #include <string>
-#include <iostream>
 #include <fstream>
 #include "gmock/gmock.h"
 #include "ssd.h"
-#include "reader.h"
 #include "fileio.h"
 
 using std::string;
@@ -33,7 +31,7 @@ int main(int argc, char* argv[]) {
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
 #else
-	SSD ssd;
+	
 	if (argc < 2) {
 		// Not enough arguments
 		std::cout << "argunement error" << "\n";
@@ -47,8 +45,8 @@ int main(int argc, char* argv[]) {
 	if (command == "R") {
 		if (argc == 3) { // R <LBA>
 			FileInOut fileio(NAND_FILE_PATH);
-			SSDHandler handler(fileio.nandData);
-			string result = handler.executeRead(addr);
+			SSD handler(fileio.nandData);
+			string result = handler.doReadCmd(addr);
 			writeOutput(result);
 			std::cout << "result = " << result << "\n";
 		}
@@ -64,8 +62,8 @@ int main(int argc, char* argv[]) {
 			int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
 			std::cout << "data = " << data << "\n";
 			FileInOut fileio(NAND_FILE_PATH);
-			SSDHandler ssd_reader(fileio.nandData);
-			ssd.loadData(ssd_reader.nandData);
+			SSD ssd(fileio.nandData);
+			//ssd.loadData(ssd_reader.nandData);
 			string result = ssd.doWriteCmd(addr, data);
 			storeNand(&ssd);
 			writeOutput(result);

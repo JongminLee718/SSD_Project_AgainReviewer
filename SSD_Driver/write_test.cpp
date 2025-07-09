@@ -1,18 +1,17 @@
 #include "gmock/gmock.h"
 #include "ssd.h"
+#include "fileio.h"
 #include <string>
 
 using namespace testing;
 
+
 class WriteFixture : public Test {
 public:
-	SSD ssd;
-	WriteFixture() {
-		for (int addrIdx = 0; addrIdx < MAX_LBA; addrIdx++) {
-			ssd.setData(addrIdx, 0);
-		}
-	}
+	
 	void writeTest(int tarAddr, int writeData) {
+		FileInOut fileio(TEST_NAN_PATH);
+		SSD ssd(fileio.nandData);
 		std::string result = {};
 		EXPECT_EQ(ssd.getData(tarAddr), 0);
 		result = ssd.doWriteCmd(tarAddr, writeData);
@@ -20,6 +19,8 @@ public:
 		EXPECT_EQ("", result);
 	}
 	void writeExpectionTest(int tarAddr, int writeData) {
+		FileInOut fileio(TEST_NAN_PATH);
+		SSD ssd(fileio.nandData);
 		std::string result = {};
 		result = ssd.doWriteCmd(tarAddr, writeData);
 		EXPECT_EQ("ERROR", result);
@@ -27,6 +28,7 @@ public:
 
 private:
 	static const int MAX_LBA = 100;
+	const std::string TEST_NAN_PATH = "test_nand.txt";
 };
 
 TEST_F(WriteFixture, writeAddr0) {
