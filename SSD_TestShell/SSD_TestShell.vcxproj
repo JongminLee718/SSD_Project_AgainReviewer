@@ -127,7 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="command_processer.cpp">
+    <ClCompile Include="checker.cpp" />
+    <ClCompile Include="command_processor.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ClCompile Include="exit_command.cpp" />
@@ -161,8 +162,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="checker.h" />
     <ClInclude Include="command.h" />
-    <ClInclude Include="command_processer.h" />
+    <ClInclude Include="command_processor.h" />
     <ClInclude Include="exit_command.h" />
     <ClInclude Include="full_read_command.h" />
     <ClInclude Include="full_write_command.h" />

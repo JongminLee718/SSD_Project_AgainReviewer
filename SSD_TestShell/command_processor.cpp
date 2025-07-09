@@ -1,4 +1,4 @@
-#include "command_processer.h"
+#include "command_processor.h"
 
 #include "exit_command.h"
 #include "full_read_command.h"
@@ -30,15 +30,11 @@ private:
 	FactoryCommand() {};
 };
 
-void CommandProcesser::run(vector<string> commands) {
+void CommandProcessor::run(vector<string> commands) {
 	FactoryCommand factoryCommand = FactoryCommand::getInstance();
 
 	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface);
 
 	command->run(commands);
-}
-
-void CommandProcesser::setSsdInterface(SsdInterface* ssdInterface) {
-	this->ssdInterface = ssdInterface;
 }
 

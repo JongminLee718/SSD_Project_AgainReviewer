@@ -3,8 +3,8 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-
-#include "../command_processer.h"
+#include "../checker.h"
+#include "../command_processor.h"
 
 using namespace testing;
 using std::string;
@@ -13,8 +13,10 @@ using std::to_string;
 
 class CommandProcesserFixture : public Test {
 public:
-	CommandProcesser commandProcesser;
+	OutputChecker checker;
 	SsdHandlerMock mockSssHandler;
+
+	CommandProcessor commandProcesser{ &mockSssHandler, &checker };
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -53,7 +55,6 @@ public:
 
 private:
 	void SetUp() override {
-		commandProcesser.setSsdInterface(&mockSssHandler);
 		old_buf = std::cout.rdbuf(oss.rdbuf());
 	}
 

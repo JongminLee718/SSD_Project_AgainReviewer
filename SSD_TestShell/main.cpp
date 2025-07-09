@@ -11,11 +11,12 @@ int main(int argc, char** argv) {
 #include <iostream>
 int main() {
     std::cout << "Release\n";
+    SsdHandler ssdHandler;
+    SsdClientApp app;
 
     while (true) {
-        SsdClientApp app;
+        
         app.getUserCmdLine();
-        SsdHandler ssdHandler;
         app.startVerify(&ssdHandler);
     }
 
