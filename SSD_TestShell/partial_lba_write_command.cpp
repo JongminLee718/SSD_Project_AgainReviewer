@@ -9,6 +9,8 @@ void PartialLBAWriteCommand::run(vector<string> commands) {
 
 	for (int i = 0; i < 30; i++) {
 		uint32_t value = dist(gen);
+		oss.str("");
+		oss.clear();
 		oss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value;
 		string randData = oss.str();
 
@@ -16,18 +18,18 @@ void PartialLBAWriteCommand::run(vector<string> commands) {
 		ssd->write(std::to_string(0), randData);
 		ssd->write(std::to_string(3), randData);
 		ssd->write(std::to_string(1), randData);
-		ssd->write(std::to_string(0), randData);
+		ssd->write(std::to_string(2), randData);
 
 		for (int LBA = 0; LBA < 5; LBA++) {
 			ssd->read(std::to_string(LBA));
 
 			bool result = cc->outputChecker(randData);
 			if (!result) {
-				std::cout << "FAIL";
+				std::cout << "FAIL\n";
 				return;
 			}
 		}
 	}
 
-	std::cout << "PASS";
+	std::cout << "PASS\n";
 }

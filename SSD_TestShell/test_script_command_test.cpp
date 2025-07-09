@@ -41,7 +41,7 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test1) {
 	
 	fullWriteAndReadComapre.run(commands);
 
-	EXPECT_EQ(oss.str(), "PASS");
+	EXPECT_EQ(oss.str(), "PASS\n");
 }
 
 TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test2) {
@@ -56,7 +56,7 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test2) {
 
 	fullWriteAndReadComapre.run(commands);
 
-	EXPECT_EQ(oss.str(), "FAIL");
+	EXPECT_EQ(oss.str(), "FAIL\n");
 }
 
 TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test3) {
@@ -73,7 +73,7 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test3) {
 
 	fullWriteAndReadComapre.run(commands);
 
-	EXPECT_EQ(oss.str(), "FAIL");
+	EXPECT_EQ(oss.str(), "FAIL\n");
 }
 
 TEST_F(TestScriptFixture, PartialLBAWrite_Test1) {
@@ -89,7 +89,7 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test1) {
 
 	partialLBAWrite.run(commands);
 
-	EXPECT_EQ(oss.str(), "PASS");
+	EXPECT_EQ(oss.str(), "PASS\n");
 }
 
 TEST_F(TestScriptFixture, PartialLBAWrite_Test2) {
@@ -105,7 +105,7 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test2) {
 
 	partialLBAWrite.run(commands);
 
-	EXPECT_EQ(oss.str(), "FAIL");
+	EXPECT_EQ(oss.str(), "FAIL\n");
 }
 
 TEST_F(TestScriptFixture, PartialLBAWrite_Test3) {
@@ -126,7 +126,7 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test3) {
 
 	partialLBAWrite.run(commands);
 
-	EXPECT_EQ(oss.str(), "FAIL");
+	EXPECT_EQ(oss.str(), "FAIL\n");
 }
 
 TEST_F(TestScriptFixture, WriteReadAgingCommand_Test1) {
@@ -142,7 +142,7 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test1) {
 
 	writeReadAging.run(commands);
 
-	EXPECT_EQ(oss.str(), "PASS");
+	EXPECT_EQ(oss.str(), "PASS\n");
 }
 
 TEST_F(TestScriptFixture, WriteReadAgingCommand_Test2) {
@@ -158,7 +158,7 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test2) {
 
 	writeReadAging.run(commands);
 
-	EXPECT_EQ(oss.str(), "FAIL");
+	EXPECT_EQ(oss.str(), "FAIL\n");
 }
 
 TEST_F(TestScriptFixture, WriteReadAgingCommand_Test3) {
@@ -175,7 +175,7 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test3) {
 
 	writeReadAging.run(commands);
 
-	EXPECT_EQ(oss.str(), "FAIL");
+	EXPECT_EQ(oss.str(), "FAIL\n");
 }
 
 TEST_F(TestScriptFixture, EraseAndWriteAging_Test1) {
@@ -184,9 +184,9 @@ TEST_F(TestScriptFixture, EraseAndWriteAging_Test1) {
 	EXPECT_CALL(ssd, write(_, _))
 		.Times(2940);
 	EXPECT_CALL(ssd, erase(_, _))
-		.Times(1500);
+		.Times(1471);
 
 	eraseAndWriteAging.run(commands);
 
-	EXPECT_EQ(oss.str(), "PASS");
+	EXPECT_EQ(oss.str(), "PASS\n");
 }

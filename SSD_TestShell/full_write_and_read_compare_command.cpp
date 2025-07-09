@@ -9,21 +9,21 @@ void FullWriteAndReadCompareCommand::run(vector<string> commands) {
 
 	for (int i = 0; i < 100; i += 4) {
 		uint32_t value = dist(gen);
-	
+		oss.str("");
+		oss.clear();
+		oss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value;
+		string randData = oss.str();
 		for (int LBA = i; LBA < i + 4; LBA++) {
-			oss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value;
-			string randData = oss.str();
-
 			ssd->write(std::to_string(LBA), randData);
 			ssd->read(std::to_string(LBA));
 
 			bool result = cc->outputChecker(randData);
 			if (!result) {
-				std::cout << "FAIL";
+				std::cout << "FAIL\n";
 				return;
 			}
 		}
 	}
 
-	std::cout << "PASS";
+	std::cout << "PASS\n";
 }
