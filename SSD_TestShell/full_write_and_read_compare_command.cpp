@@ -2,7 +2,7 @@
 
 using std::cout;
 
-void FullWriteAndReadCompareCommand::run(vector<string> commands) {
+bool FullWriteAndReadCompareCommand::run(vector<string> commands) {
 	static std::mt19937 gen(std::random_device{}());
 	std::uniform_int_distribution<uint32_t>dist(0, 0xFFFFFFFF);
 	std::ostringstream oss;
@@ -20,10 +20,11 @@ void FullWriteAndReadCompareCommand::run(vector<string> commands) {
 			bool result = utils->outputChecker(randData);
 			if (!result) {
 				std::cout << "FAIL\n";
-				return;
+				return false;
 			}
 		}
 	}
 
 	std::cout << "PASS\n";
+	return true;
 }

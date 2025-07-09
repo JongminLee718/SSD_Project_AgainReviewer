@@ -13,7 +13,7 @@
 class WriteReadAgingCommand : public Command {
 public:
 	WriteReadAgingCommand(SsdInterface* ssd, UtilsInterface* utils) : ssd{ ssd }, utils{ utils } {}
-	void run(vector<string> commands) override;
+	bool run(vector<string> commands) override;
 private:
 	SsdInterface* ssd;
 	UtilsInterface* utils;

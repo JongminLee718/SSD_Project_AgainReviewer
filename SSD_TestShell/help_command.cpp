@@ -1,7 +1,8 @@
 #include "help_command.h"
 
-void HelpCommand::run(vector<string> commands) {
+bool HelpCommand::run(vector<string> commands) {
 	cout << getHelpString();
+	return true;
 }
 
 string HelpCommand::getHelpString() {

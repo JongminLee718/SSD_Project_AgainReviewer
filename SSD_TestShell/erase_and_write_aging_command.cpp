@@ -1,6 +1,6 @@
 #include "erase_and_write_aging_command.h"
 
-void EraseAndWriteAgingCommand::run(vector<string> commands) {
+bool EraseAndWriteAgingCommand::run(vector<string> commands) {
 	ssd->erase(to_string(0), to_string(3));
 	for (int i = 0; i < 30; i++) {
 		for (int LBA = 2; LBA < MAX_LBA; LBA += 2) {
@@ -18,5 +18,6 @@ void EraseAndWriteAgingCommand::run(vector<string> commands) {
 	}
 
 	std::cout << "PASS\n";
+	return true;
 
 }

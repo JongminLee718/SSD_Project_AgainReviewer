@@ -12,7 +12,7 @@ using std::string;
 interface Command {
 public:
 	//Command() = default;
-	virtual void run(vector<string> commands) = 0;
+	virtual bool run(vector<string> commands) = 0;
 
 protected:
 	const int MAX_LBA = 100;
