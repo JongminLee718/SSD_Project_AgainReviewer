@@ -39,12 +39,12 @@ string Logger::getCurrentTimestamp() {
 
 	char buf[20];
 	std::strftime(buf, sizeof(buf), "%y.%m.%d %H:%M", &tm);
-	return std::string(buf);
+	return string(buf);
 }
 
 string Logger::padMethodName(const string& methodName, size_t width) {
 	if (methodName.length() >= width) {
 		return methodName;
 	}
-	return methodName + std::string(width - methodName.length(), ' ');
+	return methodName + string(width - methodName.length(), ' ');
 }
