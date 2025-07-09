@@ -13,6 +13,7 @@
 #include "full_write_and_read_compare_command.h"
 #include "partial_lba_write_command.h"
 #include "write_read_aging_command.h"
+#include "iostream"
 
 class FactoryCommand {
 public:
@@ -47,6 +48,10 @@ void CommandProcessor::run(vector<string> commands) {
 
 	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface, checker);
 
+	if (command == nullptr) {
+		std::cout << "command is not defined.\n";
+		return;
+	}
 	command->run(commands);
 }
 

@@ -54,16 +54,26 @@ public:
 		return "[Write] Done\n";
 	}
 
+	string getReadFormatForFullRead(string lba, string expect) {
+		string empty = "";
+		if (lba.size() == 1)
+		{
+			empty = "0";
+		}
+
+		return "LBA " + empty + lba + " : " + expect + "\n";
+	}
+
 	string getFullReadFormat() {
-		string result;
+		string result="[Full Read]\n";
 		for (int lba = 0; lba < MAX_LBA; lba++) {
-			result = result + getReadFormat(to_string(lba), DEFAULT_DATA);
+			result = result + getReadFormatForFullRead(to_string(lba), DEFAULT_DATA);
 		}
 		return result;
 	}
 
 	string getFullWriteFormat() {
-		return "[Write] Done\n";
+		return "[Full Write] Done\n";
 	}
 
 	string getEraseFormat() {
