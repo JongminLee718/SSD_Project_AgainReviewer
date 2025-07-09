@@ -9,12 +9,12 @@ using std::vector;
 using std::cout;
 using std::cin;
 
-void SsdClientApp::startVerify(SsdInterface* sdInterface, Checker* checker) {
+bool SsdClientApp::startVerify(SsdInterface* sdInterface, UtilsInterface* utilsInterface) {
 	Parser parser;
 	vector<string> parsedInput = parser.parse(inputCmd);
 	
-	CommandProcessor commandProcesser{ sdInterface, checker };
-	commandProcesser.run(parsedInput);
+	CommandProcessor commandProcesser{ sdInterface, utilsInterface };
+	return commandProcesser.run(parsedInput);
 }
 
 void SsdClientApp::setInputCmd(string input) {

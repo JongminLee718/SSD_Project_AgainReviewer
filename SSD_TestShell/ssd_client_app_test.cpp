@@ -10,7 +10,7 @@ using std::to_string;
 class SsdClientAppFixture : public Test {
 public:
 	SsdHandlerMock mockSsdHandler;
-	OutputCheckerMock mockChecker;
+	UtilsMock mockUtils;
 	SsdClientApp app;
 
 	std::ostringstream oss;
@@ -69,7 +69,7 @@ public:
 
 	void doClientApp(string userCmd) {
 		app.setInputCmd(userCmd);
-		app.startVerify(&mockSsdHandler, &mockChecker);
+		app.startVerify(&mockSsdHandler, &mockUtils);
 	}
 
 private:
@@ -87,7 +87,7 @@ TEST_F(SsdClientAppFixture, ReadCommand_Success) {
 
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(1);
-	EXPECT_CALL(mockSsdHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(DEFAULT_DATA));
 
 	doClientApp(USER_READ_CMD);
@@ -100,7 +100,7 @@ TEST_F(SsdClientAppFixture, WriteCommand_Success) {
 
 	EXPECT_CALL(mockSsdHandler, write(_, _))
 		.Times(1);
-	EXPECT_CALL(mockSsdHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(""));
 
 	doClientApp(USER_WRITE_CMD);
@@ -114,7 +114,7 @@ TEST_F(SsdClientAppFixture, FullReadCommand_Success) {
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(100);
 
-	EXPECT_CALL(mockSsdHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillRepeatedly(Return(DEFAULT_DATA));
 
 	doClientApp(USER_FULL_READ_CMD);
@@ -128,7 +128,7 @@ TEST_F(SsdClientAppFixture, FullWriteCommand_Success) {
 	EXPECT_CALL(mockSsdHandler, write(_, _))
 		.Times(100);
 
-	EXPECT_CALL(mockSsdHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillRepeatedly(Return(""));
 
 	doClientApp(USER_FULL_WRITE_CMD);
@@ -141,7 +141,9 @@ TEST_F(SsdClientAppFixture, FullWriteAndReadComapreCommand_Test) {
 		.Times(100);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(100);
-	EXPECT_CALL(mockChecker, outputChecker(_))
+	EXPECT_CALL(mockUtils, genRandData())
+		.Times(25);
+	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(100)
 		.WillRepeatedly(Return(true));
 
@@ -155,7 +157,9 @@ TEST_F(SsdClientAppFixture, PartialLBAWrite_Test) {
 		.Times(150);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(150);
-	EXPECT_CALL(mockChecker, outputChecker(_))
+	EXPECT_CALL(mockUtils, genRandData())
+		.Times(30);
+	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(150)
 		.WillRepeatedly(Return(true));
 
@@ -169,7 +173,9 @@ TEST_F(SsdClientAppFixture, WriteReadAgingCommand_Test) {
 		.Times(400);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(400);
-	EXPECT_CALL(mockChecker, outputChecker(_))
+	EXPECT_CALL(mockUtils, genRandData())
+		.Times(200);
+	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(400)
 		.WillRepeatedly(Return(true));
 

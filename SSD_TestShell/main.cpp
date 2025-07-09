@@ -2,33 +2,38 @@
 #include <gmock/gmock.h>
 
 int main(int argc, char** argv) {
-    std::cout << "Debug\n";
     ::testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
 }
 #else
 #include "ssd_client_app.h"
+#include "runner.h"
 #include <iostream>
-int main() {
-    std::cout << "Release\n";
 
+int main(int argc, char* argv[]) {
     SsdHandler ssdHandler;
-    OutputChecker checker;
+    Utils utils;
     SsdClientApp app;
+    Runner runner;
 
-    while (true) {
-        try {
-            app.getUserCmdLine();
-            app.startVerify(&ssdHandler, &checker);
+    if (argc == 1) {
+        while (true) {
+            try {
+                app.getUserCmdLine();
+                app.startVerify(&ssdHandler, &utils);
+            }
+            catch (const std::invalid_argument& e) {
+                std::cout << e.what() << '\n';
+                continue;
+            }
+            catch (...) {
+                app.printError();
+                continue;
+            }
         }
-        catch (const std::invalid_argument& e) {
-            std::cout << e.what() << '\n';
-            continue;
-        }
-        catch (...) {
-            app.printError();
-            continue;
-        }
+    }
+    else {
+        runner.runScriptFile(argv[1]);
     }
 
     return 0;

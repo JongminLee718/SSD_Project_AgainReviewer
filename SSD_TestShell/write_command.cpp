@@ -6,14 +6,14 @@
 using std::cout;
 using std::to_string;
 
-void WriteCommand::run(vector<string> commands){
-	ssdInterface->write(commands[1], commands[2]);
-	string data = ssdInterface->readOutput();
+bool WriteCommand::run(vector<string> commands){
+	ssdInterface->write(commands[LBA_OFFSET], commands[DATA_OFFSET]);
 
-	if (ERROR_PATERN == data) {
+	if (ERROR_PATERN == utilsInterface->readOutput()) {
 		cout << "[Write] ERROR\n";
+		return false;
 	}
-	else {
-		cout << "[Write] Done\n";
-	}
+
+	cout << "[Write] Done\n";
+	return true;
 }

@@ -1,19 +1,14 @@
 #pragma once
 
 #include "command.h"
-#include <iomanip>
-#include <random>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <fstream>
 #include "ssd_handler.h"
-#include "checker.h"
+#include "utils.h"
 
 class EraseAndWriteAgingCommand : public Command {
 public:
-	EraseAndWriteAgingCommand(SsdInterface* ssd) : ssd{ ssd } {}
-	void run(vector<string> commands) override;
+	EraseAndWriteAgingCommand(SsdInterface* ssd, UtilsInterface* utils) : ssd{ ssd }, utils{ utils } {}
+	bool run(vector<string> commands) override;
 private:
 	SsdInterface* ssd;
+	UtilsInterface* utils;
 };

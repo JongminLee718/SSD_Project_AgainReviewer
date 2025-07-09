@@ -129,7 +129,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="checker.cpp" />
     <ClCompile Include="command_processor.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -150,6 +149,7 @@
     <ClCompile Include="parser\validator_utils.cpp" />
     <ClCompile Include="partial_lba_write_command.cpp" />
     <ClCompile Include="read_command.cpp" />
+    <ClCompile Include="runner.cpp" />
     <ClCompile Include="ssd_handler.cpp" />
     <ClCompile Include="ssd_client_app.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -158,6 +158,7 @@
     <ClCompile Include="test\logger_test.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <ClCompile Include="test\runner_test.cpp" />
     <ClCompile Include="test\test_command_processer.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -166,6 +167,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="test_script_command_test.cpp" />
+    <ClCompile Include="utils.cpp" />
     <ClCompile Include="write_command.cpp" />
     <ClCompile Include="test\mock_command_processer.h" />
     <ClCompile Include="write_read_aging_command.cpp" />
@@ -174,7 +176,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="checker.h" />
     <ClInclude Include="command.h" />
     <ClInclude Include="command_processor.h" />
     <ClInclude Include="erase_and_write_aging_command.h" />
@@ -193,8 +194,10 @@
     <ClInclude Include="parser\validator_utils.h" />
     <ClInclude Include="partial_lba_write_command.h" />
     <ClInclude Include="read_command.h" />
+    <ClInclude Include="runner.h" />
     <ClInclude Include="ssd_handler.h" />
     <ClInclude Include="ssd_client_app.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="write_command.h" />
     <ClInclude Include="write_read_aging_command.h" />
   </ItemGroup>

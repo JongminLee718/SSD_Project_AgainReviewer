@@ -78,8 +78,9 @@ jobs:
         "read 0" | Out-File -Append -Encoding ASCII -FilePath input.txt
         "fullwrite 0x00000002" | Out-File -Append -Encoding ASCII -FilePath input.txt
         "fullread" | Out-File -Append -Encoding ASCII -FilePath input.txt
+        "erase 0 10" | Out-File -Append -Encoding ASCII -FilePath input.txt
+        "read 0" | Out-File -Append -Encoding ASCII -FilePath input.txt
         "exit" | Out-File -Append -Encoding ASCII -FilePath input.txt
-
         $workDir = "$(Resolve-Path 'SSD_TestShell/x64/Release')"
         $exePath = "$workDir\SSD_TestShell.exe"
         $inputPath = "$(Resolve-Path 'input.txt')"
@@ -118,6 +119,16 @@ jobs:
 
         if ($outputStr -notmatch "\[Full Write\]\s*Done") {
           Write-Error "Expected '[Full Write] Done' message not found."
+        }
+
+        if ($outputStr -notmatch "\[Erase\]\s*Done") {
+          Write-Error "Expected value 0x00000001 not found in read output"
+          exit 1
+        }
+
+        if ($outputStr -notmatch "\[Read\] LBA 00\s*:\s*0x00000000") {
+          Write-Error "Expected value 0x00000001 not found in read output"
+          exit 1
         }
 
 

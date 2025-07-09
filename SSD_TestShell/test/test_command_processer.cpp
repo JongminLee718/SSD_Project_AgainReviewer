@@ -3,7 +3,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include "../checker.h"
+#include "../utils.h"
 #include "../command_processor.h"
 
 using namespace testing;
@@ -13,14 +13,10 @@ using std::to_string;
 
 class CommandProcesserFixture : public Test {
 public:
-	OutputChecker checker;
+	UtilsMock mockUtils;
 	SsdHandlerMock mockSssHandler;
 
-	CommandProcessor mockCmdProcesser{ &mockSssHandler, &checker };
-
-	SsdHandler ssdHandler;
-	CommandProcessor realCmdProcesser{ &ssdHandler, &checker };
-
+	CommandProcessor mockCmdProcesser{ &mockSssHandler, &mockUtils };
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -42,8 +38,8 @@ public:
 
 	string getReadFormat(string lba, string expect) {
 		string empty = "";
-		if (lba.size() == 1)
-		{
+
+		if (lba.size() == 1) {
 			empty = "0";
 		}
 
@@ -56,8 +52,8 @@ public:
 
 	string getReadFormatForFullRead(string lba, string expect) {
 		string empty = "";
-		if (lba.size() == 1)
-		{
+
+		if (lba.size() == 1) {
 			empty = "0";
 		}
 
@@ -87,7 +83,6 @@ public:
 	string getFlushFormat() {
 		return "[Flush] Done\n";
 	}
-
 
 	string getEraseRangeFormat() {
 		return "[EraseRange] Done\n";
@@ -123,7 +118,7 @@ TEST_F(CommandProcesserFixture, ReadCommand_Success) {
 
 	EXPECT_CALL(mockSssHandler, read(_))
 		.Times(1);
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(DEFAULT_DATA));
 
 	mockCmdProcesser.run(commands);
@@ -139,7 +134,7 @@ TEST_F(CommandProcesserFixture, ReadCommand_Fail) {
 
 	EXPECT_CALL(mockSssHandler, read(_))
 		.Times(1);
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(ERROR_PATTERN));
 
 	mockCmdProcesser.run(commands);
@@ -153,7 +148,7 @@ TEST_F(CommandProcesserFixture, WriteCommand_Success) {
 
 	EXPECT_CALL(mockSssHandler, write(_,_))
 		.Times(1);
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(""));
 
 	mockCmdProcesser.run(commands);
@@ -168,7 +163,7 @@ TEST_F(CommandProcesserFixture, WriteCommand_Fail) {
 	EXPECT_CALL(mockSssHandler, write(_, _))
 		.Times(1);
 
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(ERROR_PATTERN));
 
 	mockCmdProcesser.run(commands);
@@ -183,7 +178,7 @@ TEST_F(CommandProcesserFixture, FullReadCommand_Success) {
 	EXPECT_CALL(mockSssHandler, read(_))
 		.Times(100);
 
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillRepeatedly(Return(DEFAULT_DATA));
 
 	mockCmdProcesser.run(commands);
@@ -198,7 +193,7 @@ TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
 	EXPECT_CALL(mockSssHandler, write(_, _))
 		.Times(100);
 
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillRepeatedly(Return(""));
 
 	mockCmdProcesser.run(commands);
@@ -212,7 +207,7 @@ TEST_F(CommandProcesserFixture, EraseCommand_Success) {
 
 	EXPECT_CALL(mockSssHandler, erase(_, _))
 		.Times(1);
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(""));
 
 	mockCmdProcesser.run(commands);
@@ -226,7 +221,7 @@ TEST_F(CommandProcesserFixture, EraseCommand_Fail) {
 
 	EXPECT_CALL(mockSssHandler, erase(_, _))
 		.Times(1);
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return("ERROR"));
 
 	mockCmdProcesser.run(commands);
@@ -240,7 +235,7 @@ TEST_F(CommandProcesserFixture, FlushCommand_Success) {
 
 	EXPECT_CALL(mockSssHandler, flush())
 		.Times(1);
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillOnce(Return(""));
 
 	mockCmdProcesser.run(commands);
@@ -254,32 +249,11 @@ TEST_F(CommandProcesserFixture, EraseRageCommand_Success) {
 
 	EXPECT_CALL(mockSssHandler, erase(_, _))
 		.Times(3);
-	EXPECT_CALL(mockSssHandler, readOutput())
+	EXPECT_CALL(mockUtils, readOutput())
 		.WillRepeatedly(Return(""));
 
 	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
-
-/*
-TEST_F(CommandProcesserFixture, Real_WriteRead_Success) {
-	for (int lba = 0; lba < MAX_LBA; lba++)
-	{
-		string writeData = intToHexString(lba);
-		string sLba = to_string(lba);
-		vector<string> writeCommands = { WRITE , sLba, writeData };
-		vector<string> readCommands = { READ , sLba };
-		
-		string actual = getWriteFormat();
-		actual += getReadFormat(sLba, writeData);
-
-		realCmdProcesser.run(writeCommands);
-		realCmdProcesser.run(readCommands);
-
-		string str = oss.str();
-		EXPECT_EQ(str, actual);
-	}	
-}
-*/
 

@@ -6,15 +6,14 @@
 using std::cout;
 using std::to_string;
 
-void FlushCommand::run(vector<string> commands) {
+bool FlushCommand::run(vector<string> commands) {
 	ssdInterface->flush();
 
-	string data = ssdInterface->readOutput();
-
-	if (ERROR_PATERN == data) {
+	if (ERROR_PATERN == utilsInterface->readOutput()) {
 		cout << "[Flush] ERROR\n";
+		return false;
 	}
-	else {
-		cout << "[Flush] Done" << "\n";
-	}
+
+	cout << "[Flush] Done" << "\n";
+	return true;
 }
