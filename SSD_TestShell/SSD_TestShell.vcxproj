@@ -157,6 +157,7 @@
     <ClCompile Include="ssd_client_app_test.cpp" />
     <ClCompile Include="test\logger_test.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <ClCompile Include="test\runner_test.cpp" />
     <ClCompile Include="test\test_command_processer.cpp">
