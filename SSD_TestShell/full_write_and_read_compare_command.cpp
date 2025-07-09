@@ -17,7 +17,7 @@ void FullWriteAndReadCompareCommand::run(vector<string> commands) {
 			ssd->write(std::to_string(LBA), randData);
 			ssd->read(std::to_string(LBA));
 
-			bool result = cc->outputChecker(randData);
+			bool result = utils->outputChecker(randData);
 			if (!result) {
 				std::cout << "FAIL\n";
 				return;

@@ -23,20 +23,20 @@ public:
 		return instance;
 	}
 
-	Command* makeCommand(string& opcode, SsdInterface* ssdInterface, Checker* checker) {
-		if ("exit" == opcode) { return new ExitCommand(ssdInterface);}
-		else if ("read" == opcode) { return new ReadCommand(ssdInterface);}
-		else if ("write" == opcode) { return new WriteCommand(ssdInterface);}
-		else if ("erase" == opcode) { return new EraseCommand(ssdInterface); }
-		else if ("erase_range" == opcode) { return new EraseRangeCommand(ssdInterface); }
-		else if ("flush" == opcode) { return new FlushCommand(ssdInterface); }
-		else if ("help" == opcode) { return new HelpCommand(ssdInterface);}
-		else if ("fullwrite" == opcode) { return new FullWriteCommand(ssdInterface);}
-		else if ("fullread" == opcode) { return new FullReadCommand(ssdInterface);}
-		else if ("1_FullWriteAndReadCompare" == opcode || "1_" == opcode) { return new FullWriteAndReadCompareCommand(ssdInterface, checker); }
-		else if ("2_PartialLBAWrite" == opcode || "2_" == opcode) { return new PartialLBAWriteCommand(ssdInterface, checker); }
-		else if ("3_WriteReadAging" == opcode || "3_" == opcode) { return new WriteReadAgingCommand(ssdInterface, checker); }
-		else if ("4_EraseAndWriteAging" == opcode || "4_" == opcode) { return new EraseAndWriteAgingCommand(ssdInterface); }
+	Command* makeCommand(string& opcode, SsdInterface* ssdInterface, UtilsInterface* utilsInterface) {
+		if ("exit" == opcode) { return new ExitCommand(ssdInterface, utilsInterface);}
+		else if ("read" == opcode) { return new ReadCommand(ssdInterface, utilsInterface);}
+		else if ("write" == opcode) { return new WriteCommand(ssdInterface, utilsInterface);}
+		else if ("erase" == opcode) { return new EraseCommand(ssdInterface, utilsInterface); }
+		else if ("erase_range" == opcode) { return new EraseRangeCommand(ssdInterface, utilsInterface); }
+		else if ("flush" == opcode) { return new FlushCommand(ssdInterface, utilsInterface); }
+		else if ("help" == opcode) { return new HelpCommand(ssdInterface, utilsInterface);}
+		else if ("fullwrite" == opcode) { return new FullWriteCommand(ssdInterface, utilsInterface);}
+		else if ("fullread" == opcode) { return new FullReadCommand(ssdInterface, utilsInterface);}
+		else if ("1_FullWriteAndReadCompare" == opcode || "1_" == opcode) { return new FullWriteAndReadCompareCommand(ssdInterface, utilsInterface); }
+		else if ("2_PartialLBAWrite" == opcode || "2_" == opcode) { return new PartialLBAWriteCommand(ssdInterface, utilsInterface); }
+		else if ("3_WriteReadAging" == opcode || "3_" == opcode) { return new WriteReadAgingCommand(ssdInterface, utilsInterface); }
+		else if ("4_EraseAndWriteAging" == opcode || "4_" == opcode) { return new EraseAndWriteAgingCommand(ssdInterface, utilsInterface); }
 		// add new command
 
 		return nullptr;
@@ -48,7 +48,7 @@ private:
 void CommandProcessor::run(vector<string> commands) {
 	FactoryCommand factoryCommand = FactoryCommand::getInstance();
 
-	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface, checker);
+	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface, utilsInterface);
 
 	if (command == nullptr) {
 		std::cout << "command is not defined.\n";

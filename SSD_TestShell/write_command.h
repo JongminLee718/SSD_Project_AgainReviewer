@@ -4,10 +4,12 @@
 
 class WriteCommand : public Command {
 public:
-	WriteCommand(SsdInterface* ssdInterface) {
+	WriteCommand(SsdInterface* ssdInterface, UtilsInterface* utilsInterface) {
 		this->ssdInterface = ssdInterface;
+		this->utilsInterface = utilsInterface;
 	}
 	void run(vector<string> commands) override;
 private:
 	SsdInterface* ssdInterface;
+	UtilsInterface* utilsInterface;
 };

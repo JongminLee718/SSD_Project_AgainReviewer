@@ -9,7 +9,7 @@ using std::to_string;
 void FlushCommand::run(vector<string> commands) {
 	ssdInterface->flush();
 
-	string data = ssdInterface->readOutput();
+	string data = utilsInterface->readOutput();
 
 	if (ERROR_PATERN == data) {
 		cout << "[Flush] ERROR\n";

@@ -23,7 +23,7 @@ void PartialLBAWriteCommand::run(vector<string> commands) {
 		for (int LBA = 0; LBA < 5; LBA++) {
 			ssd->read(std::to_string(LBA));
 
-			bool result = cc->outputChecker(randData);
+			bool result = utils->outputChecker(randData);
 			if (!result) {
 				std::cout << "FAIL\n";
 				return;

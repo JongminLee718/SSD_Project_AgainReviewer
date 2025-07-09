@@ -9,7 +9,7 @@ using std::to_string;
 void ReadCommand::run(vector<string> commands){
 	ssdInterface->read(commands[LBA_OFFSET]);
 
-	string data = ssdInterface->readOutput();
+	string data = utilsInterface->readOutput();
 
 	if (ERROR_PATERN == data) {
 		cout << "[Read] ERROR\n";

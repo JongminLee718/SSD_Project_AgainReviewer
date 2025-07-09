@@ -18,14 +18,14 @@ void WriteReadAgingCommand::run(vector<string> commands) {
 		ssd->write(std::to_string(99), randData);
 
 		ssd->read(std::to_string(0));
-		bool result = cc->outputChecker(randData);
+		bool result = utils->outputChecker(randData);
 		if (!result) {
 			std::cout << "FAIL\n";
 			return;
 		}
 
 		ssd->read(std::to_string(99));
-		result = cc->outputChecker(randData);
+		result = utils->outputChecker(randData);
 		if (!result) {
 			std::cout << "FAIL\n";
 			return;

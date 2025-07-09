@@ -2,11 +2,11 @@
 
 #include <string>
 #include "ssd_handler.h"
-#include "checker.h"
+#include "utils.h"
 
 class SsdClientApp {
 public:
-	void startVerify(SsdInterface* sdInterface, Checker* checker);
+	void startVerify(SsdInterface* sdInterface, UtilsInterface* utilsInterface);
 	void setInputCmd(std::string input);
 	void getUserCmdLine();
 	void printError();
