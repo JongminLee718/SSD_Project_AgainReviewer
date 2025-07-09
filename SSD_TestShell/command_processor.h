@@ -3,7 +3,6 @@
 #include <string>
 #include "command.h"
 #include "ssd_handler.h"
-#include "checker.h"
 
 using std::vector;
 using std::string;
