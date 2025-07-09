@@ -1,0 +1,115 @@
+name: Build and Run Integration Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-driver:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages for SSD_Driver
+      run: nuget restore SSD_Driver/SSD_Driver.sln
+
+    - name: Build SSD_Driver (Release)
+      run: msbuild SSD_Driver/SSD_Driver.sln /p:Configuration=Release
+
+    - name: Upload SSD_Driver.exe
+      uses: actions/upload-artifact@v4
+      with:
+        name: SSD_Driver_exe
+        path: SSD_Driver/x64/Release/SSD_Driver.exe
+
+  build-shell:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Restore NuGet packages for SSD_TestShell
+      run: nuget restore SSD_TestShell/SSD_TestShell.sln
+
+    - name: Build SSD_TestShell (Release)
+      run: msbuild SSD_TestShell/SSD_TestShell.sln /p:Configuration=Release
+
+    - name: Upload SSD_TestShell.exe
+      uses: actions/upload-artifact@v4
+      with:
+        name: SSD_TestShell_exe
+        path: SSD_TestShell/x64/Release/SSD_TestShell.exe
+
+  integration-test:
+    runs-on: windows-latest
+    needs: [build-driver, build-shell]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Download SSD_Driver.exe
+      uses: actions/download-artifact@v4
+      with:
+        name: SSD_Driver_exe
+        path: SSD_TestShell/x64/Release/
+
+    - name: Download SSD_TestShell.exe
+      uses: actions/download-artifact@v4
+      with:
+        name: SSD_TestShell_exe
+        path: SSD_TestShell/x64/Release/
+
+    - name: Run SSD_TestShell with test input
+      shell: pwsh
+      run: |
+        "write 0 0x00000001" | Out-File -Encoding ASCII -FilePath input.txt
+        "read 0" | Out-File -Append -Encoding ASCII -FilePath input.txt
+        "fullwrite 0x00000002" | Out-File -Append -Encoding ASCII -FilePath input.txt
+        "fullread" | Out-File -Append -Encoding ASCII -FilePath input.txt
+        "exit" | Out-File -Append -Encoding ASCII -FilePath input.txt
+
+        $workDir = "$(Resolve-Path 'SSD_TestShell/x64/Release')"
+        $exePath = "$workDir\SSD_TestShell.exe"
+        $inputPath = "$(Resolve-Path 'input.txt')"
+        $outputPath = "$workDir\output.txt"
+
+        $process = Start-Process -FilePath $exePath `
+                                 -WorkingDirectory $workDir `
+                                 -RedirectStandardInput $inputPath `
+                                 -RedirectStandardOutput $outputPath `
+                                 -NoNewWindow -Wait -PassThru
+
+        $output = Get-Content $outputPath
+        Write-Output $output
+
+        $outputStr = $output -join "`n"
+
+        if ($outputStr -match "file open fail" -or $process.ExitCode -ne 0) {
+          Write-Error "Integration test failed. Detected 'file open fail' or non-zero exit code."
+          exit 1
+        }
+
+        if ($outputStr -notmatch "\[Read\] LBA 00\s*:\s*0x00000001") {
+          Write-Error "Expected value 0x00000001 not found in read output"
+          exit 1
+        }
+
+        if ($outputStr -notmatch "\[Read\] LBA 99\s*:\s*0x00000002") {
+          Write-Error "Expected value 0x00000002 not found in fullread output"
+          exit 1
+        }
+
+
+

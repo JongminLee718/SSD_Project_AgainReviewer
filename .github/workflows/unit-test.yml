@@ -1,4 +1,4 @@
-name: Parallel Build and Run Google Tests
+name: Build and Run Unit Tests
 
 on:
   push:
