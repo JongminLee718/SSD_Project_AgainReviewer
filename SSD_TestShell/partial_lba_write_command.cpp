@@ -2,7 +2,7 @@
 
 bool PartialLBAWriteCommand::run(vector<string> commands) {
 	for (int i = 0; i < 30; i++) {
-		string randData = utils->genRandData();
+		string randData = utils->genSSDRandData();
 
 		ssd->write(to_string(4), randData);
 		ssd->write(to_string(0), randData);

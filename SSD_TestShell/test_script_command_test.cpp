@@ -32,7 +32,7 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test1) {
 		.Times(100);
 	EXPECT_CALL(ssd, read(_))
 		.Times(100);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(25);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(100)
@@ -50,7 +50,7 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test2) {
 		.Times(1);
 	EXPECT_CALL(ssd, read(_))
 		.Times(1);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.WillRepeatedly(Return(false));
@@ -67,7 +67,7 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test3) {
 		.Times(2);
 	EXPECT_CALL(ssd, read(_))
 		.Times(2);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(2)
@@ -86,7 +86,7 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test1) {
 		.Times(150);
 	EXPECT_CALL(ssd, read(_))
 		.Times(150);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(30);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(150)
@@ -104,7 +104,7 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test2) {
 		.Times(5);
 	EXPECT_CALL(ssd, read(_))
 		.Times(1);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(1)
@@ -122,7 +122,7 @@ TEST_F(TestScriptFixture, PartialLBAWrite_Test3) {
 		.Times(10);
 	EXPECT_CALL(ssd, read(_))
 		.Times(6);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(2);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(6)
@@ -145,7 +145,7 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test1) {
 		.Times(400);
 	EXPECT_CALL(ssd, read(_))
 		.Times(400);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(200);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(400)
@@ -163,7 +163,7 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test2) {
 		.Times(2);
 	EXPECT_CALL(ssd, read(_))
 		.Times(1);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(1)
@@ -181,7 +181,7 @@ TEST_F(TestScriptFixture, WriteReadAgingCommand_Test3) {
 		.Times(2);
 	EXPECT_CALL(ssd, read(_))
 		.Times(2);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(1);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(2)
@@ -200,7 +200,7 @@ TEST_F(TestScriptFixture, EraseAndWriteAging_Test1) {
 		.Times(2940);
 	EXPECT_CALL(ssd, erase(_, _))
 		.Times(1471);
-	EXPECT_CALL(utils, genRandData())
+	EXPECT_CALL(utils, genSSDRandData())
 		.Times(2940);
 
 	eraseAndWriteAging.run(commands);

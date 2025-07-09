@@ -141,7 +141,7 @@ TEST_F(SsdClientAppFixture, FullWriteAndReadComapreCommand_Test) {
 		.Times(100);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(100);
-	EXPECT_CALL(mockUtils, genRandData())
+	EXPECT_CALL(mockUtils, genSSDRandData())
 		.Times(25);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(100)
@@ -157,7 +157,7 @@ TEST_F(SsdClientAppFixture, PartialLBAWrite_Test) {
 		.Times(150);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(150);
-	EXPECT_CALL(mockUtils, genRandData())
+	EXPECT_CALL(mockUtils, genSSDRandData())
 		.Times(30);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(150)
@@ -173,7 +173,7 @@ TEST_F(SsdClientAppFixture, WriteReadAgingCommand_Test) {
 		.Times(400);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(400);
-	EXPECT_CALL(mockUtils, genRandData())
+	EXPECT_CALL(mockUtils, genSSDRandData())
 		.Times(200);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(400)

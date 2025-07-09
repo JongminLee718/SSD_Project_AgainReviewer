@@ -4,10 +4,10 @@ bool EraseAndWriteAgingCommand::run(vector<string> commands) {
 	ssd->erase(to_string(0), to_string(3));
 	for (int i = 0; i < 30; i++) {
 		for (int LBA = 2; LBA < MAX_LBA; LBA += 2) {
-			string randData = utils->genRandData();
+			string randData = utils->genSSDRandData();
 			ssd->write(to_string(LBA), randData);
 
-			randData = utils->genRandData();
+			randData = utils->genSSDRandData();
 			ssd->write(to_string(LBA), randData);
 
 			if ((LBA + 3) > MAX_LBA)
