@@ -27,6 +27,8 @@ public:
 
 	string READ = "read";
 	string WRITE = "write";
+	string ERASE = "erase";
+	string FLUSH = "flush";
 	string FULL_READ = "fullread";
 	string FULL_WRITE = "fullwrite";
 
@@ -61,6 +63,18 @@ public:
 
 	string getFullWriteFormat() {
 		return "[Write] Done\n";
+	}
+
+	string getEraseFormat() {
+		return "[Erase] Done\n";
+	}
+
+	string getEraseErrorFormat() {
+		return "[Erase] ERROR\n";
+	}
+
+	string getFlushFormat() {
+		return "[Flush] Done\n";
 	}
 
 	std::string intToHexString(int num) {
@@ -172,6 +186,47 @@ TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
 	EXPECT_EQ(oss.str(), actual);
 }
 
+TEST_F(CommandProcesserFixture, EraseCommand_Success) {
+	vector<string> commands = { ERASE , LBA, "10" };
+	string actual = getEraseFormat();
+
+	EXPECT_CALL(mockSssHandler, erase(_, _))
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(""));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
+
+TEST_F(CommandProcesserFixture, EraseCommand_Fail) {
+	vector<string> commands = { ERASE , LBA, "1000" };
+	string actual = getEraseErrorFormat();
+
+	EXPECT_CALL(mockSssHandler, erase(_, _))
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return("ERROR"));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
+
+TEST_F(CommandProcesserFixture, FlushCommand_Success) {
+	vector<string> commands = { FLUSH };
+	string actual = getFlushFormat();
+
+	EXPECT_CALL(mockSssHandler, flush())
+		.Times(1);
+	EXPECT_CALL(mockSssHandler, readOutput())
+		.WillOnce(Return(""));
+
+	mockCmdProcesser.run(commands);
+
+	EXPECT_EQ(oss.str(), actual);
+}
 
 /*
 TEST_F(CommandProcesserFixture, Real_WriteRead_Success) {

@@ -30,7 +30,7 @@ string SsdHandler::readOutput() {
         return "";
     }
 
-    std::string line;
+    std::string line = "";
     getline(file, line);
 
     file.close();

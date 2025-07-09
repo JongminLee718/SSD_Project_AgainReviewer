@@ -6,6 +6,8 @@
 #include "help_command.h"
 #include "read_command.h"
 #include "write_command.h"
+#include "erase_command.h"
+#include "flush_command.h"
 
 #include "full_write_and_read_compare_command.h"
 #include "partial_lba_write_command.h"
@@ -22,6 +24,8 @@ public:
 		if ("exit" == opcode) { return new ExitCommand(ssdInterface);}
 		else if ("read" == opcode) { return new ReadCommand(ssdInterface);}
 		else if ("write" == opcode) { return new WriteCommand(ssdInterface);}
+		else if ("erase" == opcode) { return new EraseCommand(ssdInterface); }
+		else if ("flush" == opcode) { return new FlushCommand(ssdInterface); }
 		else if ("help" == opcode) { return new HelpCommand(ssdInterface);}
 		else if ("fullwrite" == opcode) { return new FullWriteCommand(ssdInterface);}
 		else if ("fullread" == opcode) { return new FullReadCommand(ssdInterface);}
