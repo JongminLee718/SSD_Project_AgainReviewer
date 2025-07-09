@@ -11,7 +11,7 @@ public:
 		this->ssdInterface = ssdInterface;
 		this->utilsInterface = utilsInterface;
 	}
-	void run(vector<string> commands) override;
+	bool run(vector<string> commands) override;
 private:
 	SsdInterface* ssdInterface;
 	UtilsInterface* utilsInterface;

@@ -5,7 +5,7 @@
 using std::cout;
 using std::to_string;
 
-void FullReadCommand::run(vector<string> commands) {
+bool FullReadCommand::run(vector<string> commands) {
 	cout << "[Full Read]\n";
 	
 	for (int lba = 0; lba < MAX_LBA; lba++) {
@@ -15,10 +15,11 @@ void FullReadCommand::run(vector<string> commands) {
 
 		if (ERROR_PATERN == data) {
 			cout << "[Full Read] ERROR\n";
-			break;
+			return false;;
 		}
 		else {
 			cout << "LBA " << std::setfill('0') << std::setw(2) << lba << " : " + data + "\n";
 		}
 	}
+	return true;
 }

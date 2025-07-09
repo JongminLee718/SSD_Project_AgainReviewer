@@ -8,27 +8,34 @@ int main(int argc, char** argv) {
 }
 #else
 #include "ssd_client_app.h"
+#include "runner.h"
 #include <iostream>
-int main() {
+int main(int argc, char* argv[]) {
     std::cout << "Release\n";
 
     SsdHandler ssdHandler;
     Utils utils;
     SsdClientApp app;
+    Runner runner;
 
-    while (true) {
-        try {
-            app.getUserCmdLine();
-            app.startVerify(&ssdHandler, &utils);
+    if (argc == 1) {
+        while (true) {
+            try {
+                app.getUserCmdLine();
+                app.startVerify(&ssdHandler, &utils);
+            }
+            catch (const std::invalid_argument& e) {
+                std::cout << e.what() << '\n';
+                continue;
+            }
+            catch (...) {
+                app.printError();
+                continue;
+            }
         }
-        catch (const std::invalid_argument& e) {
-            std::cout << e.what() << '\n';
-            continue;
-        }
-        catch (...) {
-            app.printError();
-            continue;
-        }
+    }
+    else {
+        runner.runScriptFile(argv[1]);
     }
 
     return 0;
