@@ -99,6 +99,12 @@ TEST_F(ParserFixture, EraseInvalidArgument) {
 	EXPECT_THROW(parser.parse("erase foo 30"), std::invalid_argument);
 }
 
+TEST_F(ParserFixture, EraseRangeSuccess) {
+	vector<string> actual = parser.parse("erase_range 20 22");
+	vector<string> expected = { "erase_range", "20", "22" };
+	EXPECT_EQ(expected, actual);
+}
+
 TEST_F(ParserFixture, FlushSuccess) {
 	vector<string> actual = parser.parse("flush");
 	vector<string> expected = { "flush" };

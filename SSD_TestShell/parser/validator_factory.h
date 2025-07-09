@@ -18,14 +18,14 @@ public:
 		if (command == "fullwrite") {
 			return std::make_unique<FullWriteValidator>();
 		}
-		if (command == "erase") {
+		if (command == "erase" || command == "erase_range") {
 			return std::make_unique<EraseValidator>();
 		}
 		if (command == "fullread" || command == "exit" || command == "help" || command == "flush") {
 			return std::make_unique<SimpleValidator>();
 		}
-		if (command == "1_" || command == "2_" || command == "3_" ||
-			command == "1_FullWriteAndReadCompare" || command == "2_PartialLBAWrite" || command == "3_WriteReadAging") {
+		if (command == "1_" || command == "2_" || command == "3_" || command == "4_" ||
+			command == "1_FullWriteAndReadCompare" || command == "2_PartialLBAWrite" || command == "3_WriteReadAging" || command ==	"Shell> 4_EraseAndWriteAging") {
 			return std::make_unique<ScriptValidator>();
 		}
 
