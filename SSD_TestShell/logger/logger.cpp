@@ -8,11 +8,18 @@ using std::string;
 
 void Logger::print(const string& methodName, const string& logMessage) {
 	createLogFile();
+	writeToLogFile(createLogLine(methodName, logMessage));
+}
 
+string Logger::createLogLine(const string& methodName, const string& logMessage)
+{
 	string paddedMethod = padMethodName(methodName);
-	string logLine = "[" + getCurrentTimestamp() + "] " +
+	return "[" + getCurrentTimestamp() + "] " +
 		paddedMethod + " : " + logMessage + "\n";
+}
 
+void Logger::writeToLogFile(const string& logLine)
+{
 	std::ofstream out(logFile, std::ios::app);
 	if (out.is_open()) {
 		out << logLine;
