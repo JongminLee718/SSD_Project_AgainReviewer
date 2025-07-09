@@ -11,13 +11,24 @@ int main(int argc, char** argv) {
 #include <iostream>
 int main() {
     std::cout << "Release\n";
+
     SsdHandler ssdHandler;
+    OutputChecker checker;
     SsdClientApp app;
 
     while (true) {
-        
-        app.getUserCmdLine();
-        app.startVerify(&ssdHandler);
+        try {
+            app.getUserCmdLine();
+            app.startVerify(&ssdHandler, &checker);
+        }
+        catch (const std::invalid_argument& e) {
+            std::cout << e.what() << '\n';
+            continue;
+        }
+        catch (...) {
+            app.printError();
+            continue;
+        }
     }
 
     return 0;

@@ -3,20 +3,17 @@
 #include "ssd_client_app.h"
 #include "parser/parser.h"
 #include "command_processor.h"
-#include "checker.h"
 
 using std::string;
 using std::vector;
 using std::cout;
 using std::cin;
 
-void SsdClientApp::startVerify(SsdInterface* sdInterface) {
+void SsdClientApp::startVerify(SsdInterface* sdInterface, Checker* checker) {
 	Parser parser;
 	vector<string> parsedInput = parser.parse(inputCmd);
 	
-	OutputChecker checker;
-
-	CommandProcessor commandProcesser{ sdInterface, &checker };
+	CommandProcessor commandProcesser{ sdInterface, checker };
 	commandProcesser.run(parsedInput);
 }
 
@@ -37,4 +34,13 @@ string SsdClientApp::readUserInput() {
 	string input;
 	getline(cin, input);
 	return input;
+}
+
+void SsdClientApp::printError() {
+	string cmdPrint;
+	if (inputCmd.find("write") == 0) cmdPrint = "[Write]";
+	else if (inputCmd.find("read") == 0) cmdPrint = "[Read]";
+	else if (inputCmd.find("fullwrite") == 0) cmdPrint = "[Full Write]";
+	else if (inputCmd.find("fullread") == 0) cmdPrint = "[Full Read]";
+	cout << cmdPrint << " ERROR\n";
 }
