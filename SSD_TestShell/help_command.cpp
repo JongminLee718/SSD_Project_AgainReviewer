@@ -1,16 +1,22 @@
 #include "help_command.h"
 
 void HelpCommand::run(vector<string> commands) {
-	// print help info
 	cout << getHelpString();
 }
 
 string HelpCommand::getHelpString() {
-	string result = "read : read one LBA.\n";
+	string result = "";
+	result += "Made by Jongmin Lee, Taedong Jung, Lee Jeong Seon, Choi Wonjun, Donghyuck Shin, Jaeyeon Kim\n\n";
+	result += "[Command List]\n";
+	result += "read : read one LBA.\n";
 	result += "write : write one LBA.\n";
+	result += "erase : erase up to 10 LBAs.\n";
+	result += "erase_range : erase specific LBA range.\n";
+	result += "flush : Write the buffer to NAND..\n";
 	result += "fullread : read all LBAs.\n";
 	result += "fullwrite : write all LBAs.\n";
 	result += "exit : finish current shell.\n";
+	result += "\n";
 
 	return result;
 }
