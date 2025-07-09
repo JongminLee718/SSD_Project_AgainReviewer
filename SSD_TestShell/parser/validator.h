@@ -41,6 +41,17 @@ private:
 	const size_t EXPECTED_NUM_TOKENS = 2;
 };
 
+class EraseValidator : public Validator {
+public:
+	void validate(const std::vector<std::string> tokens) override {
+		ValidatorUtils::checkTokenCount(tokens, EXPECTED_NUM_TOKENS);
+		ValidatorUtils::checkInteger(tokens[1]);
+		ValidatorUtils::checkInteger(tokens[2]);
+	}
+private:
+	const size_t EXPECTED_NUM_TOKENS = 3;
+};
+
 class SimpleValidator : public Validator {
 public:
 	void validate(const std::vector<std::string> tokens) override {
