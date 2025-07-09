@@ -36,6 +36,8 @@ int main(int argc, char* argv[]) {
 
 	std::string command = argv[1];
 	int addr = std::stoi(argv[2]);
+
+	if (!(command == "R" || command == "W" || command == "E" || command == "F")) writeOutput(ERROR);
 	
 	if (command == "R") {
 		if (argc != 3) {
@@ -50,7 +52,7 @@ int main(int argc, char* argv[]) {
 		std::cout << "R result = " <<addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << result << "\n";
 #endif
 	}
-	else if (command == "W") {
+	if (command == "W") {
 		if (argc != 4) {
 			writeOutput(ERROR);
 			return true;
@@ -67,7 +69,7 @@ int main(int argc, char* argv[]) {
 		std::cout << "W result = " <<  result << "\n";
 #endif
 	}
-	else if (command == "E") {
+	if (command == "E") {
 		if (argc != 4) {
 			writeOutput(ERROR);
 			return true;
@@ -82,15 +84,12 @@ int main(int argc, char* argv[]) {
 		std::cout << "E result = " << result << "\n";
 #endif
 	}
-	else if (command == "F") {
+	if (command == "F") {
 		if (argc != 2) {
 			writeOutput(ERROR);
 			return true;
 		}
 
-	}
-	else {
-		writeOutput(ERROR);
 	}
 
 	return true;
