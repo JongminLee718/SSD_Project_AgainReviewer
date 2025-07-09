@@ -12,10 +12,10 @@ void FullWriteCommand::run(vector<string> commands) {
 
 		string data = ssdInterface->readOutput();
 		if (ERROR_PATERN == data) {
-			cout << "[Write] ERROR\n";
+			cout << "[Full Write] ERROR\n";
 			return;
 		}
 	}
 
-	cout << "[Write] Done\n";
+	cout << "[Full Write] Done\n";
 }

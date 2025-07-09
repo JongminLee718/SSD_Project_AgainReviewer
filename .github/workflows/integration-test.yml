@@ -106,9 +106,18 @@ jobs:
           exit 1
         }
 
-        if ($outputStr -notmatch "\[Read\] LBA 99\s*:\s*0x00000002") {
+        if ($outputStr -notmatch "(?s)\[Full Read\]\s*LBA 00\s*:\s*0x00000002") {
           Write-Error "Expected value 0x00000002 not found in fullread output"
           exit 1
+        }
+
+        if ($outputStr -notmatch "\[Write\]\s*Done") {
+          Write-Error "Expected '[Write] Done' message not found."
+          exit 1
+        }
+
+        if ($outputStr -notmatch "\[Full Write\]\s*Done") {
+          Write-Error "Expected '[Full Write] Done' message not found."
         }
 
 

@@ -13,6 +13,8 @@
 #include "full_write_and_read_compare_command.h"
 #include "partial_lba_write_command.h"
 #include "write_read_aging_command.h"
+#include "erase_and_write_aging_command.h"
+#include "iostream"
 
 class FactoryCommand {
 public:
@@ -34,6 +36,7 @@ public:
 		else if ("1_FullWriteAndReadCompare" == opcode || "1_" == opcode) { return new FullWriteAndReadCompareCommand(ssdInterface, checker); }
 		else if ("2_PartialLBAWrite" == opcode || "2_" == opcode) { return new PartialLBAWriteCommand(ssdInterface, checker); }
 		else if ("3_WriteReadAging" == opcode || "3_" == opcode) { return new WriteReadAgingCommand(ssdInterface, checker); }
+		else if ("4_EraseAndWriteAging" == opcode || "4_" == opcode) { return new EraseAndWriteAgingCommand(ssdInterface); }
 		// add new command
 
 		return nullptr;
@@ -47,6 +50,10 @@ void CommandProcessor::run(vector<string> commands) {
 
 	Command* command = factoryCommand.makeCommand(commands[OPCODE], ssdInterface, checker);
 
+	if (command == nullptr) {
+		std::cout << "command is not defined.\n";
+		return;
+	}
 	command->run(commands);
 }
 
