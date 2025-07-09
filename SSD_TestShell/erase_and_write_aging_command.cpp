@@ -11,11 +11,15 @@ void EraseAndWriteAgingCommand::run(vector<string> commands) {
 		ssd->erase(std::to_string(0), std::to_string(3));
 		for (int LBA = 2; LBA < 100; LBA+=2) {
 			uint32_t value = dist(gen);
+			oss.str("");
+			oss.clear();
 			oss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value;
 			string randData = oss.str();
 			ssd->write(std::to_string(LBA), randData);
 			
 			value = dist(gen);
+			oss.str("");
+			oss.clear();
 			oss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value;
 			randData = oss.str();
 			ssd->write(std::to_string(LBA), randData);
@@ -27,6 +31,6 @@ void EraseAndWriteAgingCommand::run(vector<string> commands) {
 		}
 	}
 
-	std::cout << "PASS";
+	std::cout << "PASS\n";
 
 }
