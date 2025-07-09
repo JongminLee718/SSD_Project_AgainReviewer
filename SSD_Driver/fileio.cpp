@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include "fileio.h"
+#include "main.h"
 
 FileInOut::FileInOut(const std::string& nandFilePath) : filePath(nandFilePath) {
     initializeNandFile();

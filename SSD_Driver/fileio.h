@@ -8,11 +8,8 @@ public:
     FileInOut(const std::string& nandFilePath);
 
 private:
-    
     void initializeNandFile();
     void loadNandData();
-
     std::string filePath;
-
     const int SSD_SIZE = 100;
 };
