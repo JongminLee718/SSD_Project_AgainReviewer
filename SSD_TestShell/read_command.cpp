@@ -7,7 +7,7 @@ using std::cout;
 using std::to_string;
 
 void ReadCommand::run(vector<string> commands){
-	ssdInterface->read(commands[1]);
+	ssdInterface->read(commands[LBA_OFFSET]);
 
 	string data = ssdInterface->readOutput();
 
@@ -15,6 +15,7 @@ void ReadCommand::run(vector<string> commands){
 		cout << "[Read] ERROR\n";
 	}
 	else {
-		cout << "[Read] LBA " + commands[1] + " : "+ data +"\n";
+		
+		cout << "[Read] LBA " << std::setfill('0') << std::setw(2) << std::stoi(commands[LBA_OFFSET]) << " : "+ data +"\n";
 	}
 }

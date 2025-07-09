@@ -16,7 +16,11 @@ public:
 	OutputChecker checker;
 	SsdHandlerMock mockSssHandler;
 
-	CommandProcessor commandProcesser{ &mockSssHandler, &checker };
+	CommandProcessor mockCmdProcesser{ &mockSssHandler, &checker };
+
+	SsdHandler ssdHandler;
+	CommandProcessor realCmdProcesser{ &ssdHandler, &checker };
+
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -72,7 +76,7 @@ TEST_F(CommandProcesserFixture, ReadCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(DEFAULT_DATA));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -87,7 +91,7 @@ TEST_F(CommandProcesserFixture, ReadCommand_Fail) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(ERROR_PATTERN));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -101,7 +105,7 @@ TEST_F(CommandProcesserFixture, WriteCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(""));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -116,7 +120,7 @@ TEST_F(CommandProcesserFixture, WriteCommand_Fail) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillOnce(Return(ERROR_PATTERN));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -131,7 +135,7 @@ TEST_F(CommandProcesserFixture, FullReadCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillRepeatedly(Return(DEFAULT_DATA));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
@@ -146,7 +150,9 @@ TEST_F(CommandProcesserFixture, FullWriteCommand_Success) {
 	EXPECT_CALL(mockSssHandler, readOutput())
 		.WillRepeatedly(Return(""));
 
-	commandProcesser.run(commands);
+	mockCmdProcesser.run(commands);
 
 	EXPECT_EQ(oss.str(), actual);
 }
+
+
