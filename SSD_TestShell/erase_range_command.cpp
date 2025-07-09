@@ -6,7 +6,7 @@
 using std::cout;
 using std::to_string;
 
-void EraseRangeCommand::run(vector<string> commands) {
+bool EraseRangeCommand::run(vector<string> commands) {
 	int startLba = changeLbaToInt(commands[LBA_OFFSET]);
 	int endLba = startLba + changeLbaToInt(commands[LBA_SIZE_OFFSET]);
 
@@ -19,13 +19,14 @@ void EraseRangeCommand::run(vector<string> commands) {
 
 		if (ERROR_PATERN == data) {
 			cout << "[Erase] ERROR\n";
-			return;
+			return false;
 		}
 
 		startLba += lbaSize;
 	}
 	
 	cout << "[EraseRange] Done\n";
+	return true;
 }
 
 int  EraseRangeCommand::getLbaSize(int startLba, int endLba)

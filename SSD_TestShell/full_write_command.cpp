@@ -6,16 +6,17 @@
 using std::cout;
 using std::to_string;
 
-void FullWriteCommand::run(vector<string> commands) {
+bool FullWriteCommand::run(vector<string> commands) {
 	for (int lba = 0; lba < MAX_LBA; lba++) {
 		ssdInterface->write(to_string(lba), commands[1]);
 
 		string data = utilsInterface->readOutput();
 		if (ERROR_PATERN == data) {
 			cout << "[Full Write] ERROR\n";
-			return;
+			return false;;
 		}
 	}
 
 	cout << "[Full Write] Done\n";
+	return true;
 }

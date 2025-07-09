@@ -2,7 +2,7 @@
 
 using std::cout;
 
-void WriteReadAgingCommand::run(vector<string> commands) {
+bool WriteReadAgingCommand::run(vector<string> commands) {
 	static std::mt19937 gen(std::random_device{}());
 	std::uniform_int_distribution<uint32_t>dist(0, 0xFFFFFFFF);
 	std::ostringstream oss;
@@ -21,16 +21,17 @@ void WriteReadAgingCommand::run(vector<string> commands) {
 		bool result = utils->outputChecker(randData);
 		if (!result) {
 			std::cout << "FAIL\n";
-			return;
+			return false;
 		}
 
 		ssd->read(std::to_string(99));
 		result = utils->outputChecker(randData);
 		if (!result) {
 			std::cout << "FAIL\n";
-			return;
+			return false;
 		}
 	}
 
 	std::cout << "PASS\n";
+	return true;
 }
