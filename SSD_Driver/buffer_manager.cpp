@@ -81,28 +81,40 @@ void BufferManager::parsingCommandBuffer(const std::vector<std::string> parts) {
 }
 
 void BufferManager::updateBufferFile() {
+	std::vector<fs::path> current_paths(5 + 1);
 	for (const auto& entry : fs::directory_iterator(bufferDir)) {
-		fs::remove(entry.path());
+		std::string filename = entry.path().filename().string();
+		if (!filename.empty() && isdigit(filename[0])) {
+			int num = filename[0] - '0';
+			if (num >= 1 && num <= 5) {
+				current_paths[num] = entry.path();
+			}
+		}
 	}
 
-	for (int i = 0; i < 5; i++) {
-		std::string file_name = std::to_string(i + 1) + '_';
+	for (int i = 0; i < 5; ++i) {
+		std::string desired_filename_str;
+		std::string file_prefix = std::to_string(i + 1) + '_';
 		if (commands[i].isEmpty) {
-			file_name += "empty";
+			desired_filename_str = file_prefix + "empty";
 		}
 		else {
-			file_name += commands[i].type + "_";
-			file_name += std::to_string(commands[i].address) + "_";
+			desired_filename_str = file_prefix + commands[i].type + "_";
+			desired_filename_str += std::to_string(commands[i].address) + "_";
 			if (commands[i].type == "W") {
 				std::stringstream ss;
 				ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << commands[i].value;
-				file_name += ss.str();
+				desired_filename_str += ss.str();
 			}
-			else if (commands[i].type == "E") {
-				file_name += std::to_string(commands[i].eraseSize);
+			else {
+				desired_filename_str += std::to_string(commands[i].eraseSize);
 			}
 		}
-		std::ofstream(fs::path(bufferDir) / file_name);
+
+		fs::path desired_path = fs::path(bufferDir) / desired_filename_str;
+		fs::path current_path = current_paths[i + 1];
+
+		fs::rename(current_path, desired_path);
 	}
 }
 
