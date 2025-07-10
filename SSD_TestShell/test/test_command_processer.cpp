@@ -248,7 +248,7 @@ TEST_F(CommandProcesserFixture, EraseRageCommand_Success) {
 	string actual = getEraseRangeFormat();
 
 	EXPECT_CALL(mockSssHandler, erase(_, _))
-		.Times(3);
+		.Times(4);
 	EXPECT_CALL(mockUtils, readOutput())
 		.WillRepeatedly(Return(""));
 
