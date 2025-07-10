@@ -1,4 +1,5 @@
-#include "bufferManager.h"
+#include "buffer_manager.h"
+#include "command_strategy.h"
 #include "fileio.h"
 #include <iostream>
 #include <filesystem>
@@ -9,6 +10,7 @@
 #include <vector>
 #include "main.h"
 #include "ssd.h"
+#include <map>
 
 namespace fs = std::filesystem;
 
@@ -51,25 +53,31 @@ void BufferManager::loadBufferData() {
 		while (std::getline(ss, segment, '_')) {
 			parts.push_back(segment);
 		}
-
-		if (parts.size() < 2) continue;
-		if (parts[1] == "empty") continue;
-
-		int bufferNum = std::stoi(parts[0]);
-		if (bufferNum < 1 || bufferNum > 5) continue;
-
-		int command_addr = std::stoi(parts[2]);
-		std::string command_type = parts[1];
-		commands[bufferNum - 1].type = command_type;
-		commands[bufferNum - 1].address = command_addr;
-		if (command_type == "W") {
-			commands[bufferNum - 1].value = std::stoul(parts[3], nullptr, 16);
-		}
-		else if (command_type == "E") {
-			commands[bufferNum - 1].eraseSize = std::stoi(parts[3]);
-		}
-		commands[bufferNum - 1].isEmpty = false;
+		parsingCommandBuffer(parts);
 	}
+}
+
+void BufferManager::parsingCommandBuffer(const std::vector<std::string> parts) {
+	if (parts.size() < 2) return;
+	if (parts[1] == "empty") return;
+
+	int bufferNum = std::stoi(parts[0]);
+	if (bufferNum <= 0 || bufferNum > 5) return;
+
+	std::string command_type = parts[1];
+	int command_addr = std::stoi(parts[2]);
+	int erase_size = std::stoi(parts[3]);
+	int value = std::stoul(parts[3], nullptr, 16);
+
+	commands[bufferNum - 1].type = command_type;
+	commands[bufferNum - 1].address = command_addr;
+	if (command_type == "W") {
+		commands[bufferNum - 1].value = value;
+	}
+	else if (command_type == "E") {
+		commands[bufferNum - 1].eraseSize = erase_size;
+	}
+	commands[bufferNum - 1].isEmpty = false;
 }
 
 void BufferManager::updateBufferFile() {
@@ -108,94 +116,43 @@ void BufferManager::addCommandInBuffer(const std::string& command_type, int addr
 	if (emptyCnt == 0) {
 		flush();
 		loadBufferData();
-		emptyCnt = 5;
 	}
 
-	Command new_cmd;
-	new_cmd.isEmpty = false;
-	new_cmd.type = command_type;
-	new_cmd.address = address;
-	if (command_type == "W") new_cmd.value = valueOrSize;
-	else new_cmd.eraseSize = valueOrSize;
+	std::map<std::string, std::unique_ptr<CommandStrategy>> strategies;
+	strategies["W"] = std::make_unique<WriteStrategy>();
+	strategies["E"] = std::make_unique<EraseStrategy>();
+
+	auto it = strategies.find(command_type);
+	if (it == strategies.end()) {
+		return;
+	}
+
+	Command new_cmd = { command_type, false, address, (unsigned int)valueOrSize, valueOrSize };
+	if (command_type == "W") {
+		new_cmd.eraseSize = 0;
+	}
+	else {
+		new_cmd.value = 0;
+	}
 
 	bool reject_new_cmd = false;
-
 	std::vector<Command> commands_to_add;
 
-	for (int i = 0; i < commands.size(); ++i) {
-		if (commands[i].isEmpty) continue;
+	it->second->execute(*this, commands, new_cmd, commands_to_add, reject_new_cmd);
 
-		if (new_cmd.type == "W" && commands[i].type == "E") {
-			int old_start = commands[i].address;
-			int old_end = commands[i].address + commands[i].eraseSize;
-			int write_addr = new_cmd.address;
-
-			if (write_addr >= old_start && write_addr < old_end) {
-				int required_slots = (write_addr > old_start && write_addr < old_end - 1) ? 2 : 1;
-
-				if (emptyCnt < required_slots) {
-					flush();
-					addCommandInBuffer(command_type, address, valueOrSize);
-					return;
-				}
-				if (write_addr > old_start) {
-					Command prefix_erase;
-					prefix_erase.isEmpty = false;
-					prefix_erase.type = "E";
-					prefix_erase.address = old_start;
-					prefix_erase.eraseSize = write_addr - old_start;
-					commands_to_add.push_back(prefix_erase);
-				}
-				if (write_addr < old_end - 1) {
-					Command suffix_erase;
-					suffix_erase.isEmpty = false;
-					suffix_erase.type = "E";
-					suffix_erase.address = write_addr + 1;
-					suffix_erase.eraseSize = old_end - (write_addr + 1);
-					commands_to_add.push_back(suffix_erase);
-				}
-				commands[i].isEmpty = true;
-			}
-		}
-		else if (new_cmd.type == "E" && commands[i].type == "E") {
-			int old_start = commands[i].address;
-			int old_end = commands[i].address + commands[i].eraseSize;
-			int new_start = new_cmd.address;
-			int new_end = new_cmd.address + new_cmd.eraseSize;
-
-			if (new_start >= old_start && new_end <= old_end) {
-				reject_new_cmd = true;
-				break;
-			}
-			else if (old_start >= new_start && old_end <= new_end) {
-				commands[i].isEmpty = true;
-			}
-			else if (new_start <= old_end && new_end >= old_start) {
-				int merged_start = std::min(old_start, new_start);
-				int merged_end = std::max(old_end, new_end);
-				int merged_size = merged_end - merged_start;
-				if (merged_size <= 10) {
-					commands[i].isEmpty = true;
-					new_cmd.address = merged_start;
-					new_cmd.eraseSize = merged_size;
-				}
-			}
-		}
-		else if (new_cmd.type == "E" && commands[i].type == "W") {
-			int erase_start = new_cmd.address;
-			int erase_end = new_cmd.address + new_cmd.eraseSize;
-			int write_addr = commands[i].address;
-
-			if (write_addr >= erase_start && write_addr < erase_end) {
-				commands[i].isEmpty = true;
-			}
-		}
-	}
-
-	if (!reject_new_cmd) {
+	if (reject_new_cmd) {
+		updateBufferFile();
+		return;
+	} 
+	else {
 		commands_to_add.push_back(new_cmd);
 	}
 
+	updateBufferWithNewCommands(commands_to_add);
+	updateBufferFile();
+}
+
+void BufferManager::updateBufferWithNewCommands(const std::vector<Command>& commands_to_add) {
 	for (const auto& cmd_to_add : commands_to_add) {
 		bool replaced = false;
 		for (auto& old_cmd : commands) {
@@ -215,8 +172,6 @@ void BufferManager::addCommandInBuffer(const std::string& command_type, int addr
 			}
 		}
 	}
-
-	updateBufferFile();
 }
 
 bool BufferManager::readFromBuffer(int address, unsigned int& outValue) {
@@ -271,3 +226,5 @@ void BufferManager::flush() {
 
 	updateBufferFile();
 }
+
+
