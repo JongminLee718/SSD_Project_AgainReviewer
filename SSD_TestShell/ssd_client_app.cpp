@@ -3,6 +3,7 @@
 #include "ssd_client_app.h"
 #include "parser/parser.h"
 #include "command_processor.h"
+#include "logger.h"
 
 using std::string;
 using std::vector;
@@ -10,18 +11,24 @@ using std::cout;
 using std::cin;
 
 bool SsdClientApp::startVerify() {
+	LOG("ssd verify");
 	Parser parser;
 	vector<string> parsedInput = parser.parse(inputCmd);
 	
 	CommandProcessor commandProcesser{ ssdInterface, utilsInterface };
-	return commandProcesser.run(parsedInput);
+	bool isVerifySuccess = commandProcesser.run(parsedInput);
+	if (isVerifySuccess) LOG("SUCESS - ssd verify");
+	else LOG("FAIL- ssd verify");
+	return isVerifySuccess;
 }
 
 void SsdClientApp::setInputCmd(string input) {
+	LOG("user input cmd setting");
 	inputCmd = input;
 }
 
 void SsdClientApp::getUserCmdLine() {
+	LOG("user cmd input");
 	displayPrompt();
 	setInputCmd(readUserInput());
 }
@@ -31,6 +38,7 @@ void SsdClientApp::displayPrompt() const {
 }
 
 string SsdClientApp::readUserInput() {
+	LOG("user cmd input");
 	string input;
 	getline(cin, input);
 	return input;
