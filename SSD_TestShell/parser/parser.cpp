@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "validator_factory.h"
+#include "logger.h"
 #include <sstream>
 #include <stdexcept>
 
