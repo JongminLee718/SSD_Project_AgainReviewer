@@ -28,8 +28,7 @@ TEST(Runner, AllScriptSuccess) {
 		.Times(650)
 		.WillRepeatedly(Return(true));
 
-	std::filesystem::path path = std::filesystem::current_path();
-	runner.runScriptFile(path.string() + "//shell_script.txt");
+	runner.runScriptFile("shell_script.txt");
 }
 
 
