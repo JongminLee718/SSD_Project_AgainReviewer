@@ -16,7 +16,7 @@ bool EraseAndWriteAgingCommand::run(vector<string> commands) {
 				ssd->erase(to_string(LBA), to_string(3));
 		}
 	}
-
+	LOG("EraseAndWriteAgingCommand PASS");
 	cout << "PASS\n";
 	return true;
 

@@ -15,12 +15,14 @@ bool PartialLBAWriteCommand::run(vector<string> commands) {
 
 			bool result = utils->outputChecker(randData);
 			if (!result) {
+				LOG("PartialLBAWriteCommand FAIL");
 				cout << "FAIL\n";
 				return false;
 			}
 		}
 	}
 
+	LOG("PartialLBAWriteCommand PASS");
 	cout << "PASS\n";
 	return true;
 }
