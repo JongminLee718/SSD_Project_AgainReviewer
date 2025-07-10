@@ -5,6 +5,7 @@
 #include <sstream>
 #include "../utils.h"
 #include "../command_processor.h"
+#include <format>
 
 using namespace testing;
 using std::string;
@@ -257,3 +258,89 @@ TEST_F(CommandProcesserFixture, EraseRageCommand_Success) {
 	EXPECT_EQ(oss.str(), actual);
 }
 
+#if (0)
+TEST_F(CommandProcesserFixture, Random_Success) {
+	Utils utils;
+	SsdHandler ssdHandler;
+	CommandProcessor cmdProcesser{ &ssdHandler, &utils };
+	int dataMap[100] = { 0, };
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	int maxRandome = 500;
+	int readMar = 100;
+	std::uniform_int_distribution<> dis(0, maxRandome);
+	std::uniform_int_distribution<> lbaDis(0, 99);
+	std::uniform_int_distribution<> dataDis(0, 1000);
+	std::stringstream ss;
+	vector<string> cmd = { "erase_range", "0", "99" };
+
+	cmdProcesser.run(cmd);
+
+	for (int index = 0; index < 1000; index++) {
+		int random_value = dis(gen);
+		int lba = lbaDis(gen);
+
+		if (readMar > random_value) {
+			//read
+			cmd = { "read", to_string(lba) };
+			cmdProcesser.run(cmd);
+			string result = utils.readOutput();
+
+			cout << "read  " << to_string(lba) << " " << result << "\n";
+			EXPECT_EQ(dataMap[lba], std::stoi(result, nullptr, 16));
+			while (dataMap[lba] != std::stoi(result, nullptr, 16))
+			{
+				int a = 0;
+			}
+		}
+		else if (maxRandome > random_value) {
+			//write
+			int data = dataDis(gen);
+
+			std::string hex_data = "0x" + std::format("{:x}", data);
+			cmd = { "write", to_string(lba), hex_data };
+
+			dataMap[lba] = data;
+			cmdProcesser.run(cmd);
+
+			cout << "write  " << to_string(lba) << " " << hex_data << "\n";
+
+		}
+		else if (maxRandome == random_value) {
+
+			//erase
+			std::uniform_int_distribution<> endlbaDis(lba, 99);
+			int endlba = endlbaDis(gen);
+
+			cmd = { "erase_range", to_string(lba), to_string(endlba) };
+
+			cmdProcesser.run(cmd);
+			cout << "erase  " << to_string(lba) << " " << to_string(endlba) << "\n";
+
+			for (int clba = lba; clba <= endlba; clba++) {
+				dataMap[clba] = 0;
+			}
+
+		}
+		else {
+			FAIL();
+		}
+
+	}
+
+	//check
+	for (int lba = 0; lba < 100; lba++) {
+		vector<string> cmd = { "read", to_string(lba) };
+		cmdProcesser.run(cmd);
+		string result = utils.readOutput();
+
+		EXPECT_EQ(dataMap[lba], std::stoi(result, nullptr, 16));
+		while (dataMap[lba] != std::stoi(result, nullptr, 16))
+		{
+			int a = 0;
+		}
+	}
+}
+#endif
