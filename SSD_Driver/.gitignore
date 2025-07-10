@@ -421,3 +421,4 @@ ssd_nand.txt
 ssd_output.txt
 test_nand.txt
 buffer/
+coverage/

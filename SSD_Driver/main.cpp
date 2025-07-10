@@ -4,11 +4,11 @@
 #include "main.h"
 #include "ssd.h"
 #include "fileio.h"
-
 #include "bufferManager.h"
 
 using std::string;
 
+#if !defined(_DEBUG)
 int writeOutput(const std::string& content) {
 	std::ofstream outputFile(OUTPUT_FILE_PATH);
 	outputFile << content;
@@ -24,6 +24,7 @@ string getStringFromReadValue(unsigned int readValue) {
 bool CheckAdressValidation(int address) { return address < 0 || address >= SSD_SIZE; }
 bool CheckEraseRangeValidation(int address, int size) { return address + size > SSD_SIZE; }
 bool CheckEraseSizeValidation(int size) { return size < 1 || size > 10; }
+#endif
 
 int main(int argc, char* argv[]) {
 #if defined(_DEBUG)
