@@ -15,7 +15,7 @@ using namespace testing;
 
 class BufferManagerFixture : public Test {
 public:
-    const std::string test_nand_path = "nand.txt";
+    const std::string test_nand_path = "ssd_nand.txt";
     const std::string bufferDir = "buffer";
 
     void SetUp() override {
@@ -135,6 +135,7 @@ TEST_F(BufferManagerFixture, Flush_EmptyBuffer) {
     auto commands = getBufferCommands();
     EXPECT_TRUE(commands.empty());
 }
+
 
 TEST_F(BufferManagerFixture, AutoFlush_WhenBufferIsFull) {
     BufferManager bm(test_nand_path);
