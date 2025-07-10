@@ -9,7 +9,7 @@
 #include "buffer_manager.h"
 
 using std::string;
-
+#if !defined(_DEBUG)
 int SsdRunner::readHandler(char* argv[], int argc)
 {
 	int addr = std::stoi(argv[2]);
@@ -85,3 +85,4 @@ int SsdRunner::getIntDateFromString(char* argv)
 	data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
 	return data;
 }
+#endif
