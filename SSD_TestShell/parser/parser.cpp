@@ -11,13 +11,20 @@ using std::istringstream;
 vector<string> Parser::parse(const string& input) {
 	vector<string> tokens = split(input);
 
-	if (tokens.empty()) {
-		throw std::invalid_argument("INVALID COMMAND");
+	try {
+		if (tokens.empty()) {
+			throw std::invalid_argument("INVALID COMMAND");
+		}
+
+		auto validator = ValidatorFactory::createValidator(tokens[0]);
+		validator->validate(tokens);
+	}
+	catch (const std::invalid_argument& e) {
+		LOG("EXCEPTION: " + std::string(e.what()));
+		throw;
 	}
 
-	auto validator = ValidatorFactory::createValidator(tokens[0]);
-	validator->validate(tokens);
-
+	LOG("SUCCESS: PARSED " + tokens[0] + " COMMAND");
 	return tokens;
 }
 
