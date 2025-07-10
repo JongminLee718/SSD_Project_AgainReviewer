@@ -14,7 +14,8 @@ using namespace testing;
 TEST(Runner, AllScriptSuccess) {
 	SsdHandlerMock mockSsdHandler;
 	UtilsMock mockUtils;
-	Runner runner{ &mockSsdHandler, &mockUtils };
+	auto ssdClientStrategy = std::make_unique<SsdClientTestStrategy>(&mockSsdHandler, &mockUtils);
+	Runner runner(std::move(ssdClientStrategy));
 
 	EXPECT_CALL(mockSsdHandler, write(_, _))
 		.Times(3590);

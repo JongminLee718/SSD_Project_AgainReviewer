@@ -44,8 +44,9 @@ bool Runner::isValidPath(std::ifstream& fin)
 }
 
 bool Runner::executeOneTest(const string& cmd) {
-    SsdClientApp app(ssdInterface, utilsInterface);
-
-    app.setInputCmd(cmd);
-    return app.startVerify();
+    if (!testStrategy) {
+        std::cerr << "Error: Test strategy is not set.\n";
+        return false;
+    }
+    return testStrategy->execute(cmd);
 }
