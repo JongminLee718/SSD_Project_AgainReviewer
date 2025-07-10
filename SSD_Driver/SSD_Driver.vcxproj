@@ -131,8 +131,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bufferManager.cpp" />
-    <ClCompile Include="bufferManager_test.cpp" />
+    <ClCompile Include="buffer_manager.cpp" />
+    <ClCompile Include="buffer_manager_test.cpp" />
+    <ClCompile Include="command_strategy.cpp" />
     <ClCompile Include="fileio.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ssd_read_test.cpp" />
@@ -144,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bufferManager.h" />
+    <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="fileio.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="ssd.h" />
