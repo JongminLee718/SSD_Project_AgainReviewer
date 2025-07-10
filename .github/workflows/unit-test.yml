@@ -45,6 +45,10 @@ jobs:
     - name: Build SSD_TestShell.sln
       run: msbuild SSD_TestShell/SSD_TestShell.sln /p:Configuration=Debug /p:Platform=x64
 
+    - name: Copy shell_script.txt to output directory
+      shell: cmd
+      run: copy SSD_TestShell\shell_script.txt SSD_TestShell\x64\Debug\
+
     - name: Run SSD_TestShellTests
       run: SSD_TestShell\x64\Debug\SSD_TestShell.exe --gtest_output=xml:test-results-shell.xml
 
