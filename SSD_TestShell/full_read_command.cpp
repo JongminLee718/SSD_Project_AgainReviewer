@@ -13,11 +13,14 @@ bool FullReadCommand::run(vector<string> commands) {
 		string data = utilsInterface->readOutput();
 
 		if (ERROR_PATERN == data) {
+			LOG("[Full Read] ERROR Pattern");
 			cout << "[Full Read] ERROR\n";
 			return false;;
 		}
 
 		cout << "LBA " << std::setfill('0') << std::setw(2) << lba << " : " + data + "\n";
 	}
+
+	LOG("[Full Read] Done");
 	return true;
 }

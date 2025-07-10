@@ -4,6 +4,8 @@
 #include <string>
 #include "ssd_handler.h"
 #include "utils.h"
+#include "logger/logger.h"
+
 #define interface class
 
 using std::vector;

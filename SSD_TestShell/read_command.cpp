@@ -12,10 +12,11 @@ bool ReadCommand::run(vector<string> commands){
 
 	if (ERROR_PATERN == data) {
 		cout << "[Read] ERROR\n";
+		LOG("[Read] ERROR");
 		return false;
 	}
 
 	cout << "[Read] LBA " << std::setfill('0') << std::setw(2) << std::stoi(commands[LBA_OFFSET]) << " : "+ data +"\n";
-	
+	LOG("[Read] Done");
 	return true;
 }

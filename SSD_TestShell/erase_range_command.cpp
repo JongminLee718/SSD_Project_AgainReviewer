@@ -11,7 +11,8 @@ bool EraseRangeCommand::run(vector<string> commands) {
 	int endLba = changeLbaToInt(commands[END_LBA_OFFSET]) + 1;
 
 	if (isInvalidRange(startLba, endLba)) {
-		cout << "[Erase] ERROR\n";
+		LOG("[EraseRange] invalid range. startLba : "+to_string(startLba) + ", endlba : " + to_string(endLba));
+		cout << "[EraseRange] ERROR\n";
 		return false;
 	}
 
@@ -21,13 +22,15 @@ bool EraseRangeCommand::run(vector<string> commands) {
 		ssdInterface->erase(to_string(startLba), to_string(lbaSize));
 
 		if (ERROR_PATERN == utilsInterface->readOutput()) {
-			cout << "[Erase] ERROR\n";
+			LOG("[EraseRange] ERROR pattern");
+			cout << "[EraseRange] ERROR\n";
 			return false;
 		}
 
 		startLba += lbaSize;
 	}
-	
+
+	LOG("[EraseRange] Done");
 	cout << "[EraseRange] Done\n";
 	return true;
 }

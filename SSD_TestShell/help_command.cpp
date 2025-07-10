@@ -19,5 +19,7 @@ string HelpCommand::getHelpString() {
 	result += "exit : finish current shell.\n";
 	result += "\n";
 
+	LOG("help cmd");
+
 	return result;
 }
