@@ -15,4 +15,7 @@ private:
 	std::string padMethodName(const std::string& methodName, size_t width = 50);
 	void writeToLogFile(const std::string& logLine);
 	std::string createLogLine(const std::string& methodName, const std::string& logMessage);
+	void saveAsLogFile();
+	void saveAsZipFile();
+	std::string generateLogFilename();
 };

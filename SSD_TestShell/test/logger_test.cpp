@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <regex>
 
 using std::string;
@@ -15,15 +16,82 @@ public:
 
 	string currentPattern;
 	string minuteAfterPattern;
+	string currentLogFile;
+	string minuteAfterLogFile;
+	string currentZipFile;
+	string minuteAfterZipFile;
+
+	void createLargeLogFile() {
+		std::ofstream out("latest.log", std::ios::binary);
+		std::vector<char> buffer(10240, 'A');
+		out.write(buffer.data(), buffer.size());
+		out.flush();
+		out.close();
+	}
+
+	string generateLogFilename(time_t now, const string& ext) {
+		std::tm tm;
+		localtime_s(&tm, &now);
+
+		char buffer[64];
+		std::snprintf(
+			buffer, sizeof(buffer),
+			"until_%02d%02d%02d_%02dh_%02dm_%02ds",
+			(tm.tm_year % 100),
+			tm.tm_mon + 1,
+			tm.tm_mday,
+			tm.tm_hour,
+			tm.tm_min,
+			tm.tm_sec
+		);
+
+		if (ext == "log") {
+			return std::string(buffer) + ".log";
+		}
+		else if (ext == "zip") {
+			return std::string(buffer) + ".zip";
+		}
+		else {
+			return std::string(buffer) + ".unknown";
+		}
+	}
 
 private:
+	std::time_t now;
+
 	void SetUp() override {
-		std::time_t now = std::time(nullptr);
+		now = std::time(nullptr);
 		string currentTimestamp = getTimeStamp(now);
-		string minuteAfterTimestamp = getTimeStamp(now - 60);
+		string minuteAfterTimestamp = getTimeStamp(now + 60);
+		currentLogFile = generateLogFilename(now, "log");
+		minuteAfterLogFile = generateLogFilename(now + 60, "log");
+		currentZipFile = generateLogFilename(now, "zip");
+		minuteAfterZipFile = generateLogFilename(now + 60, "zip");
 
 		currentPattern = getLineWithTimeStamp(currentTimestamp);
 		minuteAfterPattern = getLineWithTimeStamp(minuteAfterTimestamp);
+	}
+
+	void TearDown() override {
+		if (std::filesystem::exists(currentLogFile)) {
+			std::filesystem::remove(currentLogFile);
+		}
+
+		if (std::filesystem::exists(minuteAfterLogFile)) {
+			std::filesystem::remove(minuteAfterLogFile);
+		}
+
+		if (std::filesystem::exists(currentZipFile)) {
+			std::filesystem::remove(currentZipFile);
+		}
+
+		if (std::filesystem::exists(minuteAfterZipFile)) {
+			std::filesystem::remove(minuteAfterZipFile);
+		}
+
+		if (std::filesystem::exists(logFile)) {
+			std::filesystem::remove(logFile);
+		}
 	}
 
 	string getTimeStamp(std::time_t now) {
@@ -50,8 +118,6 @@ TEST_F(LoggerFixture, PrintLogLine) {
 
 	EXPECT_TRUE(std::regex_match(last, std::regex(currentPattern)) ||
 		std::regex_match(last, std::regex(minuteAfterPattern)));
-
-	std::filesystem::remove(logFile);
 }
 
 TEST_F(LoggerFixture, PrintMultiLogLine) {
@@ -80,6 +146,26 @@ TEST_F(LoggerFixture, PrintMultiLogLine) {
 
 	EXPECT_TRUE(std::regex_match(line3, std::regex(currentPattern)) ||
 		std::regex_match(line3, std::regex(minuteAfterPattern)));
+}
 
-	std::filesystem::remove(logFile);
+TEST_F(LoggerFixture, SaveAsLogFile) {
+	createLargeLogFile();
+
+	logger.print("Foo.bar()", "some message.");
+
+	EXPECT_TRUE(std::filesystem::exists(currentLogFile) ||
+		std::filesystem::exists(minuteAfterLogFile));
+}
+
+TEST_F(LoggerFixture, SaveAsZipFile) {
+	createLargeLogFile();
+
+	logger.print("Foo.bar()", "some message.");
+
+	createLargeLogFile();
+
+	logger.print("Foo.bar()", "some message.");
+
+	EXPECT_TRUE(std::filesystem::exists(currentZipFile) ||
+		std::filesystem::exists(minuteAfterZipFile));
 }
