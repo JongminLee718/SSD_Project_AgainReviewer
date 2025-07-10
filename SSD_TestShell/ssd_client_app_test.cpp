@@ -11,7 +11,7 @@ class SsdClientAppFixture : public Test {
 public:
 	SsdHandlerMock mockSsdHandler;
 	UtilsMock mockUtils;
-	SsdClientApp app;
+	SsdClientApp app{ &mockSsdHandler, &mockUtils };
 
 	std::ostringstream oss;
 	std::streambuf* old_buf;
@@ -24,6 +24,7 @@ public:
 	const string USER_SCRIPT1_CMD = "1_";
 	const string USER_SCRIPT2_CMD = "2_";
 	const string USER_SCRIPT3_CMD = "3_";
+	const string USER_SCRIPT4_CMD = "4_";
 
 	const string LBA = "0";
 	const string DEFAULT_DATA = "0x00000000";
@@ -69,7 +70,7 @@ public:
 
 	void doClientApp(string userCmd) {
 		app.setInputCmd(userCmd);
-		app.startVerify(&mockSsdHandler, &mockUtils);
+		app.startVerify();
 	}
 
 private:
@@ -141,7 +142,7 @@ TEST_F(SsdClientAppFixture, FullWriteAndReadComapreCommand_Test) {
 		.Times(100);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(100);
-	EXPECT_CALL(mockUtils, genRandData())
+	EXPECT_CALL(mockUtils, genSSDRandData())
 		.Times(25);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(100)
@@ -157,7 +158,7 @@ TEST_F(SsdClientAppFixture, PartialLBAWrite_Test) {
 		.Times(150);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(150);
-	EXPECT_CALL(mockUtils, genRandData())
+	EXPECT_CALL(mockUtils, genSSDRandData())
 		.Times(30);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(150)
@@ -173,13 +174,26 @@ TEST_F(SsdClientAppFixture, WriteReadAgingCommand_Test) {
 		.Times(400);
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(400);
-	EXPECT_CALL(mockUtils, genRandData())
+	EXPECT_CALL(mockUtils, genSSDRandData())
 		.Times(200);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(400)
 		.WillRepeatedly(Return(true));
 
 	doClientApp(USER_SCRIPT3_CMD);
+
+	EXPECT_EQ(oss.str(), "PASS\n");
+}
+
+TEST_F(SsdClientAppFixture, EraseAndWriteAging_Test) {
+	EXPECT_CALL(mockSsdHandler, write(_, _))
+		.Times(2940);
+	EXPECT_CALL(mockSsdHandler, erase(_, _))
+		.Times(1471);
+	EXPECT_CALL(mockUtils, genSSDRandData())
+		.Times(2940);
+
+	doClientApp(USER_SCRIPT4_CMD);
 
 	EXPECT_EQ(oss.str(), "PASS\n");
 }

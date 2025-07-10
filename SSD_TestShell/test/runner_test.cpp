@@ -7,15 +7,28 @@
 
 #include <iostream>
 #include <sstream>
+#include <filesystem>
 
 using namespace testing;
 
-//TODO
 TEST(Runner, AllScriptSuccess) {
-	Runner runner;
-	runner.runScriptFile("shell_script.txt");
+	SsdHandlerMock mockSsdHandler;
+	UtilsMock mockUtils;
+	Runner runner{ &mockSsdHandler, &mockUtils };
 
-	EXPECT_EQ(1, 1);
+	EXPECT_CALL(mockSsdHandler, write(_, _))
+		.Times(3590);
+	EXPECT_CALL(mockSsdHandler, read(_))
+		.Times(650);
+	EXPECT_CALL(mockSsdHandler, erase(_, _))
+		.Times(1471);
+	EXPECT_CALL(mockUtils, genSSDRandData())
+		.Times(3195);
+	EXPECT_CALL(mockUtils, outputChecker(_))
+		.Times(650)
+		.WillRepeatedly(Return(true));
+
+	runner.runScriptFile("shell_script.txt");
 }
 
 

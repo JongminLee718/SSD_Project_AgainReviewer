@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <fstream>
 #include "main.h"
 #include "ssd.h"
 
@@ -32,6 +33,15 @@ string SSD::getStringFromReadValue(unsigned int readValue) {
 	std::stringstream ss;
 	ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << readValue;
 	return ss.str();
+}
+
+void SSD::storeNand() {
+	std::ofstream outputFile(NAND_FILE_PATH);
+	for (int addrIdx = 0;addrIdx < SSD_SIZE;addrIdx++) {
+		std::stringstream ss;
+		ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << getData(addrIdx) << "\n";
+		outputFile << ss.str();
+	}
 }
 
 unsigned int SSD::getData(int addr){
