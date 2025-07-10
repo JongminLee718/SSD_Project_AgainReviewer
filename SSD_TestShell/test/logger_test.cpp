@@ -11,7 +11,7 @@ using namespace testing;
 
 class LoggerFixture : public Test {
 public:
-	Logger logger;
+	Logger& logger = Logger::getInstance();
 	const std::string logFile = logger.getLogFile();
 
 	string currentPattern;

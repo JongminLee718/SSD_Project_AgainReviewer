@@ -2,13 +2,18 @@
 
 class Logger {
 public:
-	Logger() = default;
-	~Logger() = default;
+	static Logger& getInstance() {
+		static Logger instance;
+		return instance;
+	}
 
 	void print(const std::string& methodName, const std::string& logMessage);
 	std::string getLogFile() { return logFile; }
 
 private:
+	Logger() = default;
+	~Logger() = default;
+
 	const std::string logFile = "latest.log";
 	void createLogFile();
 	std::string getCurrentTimestamp();
