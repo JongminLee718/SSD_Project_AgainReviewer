@@ -1,9 +1,6 @@
 #include "gmock/gmock.h"
 #include "main.h"
-#include "ssd.h"
 #include "ssd_runner.h"
-#include "fileio.h"
-#include "buffer_manager.h"
 
 using std::string;
 
@@ -12,7 +9,6 @@ int main() {
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
 }
-
 #else
 
 int main(int argc, char* argv[]) {
