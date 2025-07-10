@@ -24,13 +24,13 @@ void BufferManager::initializeBuffer() {
 		std::string filename = entry.path().filename().string();
 		if (!filename.empty() && isdigit(filename[0])) {
 			int num = filename[0] - '0';
-			if (num >= 1 && num <= MAX_BUFFER_SIZE) {
+			if (num >= 1 && num <= 5) {
 				found_numbers[num] = true;
 			}
 		}
 	}
 
-	for (int i = 1; i <= MAX_BUFFER_SIZE; ++i) {
+	for (int i = 1; i <= 5; ++i) {
 		if (!found_numbers[i]) {
 			std::string init_file_name = std::to_string(i) + "_empty";
 			std::ofstream(fs::path(bufferDir) / init_file_name);
@@ -40,7 +40,7 @@ void BufferManager::initializeBuffer() {
 
 void BufferManager::loadBufferData() {
 	commands.clear();
-	commands.resize(MAX_BUFFER_SIZE);
+	commands.resize(5);
 
 	for (const auto& entry : fs::directory_iterator(bufferDir)) {
 		std::string file_name = entry.path().filename().string();
@@ -60,7 +60,7 @@ void BufferManager::parsingCommandBuffer(const std::vector<std::string> parts) {
 	if (parts[1] == "empty") return;
 
 	int bufferNum = std::stoi(parts[0]);
-	if (bufferNum <= 0 || bufferNum > MAX_BUFFER_SIZE) return;
+	if (bufferNum <= 0 || bufferNum > 5) return;
 
 	std::string command_type = parts[1];
 	int command_addr = std::stoi(parts[2]);
@@ -83,7 +83,7 @@ void BufferManager::updateBufferFile() {
 		fs::remove(entry.path());
 	}
 	
-	for (int i = 0; i < MAX_BUFFER_SIZE; i++) {
+	for (int i = 0; i < 5; i++) {
 		std::string file_name = std::to_string(i + 1) + '_';
 		if (commands[i].isEmpty) {
 			file_name += "empty";
@@ -175,7 +175,7 @@ void BufferManager::updateBufferWithNewCommands(const std::vector<Command>& comm
 bool BufferManager::readFromBuffer(int address, unsigned int& outValue) {
 	loadBufferData();
 
-	for (int i = MAX_BUFFER_SIZE - 1; i >= 0; i--) {
+	for (int i = 5 - 1; i >= 0; i--) {
 		const auto& cmd = commands[i];
 		if (cmd.isEmpty) continue;
 
