@@ -22,7 +22,7 @@ public:
 	string minuteAfterZipFile;
 
 	void createLargeLogFile() {
-		std::ofstream out("latest.log", std::ios::binary);
+		std::ofstream out(logFile, std::ios::binary);
 		std::vector<char> buffer(10240, 'A');
 		out.write(buffer.data(), buffer.size());
 		out.flush();

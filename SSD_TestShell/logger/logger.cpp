@@ -84,7 +84,7 @@ string Logger::padMethodName(const string& methodName, size_t width) {
 }
 
 void Logger::saveAsLogFile() {
-	string src = "latest.log";
+	string src = logFile;
 	string dst = generateLogFilename();
 
 	if (!std::filesystem::exists(src)) return;
