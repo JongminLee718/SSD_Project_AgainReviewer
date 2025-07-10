@@ -109,7 +109,7 @@ private:
 };
 
 TEST_F(LoggerFixture, PrintLogLine) {
-	logger.print("Foo.bar()", "some message.");
+	logger.print("some message.", "void __cdecl Foo::bar(void)");
 
 	std::ifstream in(logFile);
 	string line, last;
@@ -122,9 +122,9 @@ TEST_F(LoggerFixture, PrintLogLine) {
 }
 
 TEST_F(LoggerFixture, PrintMultiLogLine) {
-	logger.print("Foo.bar()", "some message.");
-	logger.print("Foo.bar()", "some message.");
-	logger.print("Foo.bar()", "some message.");
+	logger.print("some message.", "void __cdecl Foo::bar(void)");
+	logger.print("some message.", "void __cdecl Foo::bar(void)");
+	logger.print("some message.", "void __cdecl Foo::bar(void)");
 
 	std::ifstream in(logFile);
 	std::vector<std::string> lines;
@@ -152,7 +152,7 @@ TEST_F(LoggerFixture, PrintMultiLogLine) {
 TEST_F(LoggerFixture, SaveAsLogFile) {
 	createLargeLogFile();
 
-	logger.print("Foo.bar()", "some message.");
+	logger.print("some message.", "void __cdecl Foo::bar(void)");
 
 	EXPECT_TRUE(std::filesystem::exists(currentLogFile) ||
 		std::filesystem::exists(minuteAfterLogFile));
@@ -161,11 +161,11 @@ TEST_F(LoggerFixture, SaveAsLogFile) {
 TEST_F(LoggerFixture, SaveAsZipFile) {
 	createLargeLogFile();
 
-	logger.print("Foo.bar()", "some message.");
+	logger.print("some message.", "void __cdecl Foo::bar(void)");
 
 	createLargeLogFile();
 
-	logger.print("Foo.bar()", "some message.");
+	logger.print("some message.", "void __cdecl Foo::bar(void)");
 
 	EXPECT_TRUE(std::filesystem::exists(currentZipFile) ||
 		std::filesystem::exists(minuteAfterZipFile));

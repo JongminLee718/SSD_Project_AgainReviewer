@@ -3,13 +3,15 @@
 #include <chrono>
 #include <iomanip>
 #include <stdexcept>
+#include <regex>
 #include "logger.h"
 
 using std::string;
 
-void Logger::print(const string& methodName, const string& logMessage) {
+void Logger::print(const string& logMessage, const std::string& callerInfo) {
 	createLogFile();
 	saveAsLogFile();
+	const string methodName = parseMethodName(callerInfo);
 	writeToLogFile(createLogLine(methodName, logMessage));
 }
 
@@ -42,6 +44,36 @@ string Logger::getCurrentTimestamp() {
 	char buf[20];
 	std::strftime(buf, sizeof(buf), "%y.%m.%d %H:%M", &tm);
 	return string(buf);
+}
+
+string Logger::parseMethodName(const std::string& sig) {
+#if defined(_MSC_VER)
+	size_t methodStart = sig.find("__cdecl ");
+	if (methodStart == std::string::npos) return sig;
+
+	methodStart += strlen("__cdecl ");
+	size_t parenPos = sig.find('(', methodStart);
+	if (parenPos == std::string::npos) return sig;
+
+	std::string fullName = sig.substr(methodStart, parenPos - methodStart);
+	size_t delim = fullName.rfind("::");
+	if (delim == std::string::npos) return fullName + "()";
+
+	std::string className = fullName.substr(0, delim);
+	std::string methodName = fullName.substr(delim + 2);
+	return className + "." + methodName + "()";
+
+#elif defined(__GNUC__) || defined(__clang__)
+	std::regex pattern(R"(\b(\w+)::(\w+)\s*\(\))");
+	std::smatch match;
+	if (std::regex_search(sig, match, pattern)) {
+		return match[1].str() + "." + match[2].str() + "()";
+	}
+	return sig;
+
+#else
+	return sig;
+#endif
 }
 
 string Logger::padMethodName(const string& methodName, size_t width) {
