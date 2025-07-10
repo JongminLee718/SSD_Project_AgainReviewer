@@ -39,7 +39,8 @@ public:
             nandFile << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value << "\n";
         }
         nandFile.close();
-    }
+    } 
+
 
     int countBufferFiles() {
         int count = 0;
