@@ -143,7 +143,7 @@ TEST_F(SsdClientAppFixture, FullWriteAndReadComapreCommand_Test) {
 	EXPECT_CALL(mockSsdHandler, read(_))
 		.Times(100);
 	EXPECT_CALL(mockUtils, genSSDRandData())
-		.Times(25);
+		.Times(20);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(100)
 		.WillRepeatedly(Return(true));

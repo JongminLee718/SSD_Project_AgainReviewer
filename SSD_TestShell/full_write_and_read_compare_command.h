@@ -6,7 +6,8 @@
 
 class FullWriteAndReadCompareCommand : public Command {
 public:
-	FullWriteAndReadCompareCommand(SsdInterface* ssd, UtilsInterface* utils) : ssd{ ssd }, utils{ utils } {}
+	FullWriteAndReadCompareCommand(SsdInterface* ssd, UtilsInterface* utils) 
+		: ssd{ ssd }, utils{ utils } {}
 	bool run(vector<string> commands) override;
 private:
 	SsdInterface* ssd;

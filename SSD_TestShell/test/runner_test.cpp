@@ -24,7 +24,7 @@ TEST(Runner, AllScriptSuccess) {
 	EXPECT_CALL(mockSsdHandler, erase(_, _))
 		.Times(1471);
 	EXPECT_CALL(mockUtils, genSSDRandData())
-		.Times(3195);
+		.Times(3190);
 	EXPECT_CALL(mockUtils, outputChecker(_))
 		.Times(650)
 		.WillRepeatedly(Return(true));
