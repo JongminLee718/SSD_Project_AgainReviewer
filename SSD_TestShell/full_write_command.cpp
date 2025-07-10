@@ -11,11 +11,13 @@ bool FullWriteCommand::run(vector<string> commands) {
 		ssdInterface->write(to_string(lba), commands[1]);
 
 		if (ERROR_PATERN == utilsInterface->readOutput()) {
+			LOG("[Full Write] ERROR Pattern");
 			cout << "[Full Write] ERROR\n";
 			return false;;
 		}
 	}
 
+	LOG("[Full Write] Done");
 	cout << "[Full Write] Done\n";
 	return true;
 }
