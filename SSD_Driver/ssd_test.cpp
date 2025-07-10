@@ -1,14 +1,19 @@
+#include <fstream>
+#include <string>
 #include "gmock/gmock.h"
 #include "ssd.h"
 #include "fileio.h"
 #include "main.h"
-#include <string>
 
 using namespace testing;
 
-
 class SsdFixture : public Test {
 public:
+	const int SSD_SIZE = 100;
+	void writeOutput(const std::string& content) {
+		std::ofstream outputFile(OUTPUT_FILE_PATH);
+		outputFile << content;
+	}
 	
 	void writeTest(int tarAddr, int writeData) {
 		FileInOut fileio(TEST_NAN_PATH);
@@ -43,9 +48,13 @@ public:
 		result = ssd.doEraseCmd(tarAddr, eraseSize);
 		EXPECT_EQ("ERROR", result);
 	}
-
 private:
-	static const int MAX_LBA = 100;
+	void SetUp() override {
+		std::remove(TEST_NAN_PATH.c_str());
+	}
+	void TearDown() override {
+		std::remove(TEST_NAN_PATH.c_str());
+	}
 };
 
 TEST_F(SsdFixture, writeAddr0) {
@@ -78,3 +87,40 @@ TEST_F(SsdFixture, EraseException) {
 	EraseExceptionTest(70, 15);
 	EraseExceptionTest(95, 10);
 }
+
+TEST_F(SsdFixture, ReadSuccess) {
+	std::ofstream test_file(TEST_NAN_PATH);
+	test_file << "0x" << std::hex << std::setw(8) << std::setfill('0') << 1 << "\n";
+	test_file << "0x" << std::hex << std::setw(8) << std::setfill('0') << 2 << "\n";
+	test_file << "0x" << std::hex << std::setw(8) << std::setfill('0') << 3 << "\n";
+	test_file.close();
+
+	FileInOut fileio(TEST_NAN_PATH);
+	SSD handler(fileio.nandData);
+
+	EXPECT_EQ(handler.doReadCmd(0), "0x00000001");
+}
+
+TEST_F(SsdFixture, ReadFail) {
+	std::ofstream test_file(TEST_NAN_PATH);
+	test_file << "0x" << std::hex << std::setw(8) << std::setfill('0') << 2 << "\n";
+	test_file << "0x" << std::hex << std::setw(8) << std::setfill('0') << 3 << "\n";
+	test_file << "0x" << std::hex << std::setw(8) << std::setfill('0') << 4 << "\n";
+	test_file.close();
+
+	FileInOut fileio(TEST_NAN_PATH);
+	SSD handler(fileio.nandData);
+
+	EXPECT_NE(handler.doReadCmd(0), "0x00000001");
+	EXPECT_NE(handler.doReadCmd(1), "0x00000002");
+	EXPECT_NE(handler.doReadCmd(2), "0x00000003");
+}
+
+TEST_F(SsdFixture, ReadInvalidAddress) {
+	FileInOut fileio(TEST_NAN_PATH);
+	SSD handler(fileio.nandData);
+
+	EXPECT_EQ(handler.doReadCmd(100), "ERROR");
+	EXPECT_EQ(handler.doReadCmd(-1), "ERROR");
+}
+
