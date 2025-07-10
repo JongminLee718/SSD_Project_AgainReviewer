@@ -13,7 +13,6 @@ public:
 	std::string getStringFromReadValue(unsigned int readValue);
 	unsigned int getData(int addr);
 	void setData(int addr, int data);
-	void loadData(const std::vector<unsigned int>& memory);
 	void storeNand();
 private:
 	bool CheckAdressValidation(int address) { return address < 0 || address >= SSD_SIZE; }
