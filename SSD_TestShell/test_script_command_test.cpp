@@ -33,7 +33,7 @@ TEST_F(TestScriptFixture, FullWriteAndReadComapreCommand_Test1) {
 	EXPECT_CALL(ssd, read(_))
 		.Times(100);
 	EXPECT_CALL(utils, genSSDRandData())
-		.Times(25);
+		.Times(20);
 	EXPECT_CALL(utils, outputChecker(_))
 		.Times(100)
 		.WillRepeatedly(Return(true));
