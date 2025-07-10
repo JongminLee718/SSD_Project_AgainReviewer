@@ -145,11 +145,15 @@
     <ClCompile Include="main.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="parser\parser.cpp" />
+    <ClCompile Include="parser\parser.cpp">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="parser\validator_utils.cpp" />
     <ClCompile Include="partial_lba_write_command.cpp" />
     <ClCompile Include="read_command.cpp" />
     <ClCompile Include="runner.cpp" />
+    <ClCompile Include="ssd_client_test_strategy.cpp" />
     <ClCompile Include="ssd_handler.cpp" />
     <ClCompile Include="ssd_client_app.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -196,6 +200,7 @@
     <ClInclude Include="partial_lba_write_command.h" />
     <ClInclude Include="read_command.h" />
     <ClInclude Include="runner.h" />
+    <ClInclude Include="script_strategy_interface.h" />
     <ClInclude Include="ssd_handler.h" />
     <ClInclude Include="ssd_client_app.h" />
     <ClInclude Include="utils.h" />

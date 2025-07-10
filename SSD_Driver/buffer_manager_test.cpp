@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include "bufferManager.h"
+#include "buffer_manager.h"
 #include "ssd.h"
 #include "fileio.h"
 
@@ -39,7 +39,8 @@ public:
             nandFile << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << value << "\n";
         }
         nandFile.close();
-    }
+    } 
+
 
     int countBufferFiles() {
         int count = 0;
@@ -300,13 +301,31 @@ TEST_F(BufferManagerFixture, SplitAfterMergeTest) {
 TEST_F(BufferManagerFixture, Flush_AfterEraseMerge) {
     BufferManager bm(test_nand_path);
     bm.initializeBuffer();
-    bm.addCommandInBuffer("E", 10, 5);
-    bm.addCommandInBuffer("E", 14, 3);
+    bm.addCommandInBuffer("E", 10, 5); 
+    bm.addCommandInBuffer("E", 14, 10);
     bm.flush();
     FileInOut fileio(test_nand_path);
     for (int i = 10; i < 17; ++i) {
         EXPECT_EQ(fileio.nandData[i], 0x00000000) << "at LBA " << i;
     }
+}
+
+TEST_F(BufferManagerFixture, EraseMergeWithOverSize) {
+    initializeNandFile(0xFFFFFFFF);
+    BufferManager bm(test_nand_path);
+    bm.initializeBuffer();
+    bm.addCommandInBuffer("W", 1, 0xCCCCCCCC);
+    bm.addCommandInBuffer("W", 2, 0xCCCCCCCC);
+    bm.addCommandInBuffer("W", 3, 0xCCCCCCCC);
+    bm.addCommandInBuffer("W", 4, 0xCCCCCCCC);
+    bm.addCommandInBuffer("E", 10, 5); 
+    bm.addCommandInBuffer("E", 14, 9); 
+
+    bm.flush();
+    FileInOut fileio(test_nand_path);
+    for (int i = 10; i < 17; ++i) {
+        EXPECT_EQ(fileio.nandData[i], 0x00000000) << "at LBA " << i;
+    } 
 }
 
 TEST_F(BufferManagerFixture, Flush_AfterEraseContainment) {
@@ -409,7 +428,7 @@ TEST_F(BufferManagerFixture, Flush_ManualAfterAutoFlush) {
     EXPECT_EQ(fileio.nandData[10], 0xA);
     EXPECT_EQ(fileio.nandData[11], 0xB);
 }
-
+  
 TEST_F(BufferManagerFixture, Flush_AfterSplitAfterMerge) {
     BufferManager bm(test_nand_path);
     bm.initializeBuffer();
@@ -425,15 +444,14 @@ TEST_F(BufferManagerFixture, Flush_AfterSplitAfterMerge) {
     EXPECT_EQ(fileio.nandData[96], 0x00000000);
 }
 
-TEST_F(BufferManagerFixture, PreemptiveFlush_WhenSplitRequiresMoreSlots) {
+TEST_F(BufferManagerFixture,Flush_WhenSplitRequiresMoreSlots) {
     initializeNandFile(0xFFFFFFFF);
     BufferManager bm(test_nand_path);
     bm.initializeBuffer();
     bm.addCommandInBuffer("W", 1, 1);
     bm.addCommandInBuffer("W", 2, 2);
     bm.addCommandInBuffer("W", 3, 3);
-    bm.addCommandInBuffer("E", 10, 10); // 10~19
-
+    bm.addCommandInBuffer("E", 10, 10);
     bm.addCommandInBuffer("W", 15, 0xABC);
 
     FileInOut fileio(test_nand_path);
@@ -443,7 +461,6 @@ TEST_F(BufferManagerFixture, PreemptiveFlush_WhenSplitRequiresMoreSlots) {
     for (int i = 10; i < 20; ++i) {
         EXPECT_EQ(fileio.nandData[i], 0x00000000) << "at LBA " << i;
     }
-    EXPECT_EQ(fileio.nandData[15], 0x00000000);
 
     auto commands = getBufferCommands();
     ASSERT_EQ(commands.size(), 1);

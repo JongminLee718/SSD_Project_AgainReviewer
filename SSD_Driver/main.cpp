@@ -2,6 +2,8 @@
 #include "main.h"
 #include "ssd.h"
 #include "ssd_runner.h"
+#include "fileio.h"
+#include "buffer_manager.h"
 
 using std::string;
 

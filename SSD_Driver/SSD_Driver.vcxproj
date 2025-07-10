@@ -131,8 +131,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bufferManager.cpp" />
-    <ClCompile Include="bufferManager_test.cpp" />
+    <ClCompile Include="buffer_manager.cpp" />
+    <ClCompile Include="buffer_manager_test.cpp">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">    %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">    %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">    %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">    %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ClCompile Include="command_strategy.cpp" />
     <ClCompile Include="fileio.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ssd.cpp" />
@@ -143,7 +149,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bufferManager.h" />
+    <ClInclude Include="buffer_manager.h" />
+    <ClInclude Include="command_strategy.h" />
     <ClInclude Include="fileio.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="ssd.h" />

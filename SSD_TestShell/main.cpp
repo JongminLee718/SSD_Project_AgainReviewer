@@ -8,13 +8,15 @@ int main(int argc, char** argv) {
 #else
 #include "ssd_client_app.h"
 #include "runner.h"
+#include "script_strategy_interface.h"
 #include <iostream>
 
 int main(int argc, char* argv[]) {
     SsdHandler ssdHandler;
     Utils utils;
     SsdClientApp app(&ssdHandler, &utils);
-    Runner runner(&ssdHandler, &utils);
+    auto ssdClientStrategy = std::make_unique<SsdClientTestStrategy>(&ssdHandler, &utils);
+    Runner runner(std::move(ssdClientStrategy));
 
     if (argc == 1) {
         while (true) {
