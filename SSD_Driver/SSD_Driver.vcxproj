@@ -135,7 +135,6 @@
     <ClCompile Include="bufferManager_test.cpp" />
     <ClCompile Include="fileio.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ssd_read_test.cpp" />
     <ClCompile Include="ssd.cpp" />
     <ClCompile Include="ssd_test.cpp" />
   </ItemGroup>

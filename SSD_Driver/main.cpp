@@ -8,7 +8,13 @@
 
 using std::string;
 
-#if !defined(_DEBUG)
+#if defined(_DEBUG)
+int main() {
+	::testing::InitGoogleMock();
+	return RUN_ALL_TESTS();
+}
+
+#else
 int writeOutput(const std::string& content) {
 	std::ofstream outputFile(OUTPUT_FILE_PATH);
 	outputFile << content;
@@ -24,13 +30,8 @@ string getStringFromReadValue(unsigned int readValue) {
 bool CheckAdressValidation(int address) { return address < 0 || address >= SSD_SIZE; }
 bool CheckEraseRangeValidation(int address, int size) { return address + size > SSD_SIZE; }
 bool CheckEraseSizeValidation(int size) { return size < 1 || size > 10; }
-#endif
 
 int main(int argc, char* argv[]) {
-#if defined(_DEBUG)
-	::testing::InitGoogleMock();
-	return RUN_ALL_TESTS();
-#else
 	
 	if (argc < 2) return writeOutput(ERROR);
 
@@ -49,14 +50,13 @@ int main(int argc, char* argv[]) {
 		string result;
 		if (isBufResult) {
 			result = getStringFromReadValue(readValue);
-			writeOutput(result);
 		}
 		else {
 			FileInOut fileio(NAND_FILE_PATH);
 			SSD handler(fileio.nandData);
 			result = handler.doReadCmd(addr);
-			writeOutput(result);
 		}
+		return writeOutput(result);
 	}
 	if (command == "W") {
 		if (argc != 4) return writeOutput(ERROR);
@@ -68,8 +68,7 @@ int main(int argc, char* argv[]) {
 		string input = argv[3];
 		int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
 		buffer.addCommandInBuffer("W", addr, data);
-		string result = PASS;
-		writeOutput(result);
+		return writeOutput(PASS);
 	}
 	if (command == "E") {
 		if (argc != 4) return writeOutput(ERROR);
@@ -82,8 +81,7 @@ int main(int argc, char* argv[]) {
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		buffer.addCommandInBuffer("E", addr, size);
-		string result = PASS;
-		writeOutput(result);
+		return writeOutput(PASS);
 	}
 	if (command == "F") {
 		if (argc != 2) return writeOutput(ERROR);
@@ -92,7 +90,6 @@ int main(int argc, char* argv[]) {
 		buffer.initializeBuffer();
 		buffer.flush();
 	}
-
 	return true;
-#endif
 }
+#endif
