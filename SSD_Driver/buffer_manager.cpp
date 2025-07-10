@@ -20,7 +20,11 @@ void BufferManager::initializeBuffer() {
 	if (!fs::exists(bufferDir)) {
 		fs::create_directory(bufferDir);
 	}
+	makeBufferFiles();
+}
 
+void BufferManager::makeBufferFiles()
+{
 	std::vector<bool> found_numbers(6, false);
 	for (const auto& entry : fs::directory_iterator(bufferDir)) {
 		std::string filename = entry.path().filename().string();
@@ -94,27 +98,35 @@ void BufferManager::updateBufferFile() {
 
 	for (int i = 0; i < 5; ++i) {
 		std::string desired_filename_str;
-		std::string file_prefix = std::to_string(i + 1) + '_';
-		if (commands[i].isEmpty) {
-			desired_filename_str = file_prefix + "empty";
+		generateFileFormatName(i, desired_filename_str);
+		renameBuffers(desired_filename_str, current_paths, i);
+	}
+}
+
+void BufferManager::renameBuffers(std::string& desired_filename_str, std::vector<std::filesystem::path>& current_paths, int i)
+{
+	fs::path desired_path = fs::path(bufferDir) / desired_filename_str;
+	fs::path current_path = current_paths[i + 1];
+	fs::rename(current_path, desired_path);
+}
+
+void BufferManager::generateFileFormatName(int i, std::string& desired_filename_str)
+{
+	std::string file_prefix = std::to_string(i + 1) + '_';
+	if (commands[i].isEmpty) {
+		desired_filename_str = file_prefix + "empty";
+	}
+	else {
+		desired_filename_str = file_prefix + commands[i].type + "_";
+		desired_filename_str += std::to_string(commands[i].address) + "_";
+		if (commands[i].type == "W") {
+			std::stringstream ss;
+			ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << commands[i].value;
+			desired_filename_str += ss.str();
 		}
 		else {
-			desired_filename_str = file_prefix + commands[i].type + "_";
-			desired_filename_str += std::to_string(commands[i].address) + "_";
-			if (commands[i].type == "W") {
-				std::stringstream ss;
-				ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << commands[i].value;
-				desired_filename_str += ss.str();
-			}
-			else {
-				desired_filename_str += std::to_string(commands[i].eraseSize);
-			}
+			desired_filename_str += std::to_string(commands[i].eraseSize);
 		}
-
-		fs::path desired_path = fs::path(bufferDir) / desired_filename_str;
-		fs::path current_path = current_paths[i + 1];
-
-		fs::rename(current_path, desired_path);
 	}
 }
 
