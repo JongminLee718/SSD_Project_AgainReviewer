@@ -1,0 +1,229 @@
+#include "buffer_manager.h"
+#include "command_strategy.h"
+#include "fileio.h"
+#include <iostream>
+#include <filesystem>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <iomanip>
+#include <vector>
+#include <map>
+
+namespace fs = std::filesystem;
+
+BufferManager::BufferManager(std::string nandPath) : nandPath(nandPath) {}
+
+void BufferManager::initializeBuffer() {
+	if (!fs::exists(bufferDir)) {
+		fs::create_directory(bufferDir);
+	}
+
+	std::vector<bool> found_numbers(6, false);
+	for (const auto& entry : fs::directory_iterator(bufferDir)) {
+		std::string filename = entry.path().filename().string();
+		if (!filename.empty() && isdigit(filename[0])) {
+			int num = filename[0] - '0';
+			if (num >= 1 && num <= MAX_BUFFER_SIZE) {
+				found_numbers[num] = true;
+			}
+		}
+	}
+
+	for (int i = 1; i <= MAX_BUFFER_SIZE; ++i) {
+		if (!found_numbers[i]) {
+			std::string init_file_name = std::to_string(i) + "_empty";
+			std::ofstream(fs::path(bufferDir) / init_file_name);
+		}
+	}
+}
+
+void BufferManager::loadBufferData() {
+	commands.clear();
+	commands.resize(MAX_BUFFER_SIZE);
+
+	for (const auto& entry : fs::directory_iterator(bufferDir)) {
+		std::string file_name = entry.path().filename().string();
+		std::stringstream ss(file_name);
+		std::string segment;
+		std::vector<std::string> parts;
+		
+		while (std::getline(ss, segment, '_')) {
+			parts.push_back(segment);
+		}
+		parsingCommandBuffer(parts);
+	}
+}
+
+void BufferManager::parsingCommandBuffer(const std::vector<std::string> parts) {
+	if (parts.size() < 2) return;
+	if (parts[1] == "empty") return;
+
+	int bufferNum = std::stoi(parts[0]);
+	if (bufferNum <= 0 || bufferNum > MAX_BUFFER_SIZE) return;
+
+	std::string command_type = parts[1];
+	int command_addr = std::stoi(parts[2]);
+	int erase_size = std::stoi(parts[3]);
+	int value = std::stoul(parts[3], nullptr, 16);
+
+	commands[bufferNum - 1].type = command_type;
+	commands[bufferNum - 1].address = command_addr;
+	if (command_type == "W") {
+		commands[bufferNum - 1].value = value;
+	}
+	else if (command_type == "E") {
+		commands[bufferNum - 1].eraseSize = erase_size;
+	}
+	commands[bufferNum - 1].isEmpty = false;
+}
+
+void BufferManager::updateBufferFile() {
+	for (const auto& entry : fs::directory_iterator(bufferDir)) {
+		fs::remove(entry.path());
+	}
+	
+	for (int i = 0; i < MAX_BUFFER_SIZE; i++) {
+		std::string file_name = std::to_string(i + 1) + '_';
+		if (commands[i].isEmpty) {
+			file_name += "empty";
+		}
+		else {
+			file_name += commands[i].type + "_";
+			file_name += std::to_string(commands[i].address) + "_";
+			if (commands[i].type == "W") {
+				std::stringstream ss;
+				ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << commands[i].value;
+				file_name += ss.str();
+			}
+			else if (commands[i].type == "E") {
+				file_name += std::to_string(commands[i].eraseSize);
+			}
+		}
+		std::ofstream(fs::path(bufferDir) / file_name);
+	}
+}
+
+void BufferManager::addCommandInBuffer(const std::string& command_type, int address, int valueOrSize) {
+	loadBufferData();
+
+	int emptyCnt = 0;
+	for (const auto& cmd : commands) {
+		if (cmd.isEmpty) emptyCnt++;
+	}
+	if (emptyCnt == 0) {
+		flush();
+		loadBufferData();
+	}
+
+	std::map<std::string, std::unique_ptr<CommandStrategy>> strategies;
+	strategies["W"] = std::make_unique<WriteStrategy>();
+	strategies["E"] = std::make_unique<EraseStrategy>();
+
+	auto it = strategies.find(command_type);
+	if (it == strategies.end()) {
+		return;
+	}
+
+	Command new_cmd = { command_type, false, address, (unsigned int)valueOrSize, valueOrSize };
+	if (command_type == "W") {
+		new_cmd.eraseSize = 0;
+	}
+	else {
+		new_cmd.value = 0;
+	}
+
+	bool reject_new_cmd = false;
+	std::vector<Command> commands_to_add;
+
+	it->second->execute(*this, commands, new_cmd, commands_to_add, reject_new_cmd);
+
+	if (reject_new_cmd) {
+		updateBufferFile();
+		return;
+	} 
+	else {
+		commands_to_add.push_back(new_cmd);
+	}
+
+	updateBufferWithNewCommands(commands_to_add);
+	updateBufferFile();
+}
+
+void BufferManager::updateBufferWithNewCommands(const std::vector<Command>& commands_to_add) {
+	for (const auto& cmd_to_add : commands_to_add) {
+		bool replaced = false;
+		for (auto& old_cmd : commands) {
+			if (!old_cmd.isEmpty && old_cmd.address == cmd_to_add.address) {
+				old_cmd = cmd_to_add;
+				replaced = true;
+				break;
+			}
+		}
+
+		if (!replaced) {
+			for (auto& slot : commands) {
+				if (slot.isEmpty) {
+					slot = cmd_to_add;
+					break;
+				}
+			}
+		}
+	}
+}
+
+bool BufferManager::readFromBuffer(int address, unsigned int& outValue) {
+	loadBufferData();
+
+	for (int i = MAX_BUFFER_SIZE - 1; i >= 0; i--) {
+		const auto& cmd = commands[i];
+		if (cmd.isEmpty) continue;
+
+		if (cmd.type == "E" && cmd.address <= address && address < (cmd.address + cmd.eraseSize)) {
+			outValue = 0x00000000;
+			return true;
+		}
+		else if (cmd.type == "W" && cmd.address == address) {
+			outValue = cmd.value;
+			return true;
+		}
+	}
+	return false;
+}
+
+void BufferManager::flush() {
+	loadBufferData();
+
+	FileInOut file_io(nandPath);
+	std::vector<unsigned int> ssd_memory = file_io.nandData;
+
+	for (const auto& cmd : commands) {
+		if (cmd.isEmpty) continue;
+		if (cmd.type == "W") {
+			if (cmd.address >= 0 && cmd.address < ssd_memory.size()) {
+				ssd_memory[cmd.address] = cmd.value;
+			}
+		}
+		else if (cmd.type == "E") {
+			for (int i = 0; i < cmd.eraseSize; i++) {
+				int current_address = cmd.address + i;
+				if (current_address >= 0 && current_address < ssd_memory.size()) {
+					ssd_memory[current_address] = 0x00000000;
+				}
+			}
+		}
+	}
+
+	std::ofstream nandFile(nandPath);
+	for (const auto& data : ssd_memory) {
+		nandFile << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << data << "\n";
+	}
+
+	for (auto& cmd : commands) {
+		cmd.isEmpty = true;
+	}
+
+	updateBufferFile();
+}
+
+
