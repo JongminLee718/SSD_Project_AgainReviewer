@@ -172,11 +172,9 @@ void BufferManager::addCommandInBuffer(const std::string& command_type, int addr
 				int merged_start = std::min(old_start, new_start);
 				int merged_end = std::max(old_end, new_end);
 				int merged_size = merged_end - merged_start;
-				if (merged_size <= 10) {
-					commands[i].isEmpty = true;
-					new_cmd.address = merged_start;
-					new_cmd.eraseSize = merged_size;
-				}
+				commands[i].isEmpty = true;
+				new_cmd.address = merged_start;
+				new_cmd.eraseSize = merged_size;
 			}
 		}
 		else if (new_cmd.type == "E" && commands[i].type == "W") {

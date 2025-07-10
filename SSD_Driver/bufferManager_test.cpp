@@ -299,8 +299,24 @@ TEST_F(BufferManagerFixture, SplitAfterMergeTest) {
 TEST_F(BufferManagerFixture, Flush_AfterEraseMerge) {
     BufferManager bm(test_nand_path);
     bm.initializeBuffer();
+    bm.addCommandInBuffer("E", 10, 5); 
+    bm.addCommandInBuffer("E", 14, 10);
+    bm.flush();
+    FileInOut fileio(test_nand_path);
+    for (int i = 10; i < 17; ++i) {
+        EXPECT_EQ(fileio.nandData[i], 0x00000000) << "at LBA " << i;
+    }
+}
+
+TEST_F(BufferManagerFixture, EraseMergeWithOverSize) {
+    BufferManager bm(test_nand_path);
+    bm.initializeBuffer();
+    bm.addCommandInBuffer("W", 2, 0xCCCCCCCC);
+    bm.addCommandInBuffer("W", 3, 0xCCCCCCCC);
+    bm.addCommandInBuffer("W", 4, 0xCCCCCCCC);
     bm.addCommandInBuffer("E", 10, 5);
-    bm.addCommandInBuffer("E", 14, 3);
+    bm.addCommandInBuffer("E", 14, 10);
+
     bm.flush();
     FileInOut fileio(test_nand_path);
     for (int i = 10; i < 17; ++i) {
@@ -431,8 +447,7 @@ TEST_F(BufferManagerFixture, PreemptiveFlush_WhenSplitRequiresMoreSlots) {
     bm.addCommandInBuffer("W", 1, 1);
     bm.addCommandInBuffer("W", 2, 2);
     bm.addCommandInBuffer("W", 3, 3);
-    bm.addCommandInBuffer("E", 10, 10); // 10~19
-
+    bm.addCommandInBuffer("E", 10, 10);
     bm.addCommandInBuffer("W", 15, 0xABC);
 
     FileInOut fileio(test_nand_path);
