@@ -2,7 +2,7 @@
 
 bool FullWriteAndReadCompareCommand::run(vector<string> commands) {
 	for (int i = 0; i < MAX_LBA; i += 4) {
-		string randData = utils->genRandData();
+		string randData = utils->genSSDRandData();
 		for (int LBA = i; LBA < i + 4; LBA++) {
 			ssd->write(to_string(LBA), randData);
 			ssd->read(to_string(LBA));

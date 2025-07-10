@@ -2,7 +2,7 @@
 
 bool WriteReadAgingCommand::run(vector<string> commands) {
 	for (int i = 0; i < 200; i++) {
-		string randData = utils->genRandData();
+		string randData = utils->genSSDRandData();
 
 		ssd->write(to_string(0), randData);
 		ssd->write(to_string(99), randData);
