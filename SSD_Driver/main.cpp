@@ -8,20 +8,11 @@
 #include "bufferManager.h"
 
 using std::string;
-//#define DEBUG_LOG
 
-void writeOutput(const std::string& content) {
+int writeOutput(const std::string& content) {
 	std::ofstream outputFile(OUTPUT_FILE_PATH);
 	outputFile << content;
-}
- 
-void storeNand(SSD* ssd) {
-	std::ofstream outputFile(NAND_FILE_PATH);
-	for (int addrIdx = 0;addrIdx < SSD_SIZE;addrIdx++) {
-		std::stringstream ss;
-		ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << ssd->getData(addrIdx)<<"\n";
-		outputFile << ss.str();
-	}
+	return true;
 }
 
 string getStringFromReadValue(unsigned int readValue) {
@@ -30,29 +21,26 @@ string getStringFromReadValue(unsigned int readValue) {
 	return ss.str();
 }
 
+bool CheckAdressValidation(int address) { return address < 0 || address >= SSD_SIZE; }
+bool CheckEraseRangeValidation(int address, int size) { return address + size > SSD_SIZE; }
+bool CheckEraseSizeValidation(int size) { return size < 1 || size > 10; }
+
 int main(int argc, char* argv[]) {
 #if defined(_DEBUG)
 	::testing::InitGoogleMock();
 	return RUN_ALL_TESTS();
 #else
 	
-	if (argc < 2) {
-		// Not enough arguments
-		writeOutput(ERROR);
-		return true;
-	}
+	if (argc < 2) return writeOutput(ERROR);
 
 	std::string command = argv[1];
-	
-
 	if (!(command == "R" || command == "W" || command == "E" || command == "F")) writeOutput(ERROR);
 	
 	if (command == "R") {
-		if (argc != 3) {
-			writeOutput(ERROR);
-			return true;
-		}
+		if (argc != 3) return writeOutput(ERROR);
 		int addr = std::stoi(argv[2]);
+		if (CheckAdressValidation(addr)) return writeOutput(ERROR);
+
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		unsigned int readValue = 0;
@@ -61,9 +49,6 @@ int main(int argc, char* argv[]) {
 		if (isBufResult) {
 			result = getStringFromReadValue(readValue);
 			writeOutput(result);
-#if defined(DEBUG_LOG)
-			std::cout << "R result from buffer = " << addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << result << "\n";
-#endif
 		}
 		else {
 			FileInOut fileio(NAND_FILE_PATH);
@@ -71,17 +56,12 @@ int main(int argc, char* argv[]) {
 			result = handler.doReadCmd(addr);
 			writeOutput(result);
 		}
-
-#if defined(DEBUG_LOG)
-		std::cout << "R result = " <<addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << result << "\n";
-#endif
 	}
 	if (command == "W") {
-		if (argc != 4) {
-			writeOutput(ERROR);
-			return true;
-		}
+		if (argc != 4) return writeOutput(ERROR);
 		int addr = std::stoi(argv[2]);
+		if (CheckAdressValidation(addr)) return writeOutput(ERROR);
+
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		string input = argv[3];
@@ -89,53 +69,27 @@ int main(int argc, char* argv[]) {
 		buffer.addCommandInBuffer("W", addr, data);
 		string result = PASS;
 		writeOutput(result);
-#if RESERVED_BUF
-		FileInOut fileio(NAND_FILE_PATH);
-		SSD ssd(fileio.nandData);
-		string result = ssd.doWriteCmd(addr, data);
-		storeNand(&ssd);
-		writeOutput(result);
-#endif
-#if defined(DEBUG_LOG)
-		std::cout << "input data = addr" << addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << data << "\n";
-		std::cout << "W result = " <<  result << "\n";
-#endif
 	}
 	if (command == "E") {
-		if (argc != 4) {
-			writeOutput(ERROR);
-			return true;
-		}
+		if (argc != 4) return writeOutput(ERROR);
 		int addr = std::stoi(argv[2]);
+		int size = std::stoi(argv[3]);
+		if (CheckAdressValidation(addr)) return writeOutput(ERROR);
+		if (CheckEraseSizeValidation(size)) return writeOutput(ERROR);
+		if (CheckEraseRangeValidation(addr, size)) return writeOutput(ERROR);
+
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
-
-		int size = std::stoi(argv[3]);
 		buffer.addCommandInBuffer("E", addr, size);
 		string result = PASS;
 		writeOutput(result);
-#if RESERVED_BUF
-		FileInOut fileio(NAND_FILE_PATH);
-		SSD ssd(fileio.nandData);
-		string result = ssd.doEraseCmd(addr, size);
-		storeNand(&ssd);
-		writeOutput(result);
-#endif
-#if defined(DEBUG_LOG)
-		std::cout << "E result = " << result << "\n";
-#endif
 	}
 	if (command == "F") {
-		if (argc != 2) {
-			writeOutput(ERROR);
-			return true;
-		}
+		if (argc != 2) return writeOutput(ERROR);
+
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		buffer.flush();
-#if defined(DEBUG_LOG)
-		std::cout << "F result = " << "\n";
-#endif
 	}
 
 	return true;

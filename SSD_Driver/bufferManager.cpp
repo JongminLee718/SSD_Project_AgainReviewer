@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <iomanip>
 #include <vector>
+#include "main.h"
+#include "ssd.h"
 
 namespace fs = std::filesystem;
 
@@ -245,23 +247,22 @@ void BufferManager::flush() {
 	for (const auto& cmd : commands) {
 		if (cmd.isEmpty) continue;
 		if (cmd.type == "W") {
+			FileInOut fileio(NAND_FILE_PATH);
+			SSD ssd(fileio.nandData);
+			std::string result;
+
 			if (cmd.address >= 0 && cmd.address < ssd_memory.size()) {
-				ssd_memory[cmd.address] = cmd.value;
+				result = ssd.doWriteCmd(cmd.address, cmd.value);
 			}
+			ssd.storeNand();
 		}
 		else if (cmd.type == "E") {
-			for (int i = 0; i < cmd.eraseSize; i++) {
-				int current_address = cmd.address + i;
-				if (current_address >= 0 && current_address < ssd_memory.size()) {
-					ssd_memory[current_address] = 0x00000000;
-				}
-			}
+			FileInOut fileio(NAND_FILE_PATH);
+			SSD ssd(fileio.nandData);
+			std::string result;
+			result = ssd.doEraseCmd(cmd.address, cmd.eraseSize);
+			ssd.storeNand();
 		}
-	}
-
-	std::ofstream nandFile(nandPath);
-	for (const auto& data : ssd_memory) {
-		nandFile << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << data << "\n";
 	}
 
 	for (auto& cmd : commands) {
