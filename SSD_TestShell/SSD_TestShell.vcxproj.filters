@@ -45,9 +45,6 @@
     <ClCompile Include="parser\parser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="parser\validator.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="parser\validator_utils.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -66,12 +63,6 @@
     <ClCompile Include="test\parser_test.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="test_script_test.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="checker.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="full_write_and_read_compare_command.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -79,6 +70,45 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="write_read_aging_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="erase_and_write_aging_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="erase_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="erase_range_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="flush_command.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="logger\logger.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="runner.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ssd_client_test_strategy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="test\logger_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="test\runner_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="test_script_command_test.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -122,17 +152,11 @@
     <ClInclude Include="parser\validator_utils.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="shell_command.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="ssd_handler.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ssd_client_app.h">
       <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="checker.h">
-      <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="full_write_and_read_compare_command.h">
       <Filter>소스 파일</Filter>
@@ -142,6 +166,30 @@
     </ClInclude>
     <ClInclude Include="write_read_aging_command.h">
       <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="erase_and_write_aging_command.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="erase_command.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="erase_range_command.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="flush_command.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="logger\logger.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="runner.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="script_strategy_interface.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
