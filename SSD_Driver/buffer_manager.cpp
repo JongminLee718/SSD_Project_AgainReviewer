@@ -62,24 +62,22 @@ void BufferManager::loadBufferData() {
 }
 
 void BufferManager::parsingCommandBuffer(const std::vector<std::string> parts) {
-	if (parts.size() < 2) return;
-	if (parts[1] == "empty") return;
+	int bufferNum = 0;
 
-	int bufferNum = std::stoi(parts[0]);
+	if (parts.size() < 2) return;
+
+	bufferNum = std::stoi(parts[0]);
 	if (bufferNum <= 0 || bufferNum > 5) return;
 
-	std::string command_type = parts[1];
-	int command_addr = std::stoi(parts[2]);
-	int erase_size = std::stoi(parts[3]);
-	int value = std::stoul(parts[3], nullptr, 16);
+	if (parts[1] == "empty") return;
 
-	commands[bufferNum - 1].type = command_type;
-	commands[bufferNum - 1].address = command_addr;
-	if (command_type == "W") {
-		commands[bufferNum - 1].value = value;
+	commands[bufferNum - 1].type = parts[1];
+	commands[bufferNum - 1].address = std::stoi(parts[2]);
+	if (parts[1] == "W") {
+		commands[bufferNum - 1].value = std::stoul(parts[3], nullptr, 16);
 	}
-	else if (command_type == "E") {
-		commands[bufferNum - 1].eraseSize = erase_size;
+	else if (parts[1] == "E") {
+		commands[bufferNum - 1].eraseSize = std::stoi(parts[3]);
 	}
 	commands[bufferNum - 1].isEmpty = false;
 }
@@ -96,38 +94,38 @@ void BufferManager::updateBufferFile() {
 		}
 	}
 
-	for (int i = 0; i < 5; ++i) {
-		std::string desired_filename_str;
-		generateFileFormatName(i, desired_filename_str);
-		renameBuffers(desired_filename_str, current_paths, i);
+	for (int index = 0; index < 5; ++index) {
+		renameBuffers(generateFileFormatName(index), current_paths, index);
 	}
 }
 
-void BufferManager::renameBuffers(std::string& desired_filename_str, std::vector<std::filesystem::path>& current_paths, int i)
+void BufferManager::renameBuffers(const std::string& desired_filename_str, std::vector<std::filesystem::path>& current_paths, int command_index)
 {
 	fs::path desired_path = fs::path(bufferDir) / desired_filename_str;
-	fs::path current_path = current_paths[i + 1];
+	fs::path current_path = current_paths[command_index + 1];
 	fs::rename(current_path, desired_path);
 }
 
-void BufferManager::generateFileFormatName(int i, std::string& desired_filename_str)
+std::string BufferManager::generateFileFormatName(int command_index)
 {
-	std::string file_prefix = std::to_string(i + 1) + '_';
-	if (commands[i].isEmpty) {
+	std::string desired_filename_str;
+	std::string file_prefix = std::to_string(command_index + 1) + '_';
+	if (commands[command_index].isEmpty) {
 		desired_filename_str = file_prefix + "empty";
 	}
 	else {
-		desired_filename_str = file_prefix + commands[i].type + "_";
-		desired_filename_str += std::to_string(commands[i].address) + "_";
-		if (commands[i].type == "W") {
+		desired_filename_str = file_prefix + commands[command_index].type + "_";
+		desired_filename_str += std::to_string(commands[command_index].address) + "_";
+		if (commands[command_index].type == "W") {
 			std::stringstream ss;
-			ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << commands[i].value;
+			ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << commands[command_index].value;
 			desired_filename_str += ss.str();
 		}
 		else {
-			desired_filename_str += std::to_string(commands[i].eraseSize);
+			desired_filename_str += std::to_string(commands[command_index].eraseSize);
 		}
 	}
+	return desired_filename_str;
 }
 
 void BufferManager::addCommandInBuffer(const std::string& command_type, int address, int valueOrSize) {
