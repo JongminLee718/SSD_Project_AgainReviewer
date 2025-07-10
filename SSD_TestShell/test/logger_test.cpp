@@ -46,17 +46,18 @@ public:
 		);
 
 		if (ext == "log") {
-			return std::string(buffer) + ".log";
+			return logDir + std::string(buffer) + ".log";
 		}
 		else if (ext == "zip") {
-			return std::string(buffer) + ".zip";
+			return logDir + std::string(buffer) + ".zip";
 		}
 		else {
-			return std::string(buffer) + ".unknown";
+			return logDir + std::string(buffer) + ".unknown";
 		}
 	}
 
 private:
+	string logDir = "logs/";
 	std::time_t now;
 
 	void SetUp() override {

@@ -66,7 +66,7 @@ void Logger::saveAsLogFile() {
 }
 
 void Logger::saveAsZipFile() {
-	for (const auto& entry : std::filesystem::directory_iterator(".")) {
+	for (const auto& entry : std::filesystem::directory_iterator("logs")) {
 		if (!entry.is_regular_file()) continue;
 
 		const auto& path = entry.path();
@@ -98,5 +98,5 @@ string Logger::generateLogFilename() {
 		tm.tm_sec
 	);
 
-	return std::string(buffer) + ".log";
+	return logDir +  std::string(buffer) + ".log";
 }

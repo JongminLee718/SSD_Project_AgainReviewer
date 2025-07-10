@@ -1,4 +1,5 @@
 #include <string>
+#include <filesystem>
 
 class Logger {
 public:
@@ -11,10 +12,13 @@ public:
 	std::string getLogFile() { return logFile; }
 
 private:
-	Logger() = default;
+	Logger() {
+		std::filesystem::create_directories(logDir);
+	}
 	~Logger() = default;
 
-	const std::string logFile = "latest.log";
+	const std::string logDir = "logs/";
+	const std::string logFile = logDir + "latest.log";
 	void createLogFile();
 	std::string getCurrentTimestamp();
 	std::string padMethodName(const std::string& methodName, size_t width = 50);
