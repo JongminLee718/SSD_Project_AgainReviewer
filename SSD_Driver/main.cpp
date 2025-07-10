@@ -5,10 +5,10 @@
 #include "ssd.h"
 #include "fileio.h"
 
-#include "bufferManager.cpp"
+#include "bufferManager.h"
 
 using std::string;
-#define DEBUG_LOG
+//#define DEBUG_LOG
 
 void writeOutput(const std::string& content) {
 	std::ofstream outputFile(OUTPUT_FILE_PATH);
@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) {
 	}
 
 	std::string command = argv[1];
-	int addr = std::stoi(argv[2]);
+	
 
 	if (!(command == "R" || command == "W" || command == "E" || command == "F")) writeOutput(ERROR);
 	
@@ -52,6 +52,7 @@ int main(int argc, char* argv[]) {
 			writeOutput(ERROR);
 			return true;
 		}
+		int addr = std::stoi(argv[2]);
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		unsigned int readValue = 0;
@@ -60,7 +61,9 @@ int main(int argc, char* argv[]) {
 		if (isBufResult) {
 			result = getStringFromReadValue(readValue);
 			writeOutput(result);
+#if defined(DEBUG_LOG)
 			std::cout << "R result from buffer = " << addr << " 0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << result << "\n";
+#endif
 		}
 		else {
 			FileInOut fileio(NAND_FILE_PATH);
@@ -78,6 +81,7 @@ int main(int argc, char* argv[]) {
 			writeOutput(ERROR);
 			return true;
 		}
+		int addr = std::stoi(argv[2]);
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 		string input = argv[3];
@@ -102,6 +106,7 @@ int main(int argc, char* argv[]) {
 			writeOutput(ERROR);
 			return true;
 		}
+		int addr = std::stoi(argv[2]);
 		BufferManager buffer(NAND_FILE_PATH);
 		buffer.initializeBuffer();
 
@@ -125,7 +130,12 @@ int main(int argc, char* argv[]) {
 			writeOutput(ERROR);
 			return true;
 		}
-
+		BufferManager buffer(NAND_FILE_PATH);
+		buffer.initializeBuffer();
+		buffer.flush();
+#if defined(DEBUG_LOG)
+		std::cout << "F result = " << "\n";
+#endif
 	}
 
 	return true;
