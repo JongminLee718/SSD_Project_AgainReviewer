@@ -1,10 +1,7 @@
-#include <iostream>
-#include <fstream>
 #include "gmock/gmock.h"
 #include "main.h"
 #include "ssd.h"
-#include "fileio.h"
-#include "bufferManager.h"
+#include "ssd_runner.h"
 
 using std::string;
 
@@ -15,81 +12,17 @@ int main() {
 }
 
 #else
-int writeOutput(const std::string& content) {
-	std::ofstream outputFile(OUTPUT_FILE_PATH);
-	outputFile << content;
-	return true;
-}
-
-string getStringFromReadValue(unsigned int readValue) {
-	std::stringstream ss;
-	ss << "0x" << std::hex << std::uppercase << std::setw(8) << std::setfill('0') << readValue;
-	return ss.str();
-}
-
-bool CheckAdressValidation(int address) { return address < 0 || address >= SSD_SIZE; }
-bool CheckEraseRangeValidation(int address, int size) { return address + size > SSD_SIZE; }
-bool CheckEraseSizeValidation(int size) { return size < 1 || size > 10; }
 
 int main(int argc, char* argv[]) {
-	
-	if (argc < 2) return writeOutput(ERROR);
-
+	SsdRunner ssdRunner;
 	std::string command = argv[1];
-	if (!(command == "R" || command == "W" || command == "E" || command == "F")) writeOutput(ERROR);
+
+	if (argc < 2) return ssdRunner.writeOutput(ERROR);
 	
-	if (command == "R") {
-		if (argc != 3) return writeOutput(ERROR);
-		int addr = std::stoi(argv[2]);
-		if (CheckAdressValidation(addr)) return writeOutput(ERROR);
-
-		BufferManager buffer(NAND_FILE_PATH);
-		buffer.initializeBuffer();
-		unsigned int readValue = 0;
-		bool isBufResult = buffer.readFromBuffer(addr, readValue);
-		string result;
-		if (isBufResult) {
-			result = getStringFromReadValue(readValue);
-		}
-		else {
-			FileInOut fileio(NAND_FILE_PATH);
-			SSD handler(fileio.nandData);
-			result = handler.doReadCmd(addr);
-		}
-		return writeOutput(result);
-	}
-	if (command == "W") {
-		if (argc != 4) return writeOutput(ERROR);
-		int addr = std::stoi(argv[2]);
-		if (CheckAdressValidation(addr)) return writeOutput(ERROR);
-
-		BufferManager buffer(NAND_FILE_PATH);
-		buffer.initializeBuffer();
-		string input = argv[3];
-		int data = (input.find("0x") == std::string::npos) ? std::stoll(input, nullptr, 10) : std::stoll(input, nullptr, 16);
-		buffer.addCommandInBuffer("W", addr, data);
-		return writeOutput(PASS);
-	}
-	if (command == "E") {
-		if (argc != 4) return writeOutput(ERROR);
-		int addr = std::stoi(argv[2]);
-		int size = std::stoi(argv[3]);
-		if (CheckAdressValidation(addr)) return writeOutput(ERROR);
-		if (CheckEraseSizeValidation(size)) return writeOutput(ERROR);
-		if (CheckEraseRangeValidation(addr, size)) return writeOutput(ERROR);
-
-		BufferManager buffer(NAND_FILE_PATH);
-		buffer.initializeBuffer();
-		buffer.addCommandInBuffer("E", addr, size);
-		return writeOutput(PASS);
-	}
-	if (command == "F") {
-		if (argc != 2) return writeOutput(ERROR);
-
-		BufferManager buffer(NAND_FILE_PATH);
-		buffer.initializeBuffer();
-		buffer.flush();
-	}
-	return true;
+	if (command == "R") return ssdRunner.readHandler(argv, argc);
+	if (command == "W") return ssdRunner.writeHandler(argv, argc);
+	if (command == "E") return ssdRunner.eraseHandler(argv, argc);
+	if (command == "F") return ssdRunner.flushHandler(argc);
+	return ssdRunner.writeOutput(ERROR);
 }
 #endif

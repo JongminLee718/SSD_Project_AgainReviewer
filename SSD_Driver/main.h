@@ -7,3 +7,9 @@ const std::string TEST_NAN_PATH = "test_nand.txt";
 const std::string ERROR = "ERROR";
 const std::string PASS = "";
 const int SSD_SIZE = 100;
+
+int getIntDateFromString(char* argv);
+
+
+
+
