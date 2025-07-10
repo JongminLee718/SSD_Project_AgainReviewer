@@ -1,7 +1,6 @@
 #include "full_write_and_read_compare_command.h"
 
 bool FullWriteAndReadCompareCommand::run(vector<string> commands) {
-	LOG("aksldjf\n");
 	for (int i = 0; i < MAX_LBA; i += 5) {
 		string randData = utils->genSSDRandData();
 		for (int LBA = i; LBA < i + 5; LBA++) {
