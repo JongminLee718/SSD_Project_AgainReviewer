@@ -4,7 +4,7 @@
 #include "main.h"
 #include "ssd.h"
 #include "fileio.h"
-#include "bufferManager.h"
+#include "buffer_manager.h"
 
 using std::string;
 
