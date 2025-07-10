@@ -8,7 +8,12 @@ using std::to_string;
 
 bool EraseRangeCommand::run(vector<string> commands) {
 	int startLba = changeLbaToInt(commands[LBA_OFFSET]);
-	int endLba = startLba + changeLbaToInt(commands[LBA_SIZE_OFFSET]);
+	int endLba = changeLbaToInt(commands[END_LBA_OFFSET]) + 1;
+
+	if (isInvalidRange(startLba, endLba)) {
+		cout << "[Erase] ERROR\n";
+		return false;
+	}
 
 	for (; startLba < endLba;) {
 		int lbaSize = getLbaSize(startLba, endLba);
@@ -25,6 +30,11 @@ bool EraseRangeCommand::run(vector<string> commands) {
 	
 	cout << "[EraseRange] Done\n";
 	return true;
+}
+
+bool EraseRangeCommand::isInvalidRange(int startLba, int endLba)
+{
+	return startLba > endLba || endLba > MAX_LBA;
 }
 
 int  EraseRangeCommand::getLbaSize(int startLba, int endLba)
