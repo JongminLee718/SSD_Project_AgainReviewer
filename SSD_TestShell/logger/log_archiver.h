@@ -9,7 +9,6 @@ public:
 private:
     const std::string logDir;
     const std::string logFile;
-    void saveAsLogFile();
     void saveAsZipFile();
     std::string generateLogFilename();
 };
