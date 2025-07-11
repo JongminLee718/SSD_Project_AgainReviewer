@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 #include "ssd_client_app.h"
-#include "parser/parser.h"
-#include "command_processor.h"
 #include "logger.h"
 
 using std::string;
@@ -12,14 +10,17 @@ using std::cin;
 
 bool SsdClientApp::startVerify() {
 	LOG("ssd verify");
-	Parser parser;
-	vector<string> parsedInput = parser.parse(inputCmd);
-	
-	CommandProcessor commandProcesser{ ssdInterface, utilsInterface };
-	bool isVerifySuccess = commandProcesser.run(parsedInput);
-	if (isVerifySuccess) LOG("SUCESS - ssd verify");
-	else LOG("FAIL- ssd verify");
-	return isVerifySuccess;
+
+	if (commandProcesser.run(parseInput())) {
+		LOG("SUCESS - ssd verify");
+		return true;
+	}
+	LOG("FAIL- ssd verify");
+	return false;
+}
+
+vector<string> SsdClientApp::parseInput() {
+	return parser.parse(inputCmd);
 }
 
 void SsdClientApp::setInputCmd(string input) {

@@ -8,8 +8,30 @@ int main(int argc, char** argv) {
 #else
 #include "ssd_client_app.h"
 #include "runner.h"
-#include "script_strategy_interface.h"
 #include <iostream>
+
+void doTestShell(SsdClientApp& app)
+{
+    while (true) {
+        try {
+            app.getUserCmdLine();
+            app.startVerify();
+        }
+        catch (const std::invalid_argument& e) {
+            std::cout << e.what() << '\n';
+            continue;
+        }
+        catch (...) {
+            app.printError();
+            continue;
+        }
+    }
+}
+
+void doRunner(Runner& runner, char* argv[])
+{
+    runner.runScriptFile(argv[1]);
+}
 
 int main(int argc, char* argv[]) {
     SsdHandler ssdHandler;
@@ -19,23 +41,10 @@ int main(int argc, char* argv[]) {
     Runner runner(std::move(ssdClientStrategy));
 
     if (argc == 1) {
-        while (true) {
-            try {
-                app.getUserCmdLine();
-                app.startVerify();
-            }
-            catch (const std::invalid_argument& e) {
-                std::cout << e.what() << '\n';
-                continue;
-            }
-            catch (...) {
-                app.printError();
-                continue;
-            }
-        }
+        doTestShell(app);
     }
     else {
-        runner.runScriptFile(argv[1]);
+        doRunner(runner, argv);
     }
 
     return 0;

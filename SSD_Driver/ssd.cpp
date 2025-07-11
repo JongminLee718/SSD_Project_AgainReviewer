@@ -51,9 +51,3 @@ unsigned int SSD::getData(int addr){
 void SSD::setData(int addr, int data) {
 	nandData[addr] = data;
 }
-
-void SSD::loadData(const std::vector<unsigned int> &memory) {
-	for (int idx = 0; idx < SSD_SIZE; idx++) {
-		nandData[idx] = memory[idx];
-	}
-}

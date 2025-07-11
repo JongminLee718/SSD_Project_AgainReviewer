@@ -3,8 +3,8 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include "../utils.h"
-#include "../command_processor.h"
+#include "utils.h"
+#include "command_processor.h"
 #include <format>
 
 using namespace testing;
