@@ -142,9 +142,6 @@
     <ClCompile Include="full_write_command.cpp" />
     <ClCompile Include="help_command.cpp" />
     <ClCompile Include="logger\logger.cpp" />
-    <ClCompile Include="logger\log_archiver.cpp" />
-    <ClCompile Include="logger\log_file_manager.cpp" />
-    <ClCompile Include="logger\log_formatter.cpp" />
     <ClCompile Include="main.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
@@ -203,9 +200,6 @@
     <ClInclude Include="full_write_command.h" />
     <ClInclude Include="help_command.h" />
     <ClInclude Include="logger\logger.h" />
-    <ClInclude Include="logger\log_archiver.h" />
-    <ClInclude Include="logger\log_file_manager.h" />
-    <ClInclude Include="logger\log_formatter.h" />
     <ClInclude Include="parser\parser.h" />
     <ClInclude Include="parser\validator.h" />
     <ClInclude Include="parser\validator_factory.h" />
