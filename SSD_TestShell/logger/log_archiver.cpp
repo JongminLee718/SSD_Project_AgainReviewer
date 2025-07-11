@@ -5,8 +5,17 @@
 using std::string;
 
 void LogArchiver::archiveLogFile() {
+    string src = logDir + logFile;
+    string dst = generateLogFilename();
+
+    if (!std::filesystem::exists(src)) return;
+    if (std::filesystem::file_size(src) < 10 * 1024) return;
+
     saveAsZipFile();
-    saveAsLogFile();
+
+    std::filesystem::copy_file(src, dst,
+        std::filesystem::copy_options::overwrite_existing);
+    std::filesystem::remove(src);
 }
 
 string LogArchiver::generateLogFilename() {
@@ -27,18 +36,6 @@ string LogArchiver::generateLogFilename() {
     );
 
     return logDir + std::string(buffer) + ".log";
-}
-
-void LogArchiver::saveAsLogFile() {
-    string src = logDir + logFile;
-    string dst = generateLogFilename();
-
-    if (!std::filesystem::exists(src)) return;
-    if (std::filesystem::file_size(src) < 10 * 1024) return;
-
-    std::filesystem::copy_file(src, dst,
-        std::filesystem::copy_options::overwrite_existing);
-    std::filesystem::remove(src);
 }
 
 void LogArchiver::saveAsZipFile() {
