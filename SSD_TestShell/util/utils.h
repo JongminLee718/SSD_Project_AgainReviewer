@@ -1,6 +1,6 @@
 #pragma once
 #include "gmock/gmock.h"
-#include "logger/logger.h"
+#include "logger.h"
 #include <iostream>
 #include <string>
 #include <random>

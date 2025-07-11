@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/logger;$(SolutionDir)/parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/logger;$(SolutionDir)/util;$(SolutionDir)/ssd_handler;$(SolutionDir)/runner;$(SolutionDir)/client;$(SolutionDir)/command;$(SolutionDir)/test;$(SolutionDir)/parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,7 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/util;$(SolutionDir)/test;$(SolutionDir)/ssd_handler;$(SolutionDir)/runner;$(SolutionDir)/logger;$(SolutionDir)/command;$(SolutionDir)/client;$(SolutionDir)/parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,90 +131,66 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="command_processor.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="erase_and_write_aging_command.cpp" />
-    <ClCompile Include="erase_command.cpp" />
-    <ClCompile Include="erase_range_command.cpp" />
-    <ClCompile Include="exit_command.cpp" />
-    <ClCompile Include="flush_command.cpp" />
-    <ClCompile Include="full_read_command.cpp" />
-    <ClCompile Include="full_write_and_read_compare_command.cpp" />
-    <ClCompile Include="full_write_command.cpp" />
-    <ClCompile Include="help_command.cpp" />
-    <ClCompile Include="logger\logger.cpp" />
-    <ClCompile Include="main.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="parser\parser.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="parser\validator_utils.cpp" />
-    <ClCompile Include="partial_lba_write_command.cpp" />
-    <ClCompile Include="read_command.cpp" />
-    <ClCompile Include="runner.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="ssd_client_test_strategy.cpp" />
-    <ClCompile Include="ssd_handler.cpp" />
-    <ClCompile Include="ssd_client_app.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/parser;$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/parser;$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="ssd_client_app_test.cpp" />
-    <ClCompile Include="test\logger_test.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)/logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\logger;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="test\runner_test.cpp" />
-    <ClCompile Include="test\test_command_processer.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"> %(AdditionalOptions)</AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="test\parser_test.cpp">
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(MSBuildThisFileDirectory)..\..\lib\native\include\;%(AdditionalIncludeDirectories);$(SolutionDir)\parser</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/parser;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <ClCompile Include="test_script_command_test.cpp" />
-    <ClCompile Include="utils.cpp" />
-    <ClCompile Include="write_command.cpp" />
-    <ClCompile Include="test\mock_command_processer.h" />
-    <ClCompile Include="write_read_aging_command.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="command.h" />
-    <ClInclude Include="command_processor.h" />
-    <ClInclude Include="erase_and_write_aging_command.h" />
-    <ClInclude Include="erase_command.h" />
-    <ClInclude Include="erase_range_command.h" />
-    <ClInclude Include="exit_command.h" />
-    <ClInclude Include="flush_command.h" />
-    <ClInclude Include="full_read_command.h" />
-    <ClInclude Include="full_write_and_read_compare_command.h" />
-    <ClInclude Include="full_write_command.h" />
-    <ClInclude Include="help_command.h" />
+    <ClCompile Include="client\ssd_client_app.cpp" />
+    <ClCompile Include="client\ssd_client_test_strategy.cpp" />
+    <ClCompile Include="command\command_processor.cpp" />
+    <ClCompile Include="command\erase_and_write_aging_command.cpp" />
+    <ClCompile Include="command\erase_command.cpp" />
+    <ClCompile Include="command\erase_range_command.cpp" />
+    <ClCompile Include="command\exit_command.cpp" />
+    <ClCompile Include="command\flush_command.cpp" />
+    <ClCompile Include="command\full_read_command.cpp" />
+    <ClCompile Include="command\full_write_and_read_compare_command.cpp" />
+    <ClCompile Include="command\full_write_command.cpp" />
+    <ClCompile Include="command\help_command.cpp" />
+    <ClCompile Include="command\partial_lba_write_command.cpp" />
+    <ClCompile Include="command\read_command.cpp" />
+    <ClCompile Include="command\write_command.cpp" />
+    <ClCompile Include="command\write_read_aging_command.cpp" />
+    <ClCompile Include="logger\logger.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="parser\parser.cpp" />
+    <ClCompile Include="parser\validator_utils.cpp" />
+    <ClCompile Include="runner\runner.cpp" />
+    <ClCompile Include="ssd_handler\ssd_handler.cpp" />
+    <ClCompile Include="test\logger_test.cpp" />
+    <ClCompile Include="test\parser_test.cpp" />
+    <ClCompile Include="test\runner_test.cpp" />
+    <ClCompile Include="test\ssd_client_app_test.cpp" />
+    <ClCompile Include="test\test_command_processer.cpp" />
+    <ClCompile Include="test\test_script_command_test.cpp" />
+    <ClCompile Include="util\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="client\script_strategy_interface.h" />
+    <ClInclude Include="client\ssd_client_app.h" />
+    <ClInclude Include="command\command.h" />
+    <ClInclude Include="command\command_processor.h" />
+    <ClInclude Include="command\erase_and_write_aging_command.h" />
+    <ClInclude Include="command\erase_command.h" />
+    <ClInclude Include="command\erase_range_command.h" />
+    <ClInclude Include="command\exit_command.h" />
+    <ClInclude Include="command\flush_command.h" />
+    <ClInclude Include="command\full_read_command.h" />
+    <ClInclude Include="command\full_write_and_read_compare_command.h" />
+    <ClInclude Include="command\full_write_command.h" />
+    <ClInclude Include="command\help_command.h" />
+    <ClInclude Include="command\mock_command_processer.h" />
+    <ClInclude Include="command\partial_lba_write_command.h" />
+    <ClInclude Include="command\read_command.h" />
+    <ClInclude Include="command\write_command.h" />
+    <ClInclude Include="command\write_read_aging_command.h" />
     <ClInclude Include="logger\logger.h" />
     <ClInclude Include="parser\parser.h" />
     <ClInclude Include="parser\validator.h" />
     <ClInclude Include="parser\validator_factory.h" />
     <ClInclude Include="parser\validator_utils.h" />
-    <ClInclude Include="partial_lba_write_command.h" />
-    <ClInclude Include="read_command.h" />
-    <ClInclude Include="runner.h" />
-    <ClInclude Include="script_strategy_interface.h" />
-    <ClInclude Include="ssd_handler.h" />
-    <ClInclude Include="ssd_client_app.h" />
-    <ClInclude Include="utils.h" />
-    <ClInclude Include="write_command.h" />
-    <ClInclude Include="write_read_aging_command.h" />
+    <ClInclude Include="runner\runner.h" />
+    <ClInclude Include="ssd_handler\ssd_handler.h" />
+    <ClInclude Include="util\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
