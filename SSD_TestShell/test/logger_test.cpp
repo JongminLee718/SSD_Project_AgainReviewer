@@ -12,7 +12,7 @@ using namespace testing;
 class LoggerFixture : public Test {
 public:
 	Logger& logger = Logger::getInstance();
-	const std::string logFile = logger.getLogFile();
+	const std::string logFile = "logs/latest.log";
 
 	string currentPattern;
 	string minuteAfterPattern;
